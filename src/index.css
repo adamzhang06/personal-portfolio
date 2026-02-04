@@ -22,3 +22,20 @@
   --color-highlight: #FFD700;
   --color-surface: #FFF9F0;
 }
+
+@layer {
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: "Inter", sans-serif;
+  }
+
+  .font-serif {
+    font-family: "Playfair Display", serif;
+  }
+}
