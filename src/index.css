@@ -6,28 +6,28 @@
 
   --color-card: #fff3e6;
 
-  --color-primary: #7c3aed;
-  --color-primary-foreground: #fff9f0;
+  --color-primary: #8a55e6;
+  --color-primary-foreground: #232323;
 
   --color-secondary: #ffd700;
-  --color-secondary-foreground: #232323;
+  --color-secondary-foreground: #8a55e6;
 
-  --color-muted: #f5e9d7;
-  --color-muted-foreground: #7c3aed;
-
+  --color-muted: #ebd4b2;
+  --color-muted-foreground: ##7a7676;
+  
   --color-border: #e0cda9;
-
+  
   --radius: 0.75rem;
 
   --color-highlight: #ffd700;
-  --color-surface: #fff9f0;
+  --color-surface: #b0aaa0;
 }
 
-@layer {
+@layer base {
   html {
     scroll-behavior: smooth;
   }
-
+  
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
@@ -38,3 +38,19 @@
     font-family: "Playfair Display", serif;
   }
 }
+
+@layer components {
+  .glass {
+    background: color-mix(in srgb, var(--color-surface) 50%, transparent);
+    backdrop-filter: blur(16px);
+    border: 1px solid color-mix(in srgb, var(--color-border) 50%, transparent);
+  }
+
+  .glass-strong {
+    background: color-mix(in srgb, var(--color-surface) 80%, transparent);
+    backdrop-filter: blur(24px);
+    border: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
+  }
+}
+
+
