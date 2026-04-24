@@ -8,58 +8,28 @@ import {
 } from "lucide-react";
 import { AnimatedBorderButton } from "../components/AnimatedBorderButton";
 
-const skills = [
-  "Python",
-  "R",
-  "Java",
-  "JavaScript",
-  "HTML/CSS",
-  "React",
-  "React Native",
-  "FastAPI",
-  "MongoDB",
-  "Tailwind CSS",
-  "Pandas",
-  "NumPy",
-  "Matplotlib",
-  "Scikit-learn",
-  "Keras",
-  "Shiny",
-  "ggplot2",
-  "Git",
-  "GitHub",
-  "VSCode",
+const skillCategories = [
+  {
+    label: "Languages",
+    skills: ["Python", "R", "Java", "JavaScript", "HTML/CSS"],
+  },
+  {
+    label: "Frameworks",
+    skills: ["React", "React Native", "FastAPI", "Shiny"],
+  },
+  {
+    label: "Libraries",
+    skills: ["Pandas", "NumPy", "Matplotlib", "Scikit-learn", "Keras", "ggplot2", "Tailwind CSS"],
+  },
+  {
+    label: "Tools",
+    skills: ["Git", "GitHub", "VSCode", "Antigravity", "Claude Code", "MongoDB"],
+  },
 ];
 
 export const Hero = () => {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Bg */}
-      <div className="absolute inset-0">
-        <img
-          src="/hero-bg.png"
-          atl="Hero image"
-          className="w-full h-full object-cover opacity-40"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/60 to-background" />
-      </div>
-
-      {/* Dots */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(30)].map((_, i) => (
-          <div
-            className="absolute w-1.5 h-1.5 rounded-full opacity-40"
-            style={{
-              backgroundColor: "#8a55e6",
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animation: `slow-drift ${15 + Math.random() * 20}s ease-in-out infinite`,
-              animationDelay: `${Math.random() * 5}`,
-            }}
-          />
-        ))}
-      </div>
-
       {/* Content */}
       <div className="container mx-auto px-6 pt-32 pb-20 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -102,7 +72,7 @@ export const Hero = () => {
 
             {/* Social Links */}
             <div className="flex items-center gap-4 animate-fade-in animation-delay-400">
-              <span className="text-sm text-muted-foreground">Follow me: </span>
+              <span className="text-sm text-muted-foreground">Connect with me: </span>
               {[
                 { icon: Github, href: "https://github.com/adamzhang06" },
                 {
@@ -160,19 +130,27 @@ export const Hero = () => {
 
         {/* Skills Section */}
         <div className="mt-20 animate-fade-in animation-delay-600">
-          <p className="text-sm text-muted-foreground mb-6 text-center">
-            Techologies I work with
+          <p className="text-sm text-muted-foreground mb-6 text-center uppercase tracking-widest">
+            Technologies I work with
           </p>
-          <div className="relative overflow-hidden">
-            <div className="flex animate-marquee">
-              {[...skills, ...skills].map((skill, idx) => (
-                <div key={idx} className="flex-shrink-0 px-8 py-4">
-                  <span className="text-xl font-semibold text-muted-foreground/50 hover:text-muted-foreground transition-colors">
-                    {skill}
-                  </span>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {skillCategories.map((category) => (
+              <div key={category.label} className="glass rounded-2xl p-4">
+                <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-3">
+                  {category.label}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {category.skills.map((skill) => (
+                    <span
+                      key={skill}
+                      className="text-xs px-2 py-1 rounded-full bg-surface/60 text-muted-foreground"
+                    >
+                      {skill}
+                    </span>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

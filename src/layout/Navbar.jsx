@@ -1,11 +1,12 @@
 import { Button } from "@/components/Button";
 import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 const navLinks = [
-  { href: "#about", label: "About" },
-  { href: "#projects", label: "Projects" },
-  { href: "#experience", label: "Experience" },
+  { href: "/", label: "Home" },
+  { href: "/#experience", label: "Experience" },
+  { href: "/#projects", label: "Projects" },
 ];
 
 export const Navbar = () => {
@@ -29,12 +30,12 @@ export const Navbar = () => {
       }  z-50`}
     >
       <nav className="container mx-auto px-6 flex items-center justify-between">
-        <a
-          href="#"
+        <Link
+          to="/"
           className="text-xl font-bold tracking-tight hover:text-primary"
         >
           AYZ<span className="text-primary">.</span>
-        </a>
+        </Link>
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-1">
@@ -48,6 +49,12 @@ export const Navbar = () => {
                 {link.label}
               </a>
             ))}
+            <Link
+              to="/photography"
+              className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground rounded-full hover:bg-surface"
+            >
+              Photography
+            </Link>
           </div>
         </div>
 
@@ -73,11 +80,19 @@ export const Navbar = () => {
               <a
                 href={link.href}
                 key={index}
+                onClick={() => setIsMobileMenuOpen(false)}
                 className="text-lg text-muted-foreground hover:text-foreground py-2"
               >
                 {link.label}
               </a>
             ))}
+            <Link
+              to="/photography"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-lg text-muted-foreground hover:text-foreground py-2"
+            >
+              Photography
+            </Link>
 
             <Button>Contact Me</Button>
           </div>
