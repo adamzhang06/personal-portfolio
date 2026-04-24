@@ -3,7 +3,7 @@ import { Download } from "lucide-react";
 export const AnimatedBorderButton = () => {
   return (
     <a
-      href="/AdamZhang_Resume.pdf"
+      href="/resumes/AdamZhang_Resume.pdf"
       download
       className="relative bg-transparent border border-border
     text-foreground hover:border-primary/50 transition-all
