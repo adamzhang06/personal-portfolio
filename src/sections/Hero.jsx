@@ -16,15 +16,15 @@ const skillCategories = [
   },
   {
     label: "Frameworks",
-    skills: ["React", "React Native", "FastAPI", "Shiny"],
+    skills: ["React", "React Native", "FastAPI", "MongoDB", "Tailwind CSS"],
   },
   {
     label: "Libraries",
-    skills: ["Pandas", "NumPy", "Matplotlib", "Scikit-learn", "Keras", "ggplot2", "Tailwind CSS"],
+    skills: ["Pandas", "NumPy", "Matplotlib", "sk-learn", "Keras", "Seurat", "sc-type", "Shiny", "ggplot2", "Rsamtools"],
   },
   {
     label: "Tools",
-    skills: ["Git", "GitHub", "VSCode", "Antigravity", "Claude Code", "MongoDB"],
+    skills: ["Git", "GitHub", "VS Code", "Antigravity", "Claude Code", "RStudio", "PyCharm", "IntelliJ", "Android Studio", "Xenium"],
   },
 ];
 
@@ -134,16 +134,16 @@ export const Hero = () => {
             Technologies I work with
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {skillCategories.map((category) => (
-              <div key={category.label} className="glass rounded-2xl p-4">
-                <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-3">
+            {skillCategories.map((category, idx) => (
+              <div key={category.label} className="card-vivid rounded-2xl p-5" style={{ "--card-angle": ["120deg","60deg","200deg","30deg"][idx % 4] }}>
+                <p className="text-sm font-semibold text-foreground uppercase tracking-widest mb-3 text-center">
                   {category.label}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {category.skills.map((skill) => (
                     <span
                       key={skill}
-                      className="text-xs px-2 py-1 rounded-full bg-surface/60 text-muted-foreground"
+                      className="text-sm px-3 py-1 rounded-full bg-primary/10 text-primary"
                     >
                       {skill}
                     </span>

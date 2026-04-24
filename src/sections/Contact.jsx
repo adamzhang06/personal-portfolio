@@ -37,7 +37,7 @@ export const Contact = () => {
         </p>
         <h2 className="text-4xl font-bold mb-4">Let's connect</h2>
         <p className="text-muted-foreground mb-12">
-          I'm always open to new conversations, please reach out!
+          {/* I'm always open to new conversations, please reach out! */}
         </p>
         <div className="space-y-4 mb-12">
           {links.map((link) => (
