@@ -15,10 +15,10 @@ const projects = [
     ],
     media: [
       { src: "/projects/barbabes/gallery.jpg", caption: "" },
-      { src: "https://www.youtube.com/watch?v=GhaOiUV3mbk", caption: "Demo video" },
       { src: "/projects/barbabes/win.jpeg", caption: "1st Overall at InnovateHER Hacks 2026" },
       { src: "/projects/barbabes/inaction.jpeg", caption: "In action" },
       { src: "/projects/barbabes/gallery (1).jpg", caption: "" },
+      { src: "https://www.youtube.com/watch?v=GhaOiUV3mbk", caption: "Demo video" },
     ],
   },
   {
