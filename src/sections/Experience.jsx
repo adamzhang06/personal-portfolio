@@ -46,7 +46,7 @@ const experiences = [
     period: "May 2023 – Aug. 2023",
     description:
       "Used R to reduce processing time for TSS analysis of RNA sequencing data by 36.6%. Doubled the read speed of BAM files using multicore processing for both Windows and Linux environments.",
-    highlights: ["36.6%", "Doubled"],
+    highlights: ["reduce processing time", "36.6%", "Doubled the read speed"],
     links: [
       {
         href: "https://docs.google.com/presentation/d/1gs9peDbaCVoPULaPnjPjkK-eCSsU5LRSpG_mCmAVlME/edit?usp=sharing",

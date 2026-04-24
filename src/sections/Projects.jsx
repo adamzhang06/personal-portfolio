@@ -26,7 +26,7 @@ const projects = [
     description:
       "A fully automated robotic camera slider system for cinematic motion control. Built custom firmware and control software to drive precise stepper motor movements, enabling programmable camera paths for film and photography applications.",
     highlights: ["robotic camera slider", "stepper motor", "programmable camera paths"],
-    tags: ["Python", "React","Viam", "OpenCV", "Robotics", "GPIO Kinematics", "Stepper Motors", "Raspberry Pi"],
+    tags: ["Python", "JavaScript", "React","FastAPI", "Viam", "OpenCV", "Robotics"],
     github: "https://github.com/adamzhang06/AXI6-cinema-robotics",
     links: [
       { label: "Devpost", href: "https://devpost.com/software/axi6-cinema-robotics-camera-slider" },
