@@ -34,46 +34,46 @@ const layout = [
   // — Section 1 —                             computed rowSpans:
   {                                            // col span 7,  aspect 2/3 → rowSpan 11
     col: "1 / span 7",  row: 1,  aspect: "2/3",
-    src: "/photos/3955912_3955912-R1-076-36A.jpg", alt: "",
+    src: "/photos/3955912_3955912-R1-076-36A.jpg", alt: "pigeon and moon",
     meta: { camera: "Nikon F3", film: "Kodak Gold 200", date: "June 2023" },
   },
   {                                            // col span 13, aspect 3/2 → rowSpan 9
     col: "9 / span 13", row: 1,  aspect: "3/2",
-    src: "/photos/000044400015.jpg", alt: "",
+    src: "/photos/000044400015.jpg", alt: "white flowers",
     meta: { camera: "Nikon F3", film: "Kodak Portra 160", date: "June 2023" },
   },
   {                                            // col span 10, aspect 3/2 → rowSpan 7
     col: "1 / span 12", row: 13, aspect: "3/2",
-    src: "/photos/AYZ_7313.jpg", alt: "",
+    src: "/photos/AYZ_7313.jpg", alt: "pf25",
     meta: { camera: "Nikon D750", lens: "95mm", settings: "f/16 · 1/60s · ISO 100", location: "West Lafayette, IN", date: "September 2025" },
   },
   {                                            // col span 7,  aspect 2/3 → rowSpan 11
     col: "14 / span 7", row: 11, aspect: "2/3",
-    src: "/photos/AYZ_0315.JPG", alt: "",
+    src: "/photos/AYZ_0315.JPG", alt: "chelsea's portrait",
     meta: { camera: "Nikon Z5II", lens: "50mm", settings: "f/1.8 · 1/400s · ISO 100", location: "Kansas City, MO", date: "March 2026" },
   },
 
   // — Section 2 — (s1 ends row 22, +3 gap → row 25)
   {
-    col: "15 / span 6", row: 23, aspect: "2/3",
-    src: "/photos/AYZ_0111.JPG", alt: "",
+    col: "1 / span 8", row: 22, aspect: "2/3",
+    src: "/photos/AYZ_0111.JPG", alt: "begonia & pepper",
     meta: { camera: "Nikon Z5II", lens: "50mm", settings: "f/5.6 · 1/100s · ISO 57600", location: "Ballwin, MO", date: "March 2026" },
   },  // rowSpan  8, ends 33
   {
-    col: "2 / span 9", row: 22, aspect: "3/2",
-    src: "/photos/AYZ_0090.JPG", alt: "",
+    col: "11 / span 8", row: 23, aspect: "3/2",
+    src: "/photos/AYZ_0090.JPG", alt: "begonia",
     meta: { camera: "Nikon Z5II", lens: "50mm", settings: "f/2 · 1/250s · ISO 7200", location: "Ballwin, MO", date: "March 2026" },
   },  // rowSpan  9, ends 36 (+2 stagger)
   {
-    col: "4 / span 10", row: 29, aspect: "3/2",
-    src: "/photos/AYZ_8259.jpg", alt: "",
+    col: "11 / span 8", row: 29, aspect: "3/2",
+    src: "/photos/AYZ_8259.jpg", alt: "porsche cmdx",
     meta: { camera: "Nikon D750", lens: "24mm", settings: "f/22 · 1/10s · ISO 100", location: "Mexico City", date: "December 2025" },
   },  // rowSpan  8, ends 46 (+2 gap)
 
   // — Section 3: hero — (s2 ends row 46, +3 gap → row 49)
   {
-    col: "1 / span 20", row: 37, aspect: "3/2",
-    src: "/photos/000016520031.jpg", alt: "",
+    col: "1 / span 20", row: 35, aspect: "3/2",
+    src: "/photos/000016520031.jpg", alt: "arches wide dad shot",
     meta: { camera: "Nikon F3", film: "Kodak Gold 200", location: "Arches National Park", date: "June 2023" },
   },  // rowSpan 13, ends 62
 
