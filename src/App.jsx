@@ -3,8 +3,9 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { Navbar } from "@/layout/Navbar";
 import { Hero } from "@/sections/Hero";
-import { Projects } from "@/sections/Projects";
 import { Experience } from "@/sections/Experience";
+import { Skills } from "@/sections/Skills";
+import { Projects } from "@/sections/Projects";
 import { Contact } from "@/sections/Contact";
 import { Photography } from "@/pages/Photography";
 import { ScrollToTop } from "@/components/ScrollToTop";
@@ -15,8 +16,9 @@ function Portfolio() {
   return (
     <main>
       <Hero />
-      <Experience />
       <Projects />
+      <Experience />
+      <Skills />
       <Contact />
     </main>
   );
