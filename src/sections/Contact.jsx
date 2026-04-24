@@ -1,4 +1,4 @@
-import { Github, Linkedin, Mail } from "lucide-react";
+import { Github, Instagram, Linkedin, Mail } from "lucide-react";
 import { Button } from "@/components/Button";
 
 const links = [
@@ -20,6 +20,12 @@ const links = [
     href: "https://www.linkedin.com/in/adam-zhang-8b2b44382/",
     display: "linkedin.com/in/adam-zhang",
   },
+  {
+    icon: Instagram,
+    label: "Instagram",
+    href: "https://www.instagram.com/_adamzhang/",
+    display: "@_adamzhang",
+  },
 ];
 
 export const Contact = () => {
@@ -31,10 +37,8 @@ export const Contact = () => {
         </p>
         <h2 className="text-4xl font-bold mb-4">Let's connect</h2>
         <p className="text-muted-foreground mb-12">
-          Whether it's a project, internship, or just a chat — I'm always open
-          to new conversations.
+          I'm always open to new conversations, please reach out!
         </p>
-
         <div className="space-y-4 mb-12">
           {links.map((link) => (
             <a

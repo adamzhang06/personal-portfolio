@@ -1,10 +1,11 @@
 import { Button } from "@/components/Button";
 import {
   ArrowRight,
-  ChevronDown,
   Download,
   Github,
+  Instagram,
   Linkedin,
+  Mail,
 } from "lucide-react";
 import { AnimatedBorderButton } from "../components/AnimatedBorderButton";
 
@@ -64,7 +65,7 @@ export const Hero = () => {
 
             {/* CTAs */}
             <div className="flex flex-wrap gap-4 animate-fade-in animation-delay-300">
-              <Button size="lg">
+              <Button size="lg" href="#contact">
                 Contact Me <ArrowRight className="w-5 h-5" />
               </Button>
               <AnimatedBorderButton />
@@ -74,11 +75,10 @@ export const Hero = () => {
             <div className="flex items-center gap-4 animate-fade-in animation-delay-400">
               <span className="text-sm text-muted-foreground">Connect with me: </span>
               {[
+                { icon: Mail, href: "mailto:reachadamzhang@gmail.com" },
                 { icon: Github, href: "https://github.com/adamzhang06" },
-                {
-                  icon: Linkedin,
-                  href: "https://www.linkedin.com/in/adam-zhang-8b2b44382/",
-                },
+                { icon: Linkedin, href: "https://www.linkedin.com/in/adam-zhang-8b2b44382/" },
+                { icon: Instagram, href: "https://www.instagram.com/_adamzhang/" },
               ].map((social, idx) => (
                 <a
                   key={idx}
@@ -155,18 +155,6 @@ export const Hero = () => {
         </div>
       </div>
 
-      <div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 
-      animate-fade-in animation-delay-800"
-      >
-        <a
-          href="#about"
-          className="flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors group"
-        >
-          <span className="text-xs uppercase tracking-wider">Scroll</span>
-          <ChevronDown className="w-6 h-6 animate-bounce" />
-        </a>
-      </div>
     </section>
   );
 };
