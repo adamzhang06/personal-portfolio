@@ -226,21 +226,65 @@ export const Photography = () => {
       {/* Lightbox */}
       {lightbox && (
         <div
-          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-8"
+          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 md:p-8"
           onClick={() => setLightbox(null)}
         >
           <button
-            className="absolute top-5 right-5 text-white/70 hover:text-white"
+            className="absolute top-4 right-4 text-white/60 hover:text-white transition-colors z-10"
             onClick={() => setLightbox(null)}
           >
             <X className="w-6 h-6" />
           </button>
-          <img
-            src={lightbox.src}
-            alt={lightbox.alt}
-            className="max-w-full max-h-full object-contain"
+
+          <div
+            className="flex flex-col md:flex-row items-stretch w-fit max-w-[90vw] max-h-[90vh] gap-0 overflow-hidden"
             onClick={(e) => e.stopPropagation()}
-          />
+          >
+            {/* Photo */}
+            <img
+              src={lightbox.src}
+              alt={lightbox.alt}
+              className="block w-auto max-w-[90vw] md:max-w-[75vw] max-h-[60vh] md:max-h-[85vh] object-contain"
+            />
+
+            {/* Metadata panel */}
+            {lightbox.meta && Object.values(lightbox.meta).some(Boolean) && (
+              <div className="w-full min-w-[180px] md:w-56 shrink-0 bg-neutral-100 flex flex-col justify-center gap-4 px-5 py-5">
+                {(lightbox.meta.camera || lightbox.meta.lens) && (
+                  <div>
+                    <p className="text-neutral-400 text-[10px] uppercase tracking-widest mb-1">Camera</p>
+                    <p className="text-neutral-800 text-sm font-medium leading-snug">
+                      {[lightbox.meta.camera, lightbox.meta.lens].filter(Boolean).join(" · ")}
+                    </p>
+                  </div>
+                )}
+                {lightbox.meta.film && (
+                  <div>
+                    <p className="text-neutral-400 text-[10px] uppercase tracking-widest mb-1">Film</p>
+                    <p className="text-neutral-800 text-sm italic">{lightbox.meta.film}</p>
+                  </div>
+                )}
+                {lightbox.meta.settings && (
+                  <div>
+                    <p className="text-neutral-400 text-[10px] uppercase tracking-widest mb-1">Exposure</p>
+                    <p className="text-neutral-800 text-sm font-mono">{lightbox.meta.settings}</p>
+                  </div>
+                )}
+                {lightbox.meta.location && (
+                  <div>
+                    <p className="text-neutral-400 text-[10px] uppercase tracking-widest mb-1">Location</p>
+                    <p className="text-neutral-800 text-sm">{lightbox.meta.location}</p>
+                  </div>
+                )}
+                {lightbox.meta.date && (
+                  <div>
+                    <p className="text-neutral-400 text-[10px] uppercase tracking-widest mb-1">Date</p>
+                    <p className="text-neutral-800 text-sm">{lightbox.meta.date}</p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

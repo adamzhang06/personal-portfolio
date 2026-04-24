@@ -3,6 +3,25 @@ import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 
+// Keep in sync with linked srcs in Photography.jsx
+const PHOTO_SRCS = [
+  "/photos/3955912_3955912-R1-076-36A.jpg",
+  "/photos/000044400015.jpg",
+  "/photos/AYZ_7313.jpg",
+  "/photos/AYZ_0315.JPG",
+  "/photos/AYZ_0111.JPG",
+  "/photos/AYZ_0090.JPG",
+  "/photos/AYZ_8259.jpg",
+  "/photos/000016520031.jpg",
+];
+
+let photoPrefetchDone = false;
+function prefetchPhotos() {
+  if (photoPrefetchDone) return;
+  photoPrefetchDone = true;
+  PHOTO_SRCS.forEach((src) => { new Image().src = src; });
+}
+
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/#projects", label: "Projects" },
@@ -52,6 +71,7 @@ export const Navbar = () => {
             ))}
             <Link
               to="/photography"
+              onMouseEnter={prefetchPhotos}
               className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground rounded-full hover:bg-surface"
             >
               Photography
@@ -89,6 +109,7 @@ export const Navbar = () => {
             ))}
             <Link
               to="/photography"
+              onMouseEnter={prefetchPhotos}
               onClick={() => setIsMobileMenuOpen(false)}
               className="text-lg text-muted-foreground hover:text-foreground py-2"
             >

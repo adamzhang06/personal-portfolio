@@ -118,7 +118,7 @@ export const Experience = () => {
                 <div
                   key={idx}
                   className={`relative flex items-start md:items-center gap-0 ${
-                    idx !== 0 ? "-mt-32" : ""
+                    idx !== 0 ? "md:-mt-32" : ""
                   }`}
                 >
                   {/* Left slot */}
