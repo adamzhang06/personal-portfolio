@@ -55,17 +55,17 @@ const layout = [
 
   // — Section 2 — (s1 ends row 22, +3 gap → row 25)
   {
-    col: "1 / span 8", row: 22, aspect: "2/3",
+    col: "2 / span 8", row: 22, aspect: "2/3",
     src: "/photos/AYZ_0111.JPG", alt: "begonia & pepper",
     meta: { camera: "Nikon Z5II", lens: "50mm", settings: "f/5.6 · 1/100s · ISO 57600", location: "Ballwin, MO", date: "March 2026" },
   },  // rowSpan  8, ends 33
   {
-    col: "11 / span 8", row: 23, aspect: "3/2",
+    col: "12 / span 8", row: 23, aspect: "3/2",
     src: "/photos/AYZ_0090.JPG", alt: "begonia",
     meta: { camera: "Nikon Z5II", lens: "50mm", settings: "f/2 · 1/250s · ISO 7200", location: "Ballwin, MO", date: "March 2026" },
   },  // rowSpan  9, ends 36 (+2 stagger)
   {
-    col: "11 / span 8", row: 29, aspect: "3/2",
+    col: "12 / span 8", row: 29, aspect: "3/2",
     src: "/photos/AYZ_8259.jpg", alt: "porsche cmdx",
     meta: { camera: "Nikon D750", lens: "24mm", settings: "f/22 · 1/10s · ISO 100", location: "Mexico City", date: "December 2025" },
   },  // rowSpan  8, ends 46 (+2 gap)
