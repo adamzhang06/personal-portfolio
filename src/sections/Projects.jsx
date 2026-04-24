@@ -14,13 +14,11 @@ const projects = [
       { label: "Devpost", href: "https://devpost.com/software/barbabes" },
     ],
     media: [
+      { src: "/projects/barbabes/gallery.jpg", caption: "" },
       { src: "https://www.youtube.com/watch?v=GhaOiUV3mbk", caption: "Demo video" },
       { src: "/projects/barbabes/win.jpeg", caption: "1st Overall at InnovateHER Hacks 2026" },
-      { src: "/projects/barbabes/original.png", caption: "App overview" },
       { src: "/projects/barbabes/inaction.jpeg", caption: "In action" },
-      { src: "/projects/barbabes/gallery.jpg", caption: "" },
       { src: "/projects/barbabes/gallery (1).jpg", caption: "" },
-      { src: "/projects/barbabes/gallery (2).jpg", caption: "" },
     ],
   },
   {
@@ -28,12 +26,16 @@ const projects = [
     description:
       "A fully automated robotic camera slider system for cinematic motion control. Built custom firmware and control software to drive precise stepper motor movements, enabling programmable camera paths for film and photography applications.",
     highlights: ["robotic camera slider", "stepper motor", "programmable camera paths"],
-    tags: ["Robotics", "Firmware", "Motor Control", "C++"],
+    tags: ["Python", "React","Viam", "OpenCV", "Robotics", "GPIO Kinematics", "Stepper Motors", "Raspberry Pi"],
     github: "https://github.com/adamzhang06/AXI6-cinema-robotics",
     links: [
       { label: "Devpost", href: "https://devpost.com/software/axi6-cinema-robotics-camera-slider" },
     ],
     media: [
+      { src: "/projects/axi6/COVER.jpeg", caption: "" },
+      { src: "/projects/axi6/website.jpeg", caption: "" },
+      { src: "/projects/axi6/cad.jpeg", caption: "" },
+      { src: "/projects/axi6/pi.jpeg", caption: "" },
       { src: "https://vimeo.com/1184530933", caption: "Demo video" },
     ],
     logo: "/projects/axi6/logo.png",
@@ -100,7 +102,7 @@ const MediaCarousel = ({ media }) => {
         <video
           key={idx}
           src={item.src}
-          className="w-full aspect-video object-cover animate-carousel-fade"
+          className="w-full aspect-video object-contain animate-carousel-fade"
           controls
           playsInline
         />
@@ -109,7 +111,7 @@ const MediaCarousel = ({ media }) => {
           key={idx}
           src={item.src}
           alt={item.caption ?? ""}
-          className="w-full aspect-video object-cover animate-carousel-fade"
+          className="w-full aspect-video object-contain animate-carousel-fade"
         />
       )}
 
@@ -175,7 +177,10 @@ export const Projects = () => {
                     <h3 className="text-2xl font-semibold">{project.title}</h3>
                   </div>
                 ) : project.logo ? (
-                  <img src={project.logo} alt={project.title} className="h-10 object-contain mix-blend-multiply" />
+                  <div className="flex flex-col gap-3">
+                    <img src={project.logo} alt={project.title} className="h-10 object-contain mix-blend-multiply" />
+                    <span className="text-2xl font-semibold text-foreground">{project.title}</span>
+                  </div>
                 ) : (
                   <h3 className="text-2xl font-semibold">{project.title}</h3>
                 )}
