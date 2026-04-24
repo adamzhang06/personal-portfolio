@@ -226,26 +226,27 @@ export const Photography = () => {
       {/* Lightbox */}
       {lightbox && (
         <div
-          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 md:p-8"
+          className="fixed inset-0 z-50 bg-black/80 overflow-y-auto"
           onClick={() => setLightbox(null)}
         >
           <button
-            className="absolute top-4 right-4 text-white/60 hover:text-white transition-colors z-10"
+            className="fixed top-4 right-4 text-white/60 hover:text-white transition-colors z-10"
             onClick={() => setLightbox(null)}
           >
             <X className="w-6 h-6" />
           </button>
 
-          <div
-            className="flex flex-col md:flex-row items-stretch w-fit max-w-[90vw] max-h-[90vh] gap-0 overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Photo */}
-            <img
-              src={lightbox.src}
-              alt={lightbox.alt}
-              className="block w-auto max-w-[90vw] md:max-w-[75vw] max-h-[60vh] md:max-h-[85vh] object-contain"
-            />
+          <div className="flex min-h-full items-center justify-center p-4 md:p-8">
+            <div
+              className="flex flex-col md:flex-row items-stretch w-fit max-w-[90vw] gap-0"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Photo */}
+              <img
+                src={lightbox.src}
+                alt={lightbox.alt}
+                className="block w-auto max-w-[90vw] md:max-w-[75vw]"
+              />
 
             {/* Metadata panel */}
             {lightbox.meta && Object.values(lightbox.meta).some(Boolean) && (
@@ -284,6 +285,7 @@ export const Photography = () => {
                 )}
               </div>
             )}
+            </div>
           </div>
         </div>
       )}
