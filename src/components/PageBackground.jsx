@@ -1,7 +1,7 @@
 export const PageBackground = () => (
   <div className="fixed inset-0 -z-10 pointer-events-none">
     <img
-      src="/hero-bg.png"
+      src="/assets/hero-bg.png"
       alt=""
       className="w-full h-full object-cover opacity-80"
     />
