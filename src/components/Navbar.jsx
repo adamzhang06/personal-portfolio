@@ -24,10 +24,10 @@ function prefetchPhotos() {
 }
 
 const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/#projects", label: "Projects" },
-  { href: "/#experience", label: "Experience" },
-  { href: "/#skills", label: "Skills" },
+  { href: "/", label: "Home", sectionId: null },
+  { href: "/#projects", label: "Projects", sectionId: "projects" },
+  { href: "/#experience", label: "Experience", sectionId: "experience" },
+  { href: "/#skills", label: "Skills", sectionId: "skills" },
 ];
 
 const itemBase = "px-4 py-2 text-sm rounded-full transition-colors";
@@ -47,11 +47,59 @@ export const Navbar = () => {
   const [photoNavState, setPhotoNavState] = useState(isOnPhotography ? "visible" : "idle-hidden");
   const prevIsOnPhotography = useRef(isOnPhotography);
 
+  const [activeLink, setActiveLink] = useState("/");
+  const [activeYear, setActiveYear] = useState(null);
+
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Track active nav link by section pixel position (home page only)
+  useEffect(() => {
+    if (pathname !== "/") {
+      setActiveLink(null);
+      return;
+    }
+    const compute = () => {
+      const threshold = window.innerHeight * 0.40;
+      let active = "/";
+      for (const link of navLinks) {
+        if (!link.sectionId) continue;
+        const el = document.getElementById(link.sectionId);
+        if (!el) continue;
+        if (el.getBoundingClientRect().top < threshold) active = link.href;
+      }
+      const contactEl = document.getElementById("contact");
+      if (contactEl && contactEl.getBoundingClientRect().top < threshold) active = null;
+      setActiveLink(active);
+    };
+    compute();
+    window.addEventListener("scroll", compute, { passive: true });
+    return () => window.removeEventListener("scroll", compute);
+  }, [pathname]);
+
+  // Track active year button by year-label pixel position (gallery page only)
+  useEffect(() => {
+    if (!isOnGallery) {
+      setActiveYear(null);
+      return;
+    }
+    const compute = () => {
+      const threshold = window.innerHeight * 0.5;
+      let active = null;
+      for (const year of PHOTO_YEARS) {
+        const el = document.getElementById(`year-${year}`);
+        if (!el) continue;
+        if (el.getBoundingClientRect().top < threshold) active = year;
+      }
+      setActiveYear(active);
+    };
+    compute();
+    window.addEventListener("scroll", compute, { passive: true });
+    return () => window.removeEventListener("scroll", compute);
+  }, [isOnGallery]);
 
   // Only animate when isOnPhotography actually changes — guards against
   // Strict Mode double-invoke and hard reloads firing a spurious exit.
@@ -94,9 +142,9 @@ export const Navbar = () => {
 
         {/* Left: logo + photo sub-nav */}
         <div className="flex items-center">
-          <Link to="/" className="text-xl font-bold tracking-tight hover:text-primary shrink-0">
+          <a href="/" className="text-xl font-bold tracking-tight hover:text-primary shrink-0">
             AYZ<span className="text-primary">.</span>
-          </Link>
+          </a>
 
           {/* Photo pills — state machine drives entry/exit animations */}
           <div
@@ -141,7 +189,7 @@ export const Navbar = () => {
                     const top = el.getBoundingClientRect().top + window.scrollY - 88;
                     window.scrollTo({ top, behavior: "smooth" });
                   }}
-                  className={`${itemBase} ${itemInactive}`}
+                  className={`${itemBase} ${activeYear === year ? itemActive : itemInactive}`}
                 >
                   {year}
                 </button>
@@ -161,7 +209,7 @@ export const Navbar = () => {
                 to={link.href}
                 key={index}
                 onClick={handleHomeLink(link.href)}
-                className={`${itemBase} ${itemInactive}`}
+                className={`${itemBase} ${activeLink === link.href ? itemActive : itemInactive}`}
               >
                 {link.label}
               </Link>
@@ -190,9 +238,9 @@ export const Navbar = () => {
 
       {/* Mobile nav row */}
       <div className="md:hidden container mx-auto px-6 flex items-center justify-between">
-        <Link to="/" className="text-xl font-bold tracking-tight hover:text-primary">
+        <a href="/" className="text-xl font-bold tracking-tight hover:text-primary">
           AYZ<span className="text-primary">.</span>
-        </Link>
+        </a>
         <button
           className="p-2 text-foreground cursor-pointer"
           onClick={() => setIsMobileMenuOpen((prev) => !prev)}

@@ -30,22 +30,51 @@ Read the provided image and pull out:
 ```bash
 ls public/photos/gallery/{year}/
 ```
-The file must be present before continuing.
+The file must be present in the **uncompressed** folder before continuing.
 
-### 3. Regenerate the manifest — REQUIRED, do not skip
+### 3. Compress the photo — REQUIRED, do not skip
+Compress the photo into the `gallery-compressed` folder using sharp. The output is always `.jpg` regardless of original extension:
+
+```bash
+node --input-type=module << 'EOF'
+import sharp from "sharp";
+import { mkdirSync, statSync } from "node:fs";
+
+const src = "public/photos/gallery/{year}/{filename}";
+const out = "public/photos/gallery-compressed/{year}/{basename}.jpg";
+
+mkdirSync("public/photos/gallery-compressed/{year}", { recursive: true });
+
+await sharp(src)
+  .rotate()
+  .resize({ width: 2400, withoutEnlargement: true })
+  .jpeg({ quality: 82, mozjpeg: true })
+  .toFile(out);
+
+const before = statSync(src).size;
+const after = statSync(out).size;
+console.log(`${(before/1e6).toFixed(1)} MB → ${(after/1e6).toFixed(1)} MB (${Math.round((1 - after/before)*100)}% smaller)`);
+EOF
+```
+
+Replace `{year}`, `{filename}` (original name with original extension), and `{basename}` (filename without extension).
+
+Confirm the compressed file was created before proceeding.
+
+### 4. Regenerate the manifest — REQUIRED, do not skip
 Run this before reading dimensions from the manifest JSON:
 ```bash
 npm run generate-manifest
 ```
-This must be run even when adding multiple photos in one session. Without it, new photos will be missing from the manifest and the layout algorithm will fall back to a default rowSpan.
+This must be run even when adding multiple photos in one session. Without it, the new compressed photo will be missing from the manifest and the layout algorithm will fall back to a default rowSpan. The manifest generator walks both `gallery/` and `gallery-compressed/` automatically.
 
-### 4. Read Photography.jsx
+### 5. Read Photography.jsx
 ```
 src/pages/Photography.jsx
 ```
 Find the year group matching the photo's year. Note the last `rowStart` + approximate `rowSpan` of the final photo in that year to determine where to place the new one.
 
-### 5. Compute default placement
+### 6. Compute default placement
 - **colSpan**: `24` for landscape, `16` for portrait (safe centered default)
 - **colStart**: `9` for landscape (centers a 24-span in 40 cols), `13` for portrait (centers a 16-span)
 - **rowStart**: last photo's `rowStart` + estimated `rowSpan` + `2` (gap)
@@ -60,7 +89,7 @@ If the year group has no photos yet, use `rowStart: 1`.
 
 Show the proposed `colStart`, `colSpan`, `rowStart` and ask: *"Does this placement look right, or would you like to adjust?"*
 
-### 6. Ask for missing metadata
+### 7. Ask for missing metadata
 After extracting what's available from the image, check for gaps and ask the user in a single message before writing anything. Fields to check:
 
 - **alt** text (descriptive title for the photo) — always ask, it's never in the file info
@@ -71,7 +100,7 @@ Group all questions into one ask: *"I need a couple things before I add this —
 
 Don't ask for things already clearly extractable (camera, settings, date, dimensions).
 
-### 7. Build the meta object
+### 8. Build the meta object
 ```js
 meta: {
   camera: "Nikon Z5II",
@@ -85,12 +114,12 @@ meta: {
 - Omit `location` field entirely if not available
 - For film cameras, use `film: "Kodak Gold 200"` instead of `settings`
 
-### 8. Insert into Photography.jsx
-Add the new photo entry at the end of the matching year group's `photos` array. Use the multi-line meta format:
+### 9. Insert into Photography.jsx
+Add the new photo entry at the end of the matching year group's `photos` array. The `src` always points to the **compressed** folder:
 
 ```js
 {
-  src: "/photos/gallery/2026/AYZ_3399.jpg",  // portrait
+  src: "/photos/gallery-compressed/2026/AYZ_3399.jpg",  // portrait
   alt: "",
   colStart: 13, colSpan: 16, rowStart: 45,
   meta: {
@@ -109,3 +138,4 @@ Leave `alt: ""` — the user fills it in later.
 - The grid is 40 columns; `colStart + colSpan` must not exceed 41
 - `rowStart` is **relative to the year's photo area**, not the absolute grid row
 - Placement is a rough default — the user will adjust `colStart`, `colSpan`, and `rowStart` manually afterward
+- The uncompressed original in `public/photos/gallery/` is preserved — never delete it
