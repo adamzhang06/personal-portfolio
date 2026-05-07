@@ -134,6 +134,18 @@
 
  
   
+  @keyframes slide-in-left {
+    from { opacity: 0; transform: translateX(-12px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes slide-out-right {
+    from { opacity: 1; transform: translateX(0); }
+    to   { opacity: 0; transform: translateX(12px); }
+  }
+
+  .animate-slide-in-left  { animation: slide-in-left  0.35s ease-out both; }
+  .animate-slide-out-right { animation: slide-out-right 0.2s  ease-in  both; }
+
   .animate-fade-in {
     animation: fade-in 0.8s ease-out both;
   }

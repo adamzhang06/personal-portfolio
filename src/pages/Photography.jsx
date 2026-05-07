@@ -1,7 +1,6 @@
 import { useState, useEffect, useLayoutEffect, useRef, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, X } from "lucide-react";
-import { PhotographySubNav } from "@/components/PhotographySubNav";
 import manifest from "@/data/photo-manifest.json";
 
 // ─── Grid system ─────────────────────────────────────────────────────────────
@@ -9,7 +8,6 @@ const COLS = 40;
 const GAP_PX = 12;
 const BLOCK_GAP = 2;    // rows of breathing room after a year's photos / after a divider
 const DIVIDER_ROWS = 2; // grid rows consumed by a year divider
-const NAVBAR_H = 80;
 
 // ─── Layout algorithm ─────────────────────────────────────────────────────────
 // yearGroups is processed in order (newest first).
@@ -446,11 +444,10 @@ export const Photography = () => {
   const [loadedImages, setLoadedImages] = useState(new Set());
   const gridRef = useRef(null);
 
-  const { cells: layout, yearMarkers } = useMemo(
+  const { cells: layout } = useMemo(
     () => computeLayout(yearGroups, rowUnit),
     [rowUnit]
   );
-  const years = yearMarkers.map((m) => m.year);
 
   const markLoaded = (idx) =>
     setLoadedImages((prev) => new Set([...prev, idx]));
@@ -480,14 +477,6 @@ export const Photography = () => {
     };
   }, [lightbox]);
 
-  const scrollToYear = (year) => {
-    const marker = yearMarkers.find((m) => m.year === year);
-    if (!marker || !gridRef.current) return;
-    const gridTop = gridRef.current.getBoundingClientRect().top + window.scrollY;
-    const rowY = (marker.rowStart - 1) * (rowUnit + GAP_PX);
-    window.scrollTo({ top: gridTop + rowY - NAVBAR_H, behavior: "smooth" });
-  };
-
   return (
     <div className="min-h-screen pt-24 pb-16">
       <div className="container mx-auto px-6">
@@ -513,21 +502,6 @@ export const Photography = () => {
           <p className="text-muted-foreground max-w-lg animate-fade-in animation-delay-300">
             A collection of moments I've captured. Digital and film.
           </p>
-          <PhotographySubNav />
-        </div>
-
-        {/* Year pills */}
-        <div className="flex items-center gap-3 mb-4 animate-fade-in animation-delay-400">
-          <span className="text-[10px] text-muted-foreground uppercase tracking-widest">Jump to</span>
-          {years.map((year) => (
-            <button
-              key={year}
-              onClick={() => scrollToYear(year)}
-              className="text-[11px] font-mono text-muted-foreground hover:text-foreground px-2 py-0.5 border border-border hover:border-foreground/30 transition-colors"
-            >
-              {year}
-            </button>
-          ))}
         </div>
 
         {/* White canvas */}
@@ -546,6 +520,7 @@ export const Photography = () => {
                 return (
                   <div
                     key={`divider-${cell.year}`}
+                    id={`year-${cell.year}`}
                     style={{ gridColumn: cell.gridColumn, gridRow: cell.gridRow }}
                     className="flex items-center gap-4"
                   >
