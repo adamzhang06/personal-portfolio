@@ -1,7 +1,6 @@
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, X } from "lucide-react";
-import { PhotographySubNav } from "@/components/PhotographySubNav";
 import manifest from "@/data/photo-manifest.json";
 
 // ─── Grid system (shared with Gallery) ───────────────────────────────────────
@@ -120,7 +119,6 @@ export const Portraits = () => {
               get in touch.
             </button>
           </p>
-          <PhotographySubNav />
         </div>
 
         {/* Sessions */}
