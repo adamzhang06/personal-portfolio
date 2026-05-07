@@ -20,7 +20,9 @@ let photoPrefetchDone = false;
 function prefetchPhotos() {
   if (photoPrefetchDone) return;
   photoPrefetchDone = true;
-  PHOTO_SRCS.forEach((src) => { new Image().src = src; });
+  PHOTO_SRCS.forEach((src) => {
+    new Image().src = src;
+  });
 }
 
 const navLinks = [
@@ -32,7 +34,8 @@ const navLinks = [
 
 const itemBase = "px-4 py-2 text-sm rounded-full transition-colors";
 const itemActive = "text-foreground font-medium bg-primary/20";
-const itemInactive = "text-muted-foreground hover:text-foreground hover:bg-primary/15";
+const itemInactive =
+  "text-muted-foreground hover:text-foreground hover:bg-primary/15";
 
 export const Navbar = () => {
   const { pathname } = useLocation();
@@ -44,12 +47,16 @@ export const Navbar = () => {
   const isOnGallery = pathname === "/photography";
 
   // 'idle-hidden' | 'entering' | 'visible' | 'exiting'
-  const [photoNavState, setPhotoNavState] = useState(isOnPhotography ? "visible" : "idle-hidden");
+  const [photoNavState, setPhotoNavState] = useState(
+    isOnPhotography ? "visible" : "idle-hidden",
+  );
   const prevIsOnPhotography = useRef(isOnPhotography);
 
   const [activeLink, setActiveLink] = useState("/");
   const [activeYear, setActiveYear] = useState(null);
   const [isYearDropdownOpen, setIsYearDropdownOpen] = useState(false);
+  const [isDesktopYearDropdownOpen, setIsDesktopYearDropdownOpen] =
+    useState(false);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -64,7 +71,7 @@ export const Navbar = () => {
       return;
     }
     const compute = () => {
-      const threshold = window.innerHeight * 0.40;
+      const threshold = window.innerHeight * 0.4;
       let active = "/";
       for (const link of navLinks) {
         if (!link.sectionId) continue;
@@ -73,7 +80,8 @@ export const Navbar = () => {
         if (el.getBoundingClientRect().top < threshold) active = link.href;
       }
       const contactEl = document.getElementById("contact");
-      if (contactEl && contactEl.getBoundingClientRect().top < threshold) active = null;
+      if (contactEl && contactEl.getBoundingClientRect().top < threshold)
+        active = null;
       setActiveLink(active);
     };
     compute();
@@ -87,12 +95,11 @@ export const Navbar = () => {
       setActiveYear(null);
       return;
     }
-    const yearElId = (year) => window.innerWidth < 768 ? `year-m-${year}` : `year-${year}`;
     const compute = () => {
       const threshold = window.innerHeight * 0.5;
       let active = null;
       for (const year of PHOTO_YEARS) {
-        const el = document.getElementById(yearElId(year));
+        const el = document.getElementById(`year-${year}`);
         if (!el) continue;
         if (el.getBoundingClientRect().top < threshold) active = year;
       }
@@ -108,15 +115,15 @@ export const Navbar = () => {
   useEffect(() => {
     if (isOnPhotography === prevIsOnPhotography.current) return;
     prevIsOnPhotography.current = isOnPhotography;
-    let t;
     if (isOnPhotography) {
       setPhotoNavState("entering");
-      t = setTimeout(() => setPhotoNavState("visible"), 350);
+      const t = setTimeout(() => setPhotoNavState("visible"), 350);
+      return () => clearTimeout(t);
     } else {
       setPhotoNavState("exiting");
-      t = setTimeout(() => setPhotoNavState("idle-hidden"), 200);
+      const t = setTimeout(() => setPhotoNavState("idle-hidden"), 300);
+      return () => clearTimeout(t);
     }
-    return () => clearTimeout(t);
   }, [isOnPhotography]);
 
   // Client-side navigation for home-page anchor links so the exit animation plays
@@ -125,7 +132,14 @@ export const Navbar = () => {
     const hash = href.split("#")[1];
     if (pathname !== "/") {
       navigate("/");
-      if (hash) setTimeout(() => document.getElementById(hash)?.scrollIntoView({ behavior: "smooth" }), 80);
+      if (hash)
+        setTimeout(
+          () =>
+            document
+              .getElementById(hash)
+              ?.scrollIntoView({ behavior: "smooth" }),
+          80,
+        );
     } else if (hash) {
       document.getElementById(hash)?.scrollIntoView({ behavior: "smooth" });
     } else {
@@ -139,26 +153,33 @@ export const Navbar = () => {
         isScrolled ? "glass-strong py-3" : "bg-transparent py-5"
       } z-50`}
     >
-      {/* Desktop nav — relative so center pill can be absolutely placed */}
-      <nav className="container mx-auto px-6 relative hidden md:flex items-center">
-
-        {/* Left: logo + photo sub-nav */}
-        <div className="flex items-center">
-          <a href="/" className="text-xl font-bold tracking-tight hover:text-primary shrink-0">
+      {/* Desktop nav (xl+) — flex-1 on both sides keeps center pill geometrically centered */}
+      <nav className="container mx-auto px-6 hidden xl:flex items-center gap-4">
+        {/* Left: flex-1 so center pill stays centered */}
+        <div className="flex items-center flex-1 min-w-0">
+          <a
+            href="/"
+            className="text-xl font-bold tracking-tight hover:text-primary shrink-0"
+          >
             AYZ<span className="text-primary">.</span>
           </a>
 
-          {/* Photo pills — state machine drives entry/exit animations */}
+          {/* Gallery/Portraits — outer collapses space, inner slides in/out */}
           <div
             className={[
-              "flex items-center gap-2 ml-8 overflow-hidden",
-              photoNavState === "idle-hidden" ? "max-w-0 pointer-events-none" : "max-w-[700px]",
-              photoNavState === "entering"    ? "animate-slide-in-left"   : "",
-              photoNavState === "exiting"     ? "animate-slide-out-right pointer-events-none" : "",
+              "flex items-center ml-8 overflow-hidden transition-[max-width] duration-300",
+              photoNavState === "idle-hidden" || photoNavState === "exiting"
+                ? "max-w-0 pointer-events-none"
+                : "max-w-[260px]",
             ].join(" ")}
           >
-            {/* Gallery / Portraits pill */}
-            <div className="glass rounded-full px-2 py-1 flex items-center gap-1 shrink-0">
+            <div
+              className={[
+                "glass rounded-full px-2 py-1 flex items-center gap-1 shrink-0",
+                photoNavState === "entering" ? "animate-slide-in-left" : "",
+                photoNavState === "exiting" ? "animate-slide-out-right" : "",
+              ].join(" ")}
+            >
               <Link
                 to="/photography"
                 className={`${itemBase} ${isOnGallery ? itemActive : itemInactive}`}
@@ -172,141 +193,186 @@ export const Navbar = () => {
                 Portraits
               </Link>
             </div>
+          </div>
 
-            {/* Year jump pill — opacity/translate only; stays full-width so both pages keep
-                the same left-group width and the center pill position stays consistent */}
-            <div
-              className={`glass rounded-full px-2 py-1 flex items-center gap-1 shrink-0 transition-all duration-300 ${
-                isOnGallery
-                  ? "opacity-100 translate-x-0"
-                  : "opacity-0 -translate-x-2 pointer-events-none"
-              }`}
-            >
-              {PHOTO_YEARS.map((year) => (
+          {/* Year dropdown — outside overflow-hidden so the panel can escape clipping */}
+          {photoNavState !== "idle-hidden" && isOnGallery && (
+            <div className="relative ml-2 shrink-0">
+              <div className="glass rounded-full px-2 py-1 flex items-center">
                 <button
-                  key={year}
-                  onClick={() => {
-                    const el = document.getElementById(`year-${year}`);
-                    if (!el) return;
-                    const top = el.getBoundingClientRect().top + window.scrollY - 88;
-                    window.scrollTo({ top, behavior: "smooth" });
-                  }}
-                  className={`${itemBase} ${activeYear === year ? itemActive : itemInactive}`}
+                  onClick={() => setIsDesktopYearDropdownOpen((p) => !p)}
+                  className={`${itemBase} flex items-center gap-1.5`}
                 >
-                  {year}
+                  {activeYear ?? PHOTO_YEARS[0]}
+                  <span
+                    className={`transition-transform duration-200 text-[10px] ${isDesktopYearDropdownOpen ? "rotate-180" : ""}`}
+                  >
+                    ▾
+                  </span>
                 </button>
-              ))}
+              </div>
+              {isDesktopYearDropdownOpen && (
+                <div className="absolute top-full mt-1 left-0 glass-strong rounded-xl py-1 z-50 min-w-[80px] animate-fade-in">
+                  {PHOTO_YEARS.map((year) => (
+                    <button
+                      key={year}
+                      onClick={() => {
+                        const el = document.getElementById(`year-${year}`);
+                        if (el) {
+                          const top =
+                            el.getBoundingClientRect().top +
+                            window.scrollY -
+                            88;
+                          window.scrollTo({ top, behavior: "smooth" });
+                        }
+                        setIsDesktopYearDropdownOpen(false);
+                      }}
+                      className={`w-full text-left px-4 py-2 text-sm transition-colors ${activeYear === year ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"}`}
+                    >
+                      {year}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-          </div>
+          )}
         </div>
 
-        {/* Center: main nav pill — absolutely centered, shifts right on photography pages */}
+        {/* Center: nav pill — always visible; slides right on photography pages */}
         <div
-          className="absolute left-1/2 flex items-center gap-1 transition-[transform] duration-300 ease-in-out"
-          style={{ transform: isOnPhotography ? "translateX(calc(-50% + 300px))" : "translateX(-50%)" }}
+          className={[
+            "glass rounded-full px-2 py-1 flex items-center gap-1 shrink-0",
+            "transition-transform duration-300",
+            isOnPhotography ? "translate-x-24" : "",
+          ].join(" ")}
         >
-          <div className="glass rounded-full px-2 py-1 flex items-center gap-1">
-            {navLinks.map((link, index) => (
-              <Link
-                to={link.href}
-                key={index}
-                onClick={handleHomeLink(link.href)}
-                className={`${itemBase} ${activeLink === link.href ? itemActive : itemInactive}`}
-              >
-                {link.label}
-              </Link>
-            ))}
+          {navLinks.map((link, index) => (
             <Link
-              to="/photography"
-              onMouseEnter={prefetchPhotos}
-              onClick={(e) => {
-                if (pathname === "/photography") {
-                  e.preventDefault();
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }
-              }}
-              className={`${itemBase} ${isOnPhotography ? itemActive : itemInactive}`}
+              to={link.href}
+              key={index}
+              onClick={handleHomeLink(link.href)}
+              className={`${itemBase} ${activeLink === link.href ? itemActive : itemInactive}`}
             >
-              Photography
+              {link.label}
             </Link>
-          </div>
+          ))}
+          <Link
+            to="/photography"
+            onMouseEnter={prefetchPhotos}
+            onClick={(e) => {
+              if (pathname === "/photography") {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }
+            }}
+            className={`${itemBase} ${isOnPhotography ? itemActive : itemInactive}`}
+          >
+            Photography
+          </Link>
         </div>
 
-        {/* Right: CTA — pinned to the right */}
-        <div className="ml-auto">
-          <Button size="sm" href="/#contact" onClick={handleHomeLink("/#contact")}>Contact Me</Button>
+        {/* Right: Contact Me — flex-1 mirrors left so pill stays centered */}
+        <div className="flex items-center justify-end flex-1">
+          <Button
+            size="sm"
+            href="/#contact"
+            onClick={handleHomeLink("/#contact")}
+          >
+            Contact Me
+          </Button>
         </div>
       </nav>
 
-      {/* Mobile nav row */}
-      <div className="md:hidden container mx-auto px-4 flex items-center gap-1.5">
-        <a href="/" className="text-xl font-bold tracking-tight hover:text-primary py-3 pr-1 shrink-0">
+      {/* Mobile/tablet nav row (below xl) */}
+      <div className="xl:hidden container mx-auto px-4 flex items-center gap-1.5">
+        <a
+          href="/"
+          className="text-xl font-bold tracking-tight hover:text-primary py-3 pr-1 shrink-0"
+        >
           AYZ<span className="text-primary">.</span>
         </a>
 
-        {/* Gallery/Portraits pill — overflow-hidden needed for slide animation */}
-        <div
-          className={[
-            "overflow-hidden transition-all duration-300 shrink-0",
-            photoNavState === "idle-hidden" ? "max-w-0 opacity-0 pointer-events-none" : "max-w-[130px] opacity-100",
-            photoNavState === "entering" ? "animate-slide-in-left" : "",
-            photoNavState === "exiting" ? "animate-slide-out-right pointer-events-none" : "",
-          ].join(" ")}
-        >
-          <div className="glass rounded-full px-1 py-0.5 flex items-center gap-0.5 text-[11px] whitespace-nowrap">
-            <Link
-              to="/photography"
-              className={`px-2 py-0.5 rounded-full transition-colors ${isOnGallery ? itemActive : itemInactive}`}
+        {/* Gallery/Portraits pill + Year dropdown — wrapped together so they shrink as a unit */}
+        <div className="flex items-center gap-1.5 min-w-0">
+          {/* Gallery/Portraits pill — outer collapses space, inner slides in/out */}
+          <div
+            className={[
+              "overflow-hidden transition-[max-width,opacity] duration-300",
+              photoNavState === "idle-hidden" || photoNavState === "exiting"
+                ? "max-w-0 opacity-0 pointer-events-none"
+                : "max-w-[130px] opacity-100",
+            ].join(" ")}
+          >
+            <div
+              className={[
+                "glass rounded-full px-1 py-0.5 flex items-center gap-0.5 text-[11px] whitespace-nowrap shrink-0",
+                photoNavState === "entering" ? "animate-slide-in-left" : "",
+                photoNavState === "exiting" ? "animate-slide-out-right" : "",
+              ].join(" ")}
             >
-              Gallery
-            </Link>
-            <Link
-              to="/photography/portraits"
-              className={`px-2 py-0.5 rounded-full transition-colors ${!isOnGallery ? itemActive : itemInactive}`}
-            >
-              Portraits
-            </Link>
+              <Link
+                to="/photography"
+                className={`px-2 py-0.5 rounded-full transition-colors ${isOnGallery ? itemActive : itemInactive}`}
+              >
+                Gallery
+              </Link>
+              <Link
+                to="/photography/portraits"
+                className={`px-2 py-0.5 rounded-full transition-colors ${!isOnGallery ? itemActive : itemInactive}`}
+              >
+                Portraits
+              </Link>
+            </div>
           </div>
-        </div>
 
-        {/* Year dropdown — outside overflow-hidden so the dropdown panel can escape */}
-        {isOnGallery && photoNavState !== "idle-hidden" && (
-          <div className="relative shrink-0">
-            <button
-              onClick={() => setIsYearDropdownOpen((p) => !p)}
-              className={`glass rounded-full px-2 py-0.5 text-[11px] flex items-center gap-0.5 transition-colors whitespace-nowrap ${isYearDropdownOpen ? "text-foreground" : "text-muted-foreground"}`}
-            >
-              {activeYear ?? PHOTO_YEARS[0]}
-              <span className={`transition-transform duration-200 text-[9px] ${isYearDropdownOpen ? "rotate-180" : ""}`}>▾</span>
-            </button>
-            {isYearDropdownOpen && (
-              <div className="absolute top-full mt-1 left-0 glass-strong rounded-xl py-1 z-[100] min-w-[70px] animate-fade-in">
-                {PHOTO_YEARS.map((year) => (
-                  <button
-                    key={year}
-                    onClick={() => {
-                      const el = document.getElementById(`year-m-${year}`);
-                      if (el) {
-                        const top = el.getBoundingClientRect().top + window.scrollY - 88;
-                        window.scrollTo({ top, behavior: "smooth" });
-                      }
-                      setIsYearDropdownOpen(false);
-                    }}
-                    className={`w-full text-left px-3 py-2 text-xs transition-colors ${activeYear === year ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"}`}
-                  >
-                    {year}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+          {/* Year dropdown — outside overflow-hidden so the dropdown panel can escape */}
+          {isOnGallery && photoNavState !== "idle-hidden" && (
+            <div className="relative shrink-0">
+              <button
+                onClick={() => setIsYearDropdownOpen((p) => !p)}
+                className={`glass rounded-full px-2 py-0.5 text-[11px] flex items-center gap-0.5 transition-colors whitespace-nowrap ${isYearDropdownOpen ? "text-foreground" : "text-muted-foreground"}`}
+              >
+                {activeYear ?? PHOTO_YEARS[0]}
+                <span
+                  className={`transition-transform duration-200 text-[9px] ${isYearDropdownOpen ? "rotate-180" : ""}`}
+                >
+                  ▾
+                </span>
+              </button>
+              {isYearDropdownOpen && (
+                <div className="absolute top-full mt-1 left-0 glass-strong rounded-xl py-1 z-[100] min-w-[70px] animate-fade-in">
+                  {PHOTO_YEARS.map((year) => (
+                    <button
+                      key={year}
+                      onClick={() => {
+                        const el = document.getElementById(`year-${year}`);
+                        if (el) {
+                          const top =
+                            el.getBoundingClientRect().top +
+                            window.scrollY -
+                            88;
+                          window.scrollTo({ top, behavior: "smooth" });
+                        }
+                        setIsYearDropdownOpen(false);
+                      }}
+                      className={`w-full text-left px-3 py-2 text-xs transition-colors ${activeYear === year ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"}`}
+                    >
+                      {year}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
         {/* Right icons */}
         <div className="flex items-center ml-auto">
           <Link
             to="/"
-            onClick={(e) => { handleHomeLink("/")(e); }}
+            onClick={(e) => {
+              handleHomeLink("/")(e);
+            }}
             className="p-1.5 text-muted-foreground hover:text-foreground transition-colors"
             aria-label="Home"
           >
@@ -335,21 +401,34 @@ export const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile/tablet dropdown menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden glass-strong animate-fade-in">
+        <div className="xl:hidden glass-strong animate-fade-in">
           <div className="container mx-auto px-6 py-6 flex flex-col gap-4">
-            {navLinks.filter(link => link.href !== "/").map((link, index) => (
-              <Link
-                to={link.href}
-                key={index}
-                onClick={(e) => { handleHomeLink(link.href)(e); setIsMobileMenuOpen(false); }}
-                className="text-lg text-muted-foreground hover:text-foreground py-2"
-              >
-                {link.label}
-              </Link>
-            ))}
-            <Button href="/#contact" onClick={(e) => { handleHomeLink("/#contact")(e); setIsMobileMenuOpen(false); }}>Contact Me</Button>
+            {navLinks
+              .filter((link) => link.href !== "/")
+              .map((link, index) => (
+                <Link
+                  to={link.href}
+                  key={index}
+                  onClick={(e) => {
+                    handleHomeLink(link.href)(e);
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="text-lg text-muted-foreground hover:text-foreground py-2"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            <Button
+              href="/#contact"
+              onClick={(e) => {
+                handleHomeLink("/#contact")(e);
+                setIsMobileMenuOpen(false);
+              }}
+            >
+              Contact Me
+            </Button>
           </div>
         </div>
       )}

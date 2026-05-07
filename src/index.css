@@ -146,6 +146,17 @@
   .animate-slide-in-left  { animation: slide-in-left  0.35s ease-out both; }
   .animate-slide-out-right { animation: slide-out-right 0.2s  ease-in  both; }
 
+  @keyframes nav-enter {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes nav-exit {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(20px); }
+  }
+  .animate-nav-enter { animation: nav-enter 0.35s ease-out both; }
+  .animate-nav-exit  { animation: nav-exit  0.3s  ease-in  both; }
+
   .animate-fade-in {
     animation: fade-in 0.8s ease-out both;
   }
