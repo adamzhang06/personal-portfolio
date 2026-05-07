@@ -238,79 +238,78 @@ export const Navbar = () => {
       </nav>
 
       {/* Mobile nav row */}
-      <div className="md:hidden container mx-auto px-6 flex items-center gap-2">
-        <a href="/" className="text-xl font-bold tracking-tight hover:text-primary py-3 pr-2 shrink-0">
+      <div className="md:hidden container mx-auto px-4 flex items-center gap-1.5">
+        <a href="/" className="text-xl font-bold tracking-tight hover:text-primary py-3 pr-1 shrink-0">
           AYZ<span className="text-primary">.</span>
         </a>
 
-        {/* Photo nav pills — slide in/out matching desktop state machine */}
+        {/* Gallery/Portraits pill — overflow-hidden needed for slide animation */}
         <div
           className={[
-            "flex items-center gap-1 overflow-hidden transition-all duration-300",
-            photoNavState === "idle-hidden" ? "max-w-0 opacity-0 pointer-events-none" : "max-w-[220px] opacity-100",
+            "overflow-hidden transition-all duration-300 shrink-0",
+            photoNavState === "idle-hidden" ? "max-w-0 opacity-0 pointer-events-none" : "max-w-[130px] opacity-100",
             photoNavState === "entering" ? "animate-slide-in-left" : "",
             photoNavState === "exiting" ? "animate-slide-out-right pointer-events-none" : "",
           ].join(" ")}
         >
-          {/* Gallery / Portraits toggle */}
-          <div className="glass rounded-full px-1.5 py-0.5 flex items-center gap-0.5 shrink-0 text-xs">
+          <div className="glass rounded-full px-1 py-0.5 flex items-center gap-0.5 text-[11px] whitespace-nowrap">
             <Link
               to="/photography"
-              className={`px-2.5 py-1 rounded-full transition-colors ${isOnGallery ? itemActive : itemInactive}`}
+              className={`px-2 py-0.5 rounded-full transition-colors ${isOnGallery ? itemActive : itemInactive}`}
             >
               Gallery
             </Link>
             <Link
               to="/photography/portraits"
-              className={`px-2.5 py-1 rounded-full transition-colors ${!isOnGallery ? itemActive : itemInactive}`}
+              className={`px-2 py-0.5 rounded-full transition-colors ${!isOnGallery ? itemActive : itemInactive}`}
             >
               Portraits
             </Link>
           </div>
-
-          {/* Year dropdown — gallery only */}
-          {isOnGallery && (
-            <div className="relative shrink-0">
-              <button
-                onClick={() => setIsYearDropdownOpen((p) => !p)}
-                className={`glass rounded-full px-2.5 py-1 text-xs flex items-center gap-1 transition-colors ${isYearDropdownOpen ? "text-foreground" : "text-muted-foreground"}`}
-              >
-                {activeYear ?? PHOTO_YEARS[0]}
-                <span className={`transition-transform duration-200 ${isYearDropdownOpen ? "rotate-180" : ""}`}>▾</span>
-              </button>
-              {isYearDropdownOpen && (
-                <div className="absolute top-full mt-1 left-0 glass-strong rounded-xl py-1 z-50 min-w-[80px] animate-fade-in">
-                  {PHOTO_YEARS.map((year) => (
-                    <button
-                      key={year}
-                      onClick={() => {
-                        const el = document.getElementById(`year-${year}`);
-                        if (el) {
-                          const top = el.getBoundingClientRect().top + window.scrollY - 88;
-                          window.scrollTo({ top, behavior: "smooth" });
-                        }
-                        setIsYearDropdownOpen(false);
-                      }}
-                      className={`w-full text-left px-4 py-2 text-xs transition-colors ${activeYear === year ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"}`}
-                    >
-                      {year}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
         </div>
 
+        {/* Year dropdown — outside overflow-hidden so the dropdown panel can escape */}
+        {isOnGallery && photoNavState !== "idle-hidden" && (
+          <div className="relative shrink-0">
+            <button
+              onClick={() => setIsYearDropdownOpen((p) => !p)}
+              className={`glass rounded-full px-2 py-0.5 text-[11px] flex items-center gap-0.5 transition-colors whitespace-nowrap ${isYearDropdownOpen ? "text-foreground" : "text-muted-foreground"}`}
+            >
+              {activeYear ?? PHOTO_YEARS[0]}
+              <span className={`transition-transform duration-200 text-[9px] ${isYearDropdownOpen ? "rotate-180" : ""}`}>▾</span>
+            </button>
+            {isYearDropdownOpen && (
+              <div className="absolute top-full mt-1 left-0 glass-strong rounded-xl py-1 z-[100] min-w-[70px] animate-fade-in">
+                {PHOTO_YEARS.map((year) => (
+                  <button
+                    key={year}
+                    onClick={() => {
+                      const el = document.getElementById(`year-${year}`);
+                      if (el) {
+                        const top = el.getBoundingClientRect().top + window.scrollY - 88;
+                        window.scrollTo({ top, behavior: "smooth" });
+                      }
+                      setIsYearDropdownOpen(false);
+                    }}
+                    className={`w-full text-left px-3 py-2 text-xs transition-colors ${activeYear === year ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"}`}
+                  >
+                    {year}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Right icons */}
-        <div className="flex items-center gap-1 ml-auto">
+        <div className="flex items-center ml-auto">
           <Link
             to="/"
             onClick={(e) => { handleHomeLink("/")(e); }}
-            className="p-2 text-muted-foreground hover:text-foreground transition-colors"
+            className="p-1.5 text-muted-foreground hover:text-foreground transition-colors"
             aria-label="Home"
           >
-            <Home size={20} />
+            <Home size={18} />
           </Link>
           <Link
             to="/photography"
@@ -321,16 +320,16 @@ export const Navbar = () => {
                 window.scrollTo({ top: 0, behavior: "smooth" });
               }
             }}
-            className={`p-2 transition-colors ${isOnPhotography ? "text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+            className={`p-1.5 transition-colors ${isOnPhotography ? "text-foreground" : "text-muted-foreground hover:text-foreground"}`}
             aria-label="Photography"
           >
-            <Camera size={20} />
+            <Camera size={18} />
           </Link>
           <button
-            className="p-2 text-foreground cursor-pointer"
+            className="p-1.5 text-foreground cursor-pointer"
             onClick={() => setIsMobileMenuOpen((prev) => !prev)}
           >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </div>

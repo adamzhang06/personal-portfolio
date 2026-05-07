@@ -1,5 +1,5 @@
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, X } from "lucide-react";
 import { PhotographySubNav } from "@/components/PhotographySubNav";
 import manifest from "@/data/photo-manifest.json";
@@ -49,6 +49,7 @@ const SESSION_SLOTS = [
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export const Portraits = () => {
+  const navigate = useNavigate();
   const [lightbox, setLightbox] = useState(null);
   const [rowUnit, setRowUnit] = useState(40);
   const [loadedImages, setLoadedImages] = useState(new Set());
@@ -109,10 +110,15 @@ export const Portraits = () => {
           </h1>
           <p className="text-muted-foreground max-w-lg animate-fade-in animation-delay-300">
             Available for grad, portrait, and event sessions —{" "}
-            <a href="/#contact" className="underline underline-offset-2 hover:text-foreground transition-colors">
-              reach out!
-            </a>
-            .
+            <button
+              onClick={() => {
+                navigate("/");
+                setTimeout(() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }), 80);
+              }}
+              className="underline underline-offset-2 hover:text-foreground transition-colors cursor-pointer"
+            >
+              get in touch.
+            </button>
           </p>
           <PhotographySubNav />
         </div>
