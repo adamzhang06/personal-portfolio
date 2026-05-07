@@ -150,7 +150,7 @@ export const Experience = () => {
                       <div className="w-4 h-4 rounded-full bg-primary border-2 border-background shrink-0" />
                       <div className="w-px flex-1 bg-border mt-1" />
                     </div>
-                    <div className="card-vivid rounded-2xl p-8 flex-1 mb-6" style={cardStyle}>
+                    <div className="card-vivid rounded-2xl p-8 flex-1 mb-6 min-w-0" style={cardStyle}>
                       <CardContent exp={exp} />
                     </div>
                   </div>
