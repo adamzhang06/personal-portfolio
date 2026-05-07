@@ -45,7 +45,7 @@ A minimal side-margin marker in the Gallery that indicates where a new year's ph
 
 ## Image hosting
 
-Photos are served from **Cloudinary**. Store the Cloudinary public URL (or public ID) per photo slot. Cloudinary handles WebP conversion, responsive sizing via URL params, and removes photo files from the repo. Metadata (camera, film, settings, etc.) remains in the code alongside the Cloudinary URL.
+Photos are served as static files from Vercel's CDN. Originals live in `public/photos/gallery/<year>/` and are never committed compressed. Compressed versions (run `npm run compress-photos`) live in `public/photos/gallery-compressed/<year>/` — these are what the site actually serves. Static assets (hero background, profile photo) follow the same pattern: originals in `public/assets/`, compressed in `public/assets/compressed/`.
 
 ## Layout algorithm (Gallery grid)
 

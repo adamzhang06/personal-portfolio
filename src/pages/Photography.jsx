@@ -71,7 +71,7 @@ function computeLayout(yearGroups, rowUnit) {
 //
 // colSpan = explicit column span; rowSpan is always derived from the aspect ratio.
 //
-// Run `npm run generate-manifest` after adding new files to public/photos/gallery/.
+// Run `npm run generate-manifest` after adding new files to public/photos/gallery-compressed/.
 // ─────────────────────────────────────────────────────────────────────────────
 const yearGroups = [
   // ── 2026 ──────────────────────────────────────────────────────────────────────
@@ -79,7 +79,7 @@ const yearGroups = [
     year: "2026",
     photos: [
       {
-        src: "/photos/gallery/2026/AYZ_0111.JPG",  // portrait
+        src: "/photos/gallery-compressed/2026/AYZ_0111.jpg",  // portrait
         alt: "Begonia & Pepper",
         colStart: 1, colSpan: 16, rowStart: 1,
         meta: {
@@ -91,7 +91,7 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery/2026/AYZ_0090.JPG",  // landscape
+        src: "/photos/gallery-compressed/2026/AYZ_0090.jpg",  // landscape
         alt: "Begonia",
         colStart: 18, colSpan: 23, rowStart: 1,
         meta: {
@@ -103,7 +103,7 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery/2026/AYZ_0315.JPG",  // portrait
+        src: "/photos/gallery-compressed/2026/AYZ_0315.jpg",  // portrait
         alt: "Chelsea's UMKC Portrait",
         colStart: 30, colSpan: 11, rowStart: 17,
         meta: {
@@ -115,7 +115,7 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery/2026/AYZ_3399.jpg",  // portrait
+        src: "/photos/gallery-compressed/2026/AYZ_3399.jpg",  // portrait
         alt: "Charly Bell Tower",
         colStart: 18, colSpan: 11, rowStart: 17,
         meta: {
@@ -127,7 +127,7 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery/2026/AYZ_1916.jpg",  // landscape
+        src: "/photos/gallery-compressed/2026/AYZ_1916.jpg",  // landscape
         alt: "Gil Helmet",
         colStart: 1, colSpan: 16, rowStart: 26,
         meta: {
@@ -139,7 +139,7 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery/2026/AYZ_2052.jpg",  // portrait
+        src: "/photos/gallery-compressed/2026/AYZ_2052.jpg",  // portrait
         alt: "PF26 Slow Shutter",
         colStart: 1, colSpan: 16, rowStart: 40,
         meta: {
@@ -151,7 +151,7 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery/2026/AYZ_1540.jpg",  // landscape
+        src: "/photos/gallery-compressed/2026/AYZ_1540.jpg",  // landscape
         alt: "HTF Group",
         colStart: 18, colSpan: 24, rowStart: 33,
         meta: {
@@ -170,7 +170,7 @@ const yearGroups = [
     year: "2025",
     photos: [
       {
-        src: "/photos/gallery/2025/AYZ_8259.jpg",  // landscape
+        src: "/photos/gallery-compressed/2025/AYZ_8259.jpg",  // landscape
         alt: "Porsche CMDX",
         colStart: 22, colSpan: 20, rowStart: 1,
         meta: {
@@ -182,7 +182,7 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery/2025/AYZ_7313.jpg",  // landscape
+        src: "/photos/gallery-compressed/2025/AYZ_7313.jpg",  // landscape
         alt: "PF25",
         colStart: 1, colSpan: 19, rowStart: 1,
         meta: {
@@ -194,7 +194,7 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery/2025/AYZ_7791.jpg",  // portrait
+        src: "/photos/gallery-compressed/2025/AYZ_7791.jpg",  // portrait
         alt: "Water Temple Two People",
         colStart: 1, colSpan: 9, rowStart: 15,
         meta: {
@@ -206,7 +206,7 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery/2025/AYZ_7803.jpg",  // portrait
+        src: "/photos/gallery-compressed/2025/AYZ_7803.jpg",  // portrait
         alt: "Water Temple Sun Flare",
         colStart: 11, colSpan: 9, rowStart: 15,
         meta: {
@@ -218,7 +218,7 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery/2025/AYZ_7687.jpg",  // portrait
+        src: "/photos/gallery-compressed/2025/AYZ_7687.jpg",  // portrait
         alt: "Mom and Dad Portrait",
         colStart: 22, colSpan: 9, rowStart: 15,
         meta: {
@@ -230,7 +230,7 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery/2025/AYZ_7859.jpg",  // portrait
+        src: "/photos/gallery-compressed/2025/AYZ_7859.jpg",  // portrait
         alt: "Dad O",
         colStart: 32, colSpan: 9, rowStart: 15,
         meta: {
@@ -242,7 +242,7 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery/2025/AYZ_7910.jpg",  // landscape
+        src: "/photos/gallery-compressed/2025/AYZ_7910.jpg",  // landscape
         alt: "Mom and Dad Garden Portrait",
         colStart: 3, colSpan: 36, rowStart: 29,
         meta: {
@@ -261,7 +261,7 @@ const yearGroups = [
     year: "2024",
     photos: [
       {
-        src: "/photos/gallery/2024/IMG_0651.JPG",  // landscape
+        src: "/photos/gallery-compressed/2024/IMG_0651.jpg",  // landscape
         alt: "Solar Eclipse",
         colStart: 3, colSpan: 36, rowStart: 1,
         meta: {
@@ -273,7 +273,7 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery/2024/AYZ_5102_01.JPG",  // portrait
+        src: "/photos/gallery-compressed/2024/AYZ_5102_01.jpg",  // portrait
         alt: "Calvin Samples",
         colStart: 15, colSpan: 13, rowStart: 22,
         meta: {
@@ -285,7 +285,7 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery/2024/AYZ_5050_01.JPG",  // portrait
+        src: "/photos/gallery-compressed/2024/AYZ_5050_01.jpg",  // portrait
         alt: "Calvin",
         colStart: 1, colSpan: 13, rowStart: 22,
         meta: {
@@ -297,7 +297,7 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery/2024/AYZ_5070_01.JPG",  // portrait
+        src: "/photos/gallery-compressed/2024/AYZ_5070_01.jpg",  // portrait
         alt: "Calvin Extended",
         colStart: 29, colSpan: 13, rowStart: 22,
         meta: {
@@ -316,7 +316,7 @@ const yearGroups = [
     year: "2023",
     photos: [
       {
-        src: "/photos/gallery/2023/000016520031.jpg",  // landscape
+        src: "/photos/gallery-compressed/2023/000016520031.jpg",  // landscape
         alt: "Arches Wide",
         colStart: 3, colSpan: 36, rowStart: 1,
         meta: {
@@ -327,7 +327,7 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery/2023/3955912_3955912-R1-076-36A.jpg",  // portrait
+        src: "/photos/gallery-compressed/2023/3955912_3955912-R1-076-36A.jpg",  // portrait
         alt: "Pigeon and Moon",
         colStart: 2, colSpan: 12, rowStart: 45,
         meta: {
@@ -338,7 +338,7 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery/2023/000044400015.jpg",  // landscape
+        src: "/photos/gallery-compressed/2023/000044400015.jpg",  // landscape
         alt: "White Flowers",
         colStart: 3, colSpan: 36, rowStart: 64,
         meta: {
@@ -348,7 +348,7 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery/2023/000016500031.jpg",  // portrait
+        src: "/photos/gallery-compressed/2023/000016500031.jpg",  // portrait
         alt: "Charly Tesla",
         colStart: 15, colSpan: 12, rowStart: 45,
         meta: {
@@ -358,7 +358,7 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery/2023/000067370012.jpg",  // portrait
+        src: "/photos/gallery-compressed/2023/000067370012.jpg",  // portrait
         alt: "Lighthouse",
         colStart: 8, colSpan: 12, rowStart: 26,
         meta: {
@@ -369,7 +369,7 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery/2023/000067370011.jpg",  // portrait
+        src: "/photos/gallery-compressed/2023/000067370011.jpg",  // portrait
         alt: "Coastline",
         colStart: 22, colSpan: 12, rowStart: 26,
         meta: {
@@ -380,7 +380,7 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery/2023/3955912_3955912-R1-062-29A.jpg",  // portrait
+        src: "/photos/gallery-compressed/2023/3955912_3955912-R1-062-29A.jpg",  // portrait
         alt: "Corner Flower Building",
         colStart: 28, colSpan: 12, rowStart: 45,
         meta: {
@@ -397,7 +397,7 @@ const yearGroups = [
     year: "2022",
     photos: [
       {
-        src: "/photos/gallery/2022/ADM_3713.JPG",  // landscape
+        src: "/photos/gallery-compressed/2022/ADM_3713.jpg",  // landscape
         alt: "Yellowstone Goat Eating",
         colStart: 22, colSpan: 19, rowStart: 1,
         meta: {
@@ -409,7 +409,7 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery/2022/ADM_3714.jpeg",  // landscape
+        src: "/photos/gallery-compressed/2022/ADM_3714.jpg",  // landscape
         alt: "Yellowstone Goat Smiling",
         colStart: 1, colSpan: 19, rowStart: 1,
         meta: {
@@ -421,7 +421,7 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery/2022/ADM_3735.jpeg",  // landscape
+        src: "/photos/gallery-compressed/2022/ADM_3735.jpg",  // landscape
         alt: "Yellowstone Goat on the edge",
         colStart: 5, colSpan: 32, rowStart: 15,
         meta: {
