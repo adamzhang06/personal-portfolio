@@ -511,7 +511,7 @@ export const Photography = () => {
           <div className="md:hidden">
             {yearGroups.map((group) => (
               <div key={group.year}>
-                <div id={`year-${group.year}`} className="flex items-center gap-4 mb-3">
+                <div id={`year-m-${group.year}`} className="flex items-center gap-4 mb-3">
                   <div className="flex-1 h-px bg-neutral-300" />
                   <span className="text-[10px] font-mono text-neutral-500 tracking-[0.2em] select-none">
                     {group.year}

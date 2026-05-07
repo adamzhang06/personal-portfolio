@@ -87,11 +87,12 @@ export const Navbar = () => {
       setActiveYear(null);
       return;
     }
+    const yearElId = (year) => window.innerWidth < 768 ? `year-m-${year}` : `year-${year}`;
     const compute = () => {
       const threshold = window.innerHeight * 0.5;
       let active = null;
       for (const year of PHOTO_YEARS) {
-        const el = document.getElementById(`year-${year}`);
+        const el = document.getElementById(yearElId(year));
         if (!el) continue;
         if (el.getBoundingClientRect().top < threshold) active = year;
       }
@@ -284,7 +285,7 @@ export const Navbar = () => {
                   <button
                     key={year}
                     onClick={() => {
-                      const el = document.getElementById(`year-${year}`);
+                      const el = document.getElementById(`year-m-${year}`);
                       if (el) {
                         const top = el.getBoundingClientRect().top + window.scrollY - 88;
                         window.scrollTo({ top, behavior: "smooth" });
