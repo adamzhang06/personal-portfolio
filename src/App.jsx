@@ -8,6 +8,7 @@ import { Skills } from "@/sections/Skills";
 import { Projects } from "@/sections/Projects";
 import { Contact } from "@/sections/Contact";
 import { Photography } from "@/pages/Photography";
+import { Portraits } from "@/pages/Portraits";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { PageBackground } from "@/components/PageBackground";
 import { PageDots } from "@/components/PageDots";
@@ -35,6 +36,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Portfolio />} />
           <Route path="/photography" element={<Photography />} />
+          <Route path="/photography/portraits" element={<Portraits />} />
         </Routes>
       </div>
       <Analytics />

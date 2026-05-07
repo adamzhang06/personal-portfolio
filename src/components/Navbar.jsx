@@ -5,14 +5,14 @@ import { Link, useLocation } from "react-router-dom";
 
 // Keep in sync with linked srcs in Photography.jsx
 const PHOTO_SRCS = [
-  "/photos/3955912_3955912-R1-076-36A.jpg",
-  "/photos/000044400015.jpg",
-  "/photos/AYZ_7313.jpg",
-  "/photos/AYZ_0315.JPG",
-  "/photos/AYZ_0111.JPG",
-  "/photos/AYZ_0090.JPG",
-  "/photos/AYZ_8259.jpg",
-  "/photos/000016520031.jpg",
+  "/photos/gallery/3955912_3955912-R1-076-36A.jpg",
+  "/photos/gallery/000044400015.jpg",
+  "/photos/gallery/AYZ_7313.jpg",
+  "/photos/gallery/AYZ_0315.JPG",
+  "/photos/gallery/AYZ_0111.JPG",
+  "/photos/gallery/AYZ_0090.JPG",
+  "/photos/gallery/AYZ_8259.jpg",
+  "/photos/gallery/000016520031.jpg",
 ];
 
 let photoPrefetchDone = false;
