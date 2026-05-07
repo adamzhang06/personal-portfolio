@@ -505,10 +505,66 @@ export const Photography = () => {
         </div>
 
         {/* White canvas */}
-        <div className="bg-white py-10 px-10 animate-fade-in animation-delay-500">
+        <div className="bg-white py-10 px-4 md:px-10 animate-fade-in animation-delay-500">
+
+          {/* Mobile: 2-column masonry layout (shortest-column-first) */}
+          <div className="md:hidden">
+            {yearGroups.map((group) => {
+              // Distribute photos into 2 columns by shortest-column-first
+              const cols = [[], []];
+              const heights = [0, 0];
+              for (const photo of group.photos) {
+                const filename = photo.src.replace("/photos/", "");
+                const dims = manifest[filename];
+                const aspect = dims ? dims.h / dims.w : 1;
+                const shorter = heights[0] <= heights[1] ? 0 : 1;
+                cols[shorter].push(photo);
+                heights[shorter] += aspect;
+              }
+
+              return (
+                <div key={group.year}>
+                  <div id={`mobile-year-${group.year}`} className="flex items-center gap-4 mb-3">
+                    <div className="flex-1 h-px bg-neutral-300" />
+                    <span className="text-[10px] font-mono text-neutral-500 tracking-[0.2em] select-none">
+                      {group.year}
+                    </span>
+                    <div className="flex-1 h-px bg-neutral-300" />
+                  </div>
+                  <div className="flex gap-2 mb-6">
+                    {cols.map((col, colIdx) => (
+                      <div key={colIdx} className="flex flex-col gap-2 flex-1">
+                        {col.map((photo, idx) => {
+                          const filename = photo.src.replace("/photos/", "");
+                          const dims = manifest[filename];
+                          return (
+                            <div
+                              key={idx}
+                              className="relative cursor-pointer overflow-hidden"
+                              style={{ aspectRatio: dims ? `${dims.w} / ${dims.h}` : "1" }}
+                              onClick={() => setLightbox(photo)}
+                            >
+                              <img
+                                src={photo.src}
+                                alt={photo.alt}
+                                className="w-full h-full object-cover"
+                                loading="lazy"
+                              />
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Desktop: positioned 40-column grid */}
           <div
             ref={gridRef}
-            className="grid"
+            className="hidden md:grid"
             style={{
               gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))`,
               gridAutoRows: `${rowUnit}px`,

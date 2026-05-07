@@ -95,11 +95,18 @@ export const Navbar = () => {
       setActiveYear(null);
       return;
     }
+    const findYearEl = (year) => {
+      const a = document.getElementById(`year-${year}`);
+      const b = document.getElementById(`mobile-year-${year}`);
+      if (a && a.offsetParent !== null) return a;
+      if (b && b.offsetParent !== null) return b;
+      return null;
+    };
     const compute = () => {
       const threshold = window.innerHeight * 0.5;
       let active = null;
       for (const year of PHOTO_YEARS) {
-        const el = document.getElementById(`year-${year}`);
+        const el = findYearEl(year);
         if (!el) continue;
         if (el.getBoundingClientRect().top < threshold) active = year;
       }
@@ -217,7 +224,9 @@ export const Navbar = () => {
                     <button
                       key={year}
                       onClick={() => {
-                        const el = document.getElementById(`year-${year}`);
+                        const a = document.getElementById(`year-${year}`);
+                        const b = document.getElementById(`mobile-year-${year}`);
+                        const el = (a && a.offsetParent !== null) ? a : b;
                         if (el) {
                           const top =
                             el.getBoundingClientRect().top +
@@ -345,7 +354,9 @@ export const Navbar = () => {
                     <button
                       key={year}
                       onClick={() => {
-                        const el = document.getElementById(`year-${year}`);
+                        const a = document.getElementById(`year-${year}`);
+                        const b = document.getElementById(`mobile-year-${year}`);
+                        const el = (a && a.offsetParent !== null) ? a : b;
                         if (el) {
                           const top =
                             el.getBoundingClientRect().top +
