@@ -1,4 +1,5 @@
-import { useState, useEffect, useLayoutEffect, useRef, useMemo } from "react";
+import { useState, useLayoutEffect, useRef, useMemo } from "react";
+import { useLightbox } from "@/hooks/useLightbox";
 import { Link } from "react-router-dom";
 import { ArrowLeft, X } from "lucide-react";
 import manifest from "@/data/photo-manifest.json";
@@ -6,7 +7,7 @@ import manifest from "@/data/photo-manifest.json";
 // ─── Grid system ─────────────────────────────────────────────────────────────
 const COLS = 40;
 const GAP_PX = 12;
-const BLOCK_GAP = 2;    // rows of breathing room after a year's photos / after a divider
+const BLOCK_GAP = 2; // rows of breathing room after a year's photos / after a divider
 const DIVIDER_ROWS = 2; // grid rows consumed by a year divider
 
 // ─── Layout algorithm ─────────────────────────────────────────────────────────
@@ -44,7 +45,9 @@ function computeLayout(yearGroups, rowUnit) {
       const colSpan = photo.colSpan;
       const photoWidthPx = colSpan * rowUnit + (colSpan - 1) * GAP_PX;
       const rowSpan = dims
-        ? Math.round((photoWidthPx * (dims.h / dims.w) + GAP_PX) / (rowUnit + GAP_PX))
+        ? Math.round(
+            (photoWidthPx * (dims.h / dims.w) + GAP_PX) / (rowUnit + GAP_PX),
+          )
         : colSpan;
 
       const absRow = photoBaseRow + photo.rowStart - 1;
@@ -79,9 +82,11 @@ const yearGroups = [
     year: "2026",
     photos: [
       {
-        src: "/photos/gallery-compressed/2026/AYZ_0111.jpg",  // portrait
+        src: "/photos/gallery-compressed/2026/AYZ_0111.jpg", // portrait
         alt: "Begonia & Pepper",
-        colStart: 1, colSpan: 16, rowStart: 1,
+        colStart: 1,
+        colSpan: 16,
+        rowStart: 1,
         meta: {
           camera: "Nikon Z5II",
           lens: "50mm",
@@ -91,9 +96,11 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery-compressed/2026/AYZ_0090.jpg",  // landscape
+        src: "/photos/gallery-compressed/2026/AYZ_0090.jpg", // landscape
         alt: "Begonia",
-        colStart: 18, colSpan: 23, rowStart: 1,
+        colStart: 18,
+        colSpan: 23,
+        rowStart: 1,
         meta: {
           camera: "Nikon Z5II",
           lens: "50mm",
@@ -103,9 +110,11 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery-compressed/2026/AYZ_0315.jpg",  // portrait
+        src: "/photos/gallery-compressed/2026/AYZ_0315.jpg", // portrait
         alt: "Chelsea's UMKC Portrait",
-        colStart: 30, colSpan: 11, rowStart: 17,
+        colStart: 30,
+        colSpan: 11,
+        rowStart: 17,
         meta: {
           camera: "Nikon Z5II",
           lens: "50mm",
@@ -115,9 +124,11 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery-compressed/2026/AYZ_3399.jpg",  // portrait
+        src: "/photos/gallery-compressed/2026/AYZ_3399.jpg", // portrait
         alt: "Charly Bell Tower",
-        colStart: 18, colSpan: 11, rowStart: 17,
+        colStart: 18,
+        colSpan: 11,
+        rowStart: 17,
         meta: {
           camera: "Nikon Z5II",
           lens: "50mm",
@@ -127,9 +138,11 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery-compressed/2026/AYZ_1916.jpg",  // landscape
+        src: "/photos/gallery-compressed/2026/AYZ_1916.jpg", // landscape
         alt: "Gil Helmet",
-        colStart: 1, colSpan: 16, rowStart: 26,
+        colStart: 1,
+        colSpan: 16,
+        rowStart: 26,
         meta: {
           camera: "Nikon Z5II",
           lens: "75mm",
@@ -139,9 +152,11 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery-compressed/2026/AYZ_2052.jpg",  // portrait
+        src: "/photos/gallery-compressed/2026/AYZ_2052.jpg", // portrait
         alt: "PF26 Slow Shutter",
-        colStart: 1, colSpan: 16, rowStart: 40,
+        colStart: 1,
+        colSpan: 16,
+        rowStart: 40,
         meta: {
           camera: "Nikon Z5II",
           lens: "36mm",
@@ -151,13 +166,29 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery-compressed/2026/AYZ_1540.jpg",  // landscape
+        src: "/photos/gallery-compressed/2026/AYZ_1540.jpg", // landscape
         alt: "HTF Group",
-        colStart: 18, colSpan: 24, rowStart: 33,
+        colStart: 18,
+        colSpan: 24,
+        rowStart: 33,
         meta: {
           camera: "Nikon Z5II",
           lens: "28mm",
           settings: ["f/8", "1/100s", "ISO 1600"],
+          location: "West Lafayette, IN",
+          date: "April 2026",
+        },
+      },
+      {
+        src: "/photos/gallery-compressed/2026/AYZ_3221.jpg", // landscape
+        alt: "USB Picnic",
+        colStart: 18,
+        colSpan: 24,
+        rowStart: 53,
+        meta: {
+          camera: "Nikon Z5II",
+          lens: "32mm",
+          settings: ["f/5.6", "1/160s", "ISO 2500"],
           location: "West Lafayette, IN",
           date: "April 2026",
         },
@@ -170,9 +201,11 @@ const yearGroups = [
     year: "2025",
     photos: [
       {
-        src: "/photos/gallery-compressed/2025/AYZ_8259.jpg",  // landscape
+        src: "/photos/gallery-compressed/2025/AYZ_8259.jpg", // landscape
         alt: "Porsche CMDX",
-        colStart: 22, colSpan: 20, rowStart: 1,
+        colStart: 22,
+        colSpan: 20,
+        rowStart: 1,
         meta: {
           camera: "Nikon D750",
           lens: "24mm",
@@ -182,9 +215,11 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery-compressed/2025/AYZ_7313.jpg",  // landscape
+        src: "/photos/gallery-compressed/2025/AYZ_7313.jpg", // landscape
         alt: "PF25",
-        colStart: 1, colSpan: 19, rowStart: 1,
+        colStart: 1,
+        colSpan: 19,
+        rowStart: 1,
         meta: {
           camera: "Nikon D750",
           lens: "95mm",
@@ -194,9 +229,11 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery-compressed/2025/AYZ_7791.jpg",  // portrait
+        src: "/photos/gallery-compressed/2025/AYZ_7791.jpg", // portrait
         alt: "Water Temple Two People",
-        colStart: 1, colSpan: 9, rowStart: 15,
+        colStart: 1,
+        colSpan: 9,
+        rowStart: 15,
         meta: {
           camera: "Nikon D750",
           lens: "46mm",
@@ -206,9 +243,11 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery-compressed/2025/AYZ_7803.jpg",  // portrait
+        src: "/photos/gallery-compressed/2025/AYZ_7803.jpg", // portrait
         alt: "Water Temple Sun Flare",
-        colStart: 11, colSpan: 9, rowStart: 15,
+        colStart: 11,
+        colSpan: 9,
+        rowStart: 15,
         meta: {
           camera: "Nikon D750",
           lens: "31mm",
@@ -218,9 +257,11 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery-compressed/2025/AYZ_7687.jpg",  // portrait
+        src: "/photos/gallery-compressed/2025/AYZ_7687.jpg", // portrait
         alt: "Mom and Dad Portrait",
-        colStart: 22, colSpan: 9, rowStart: 15,
+        colStart: 22,
+        colSpan: 9,
+        rowStart: 15,
         meta: {
           camera: "Nikon D750",
           lens: "58mm",
@@ -230,9 +271,11 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery-compressed/2025/AYZ_7859.jpg",  // portrait
+        src: "/photos/gallery-compressed/2025/AYZ_7859.jpg", // portrait
         alt: "Dad O",
-        colStart: 32, colSpan: 9, rowStart: 15,
+        colStart: 32,
+        colSpan: 9,
+        rowStart: 15,
         meta: {
           camera: "Nikon D750",
           lens: "24mm",
@@ -242,9 +285,11 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery-compressed/2025/AYZ_7910.jpg",  // landscape
+        src: "/photos/gallery-compressed/2025/AYZ_7910.jpg", // landscape
         alt: "Mom and Dad Garden Portrait",
-        colStart: 3, colSpan: 36, rowStart: 29,
+        colStart: 3,
+        colSpan: 36,
+        rowStart: 29,
         meta: {
           camera: "Nikon D750",
           lens: "56mm",
@@ -261,9 +306,11 @@ const yearGroups = [
     year: "2024",
     photos: [
       {
-        src: "/photos/gallery-compressed/2024/IMG_0651.jpg",  // landscape
+        src: "/photos/gallery-compressed/2024/IMG_0651.jpg", // landscape
         alt: "Solar Eclipse",
-        colStart: 3, colSpan: 36, rowStart: 1,
+        colStart: 3,
+        colSpan: 36,
+        rowStart: 1,
         meta: {
           camera: "Canon PowerShot SX50 HS",
           lens: "176mm",
@@ -273,9 +320,11 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery-compressed/2024/AYZ_5102_01.jpg",  // portrait
+        src: "/photos/gallery-compressed/2024/AYZ_5102_01.jpg", // portrait
         alt: "Calvin Samples",
-        colStart: 15, colSpan: 13, rowStart: 22,
+        colStart: 15,
+        colSpan: 13,
+        rowStart: 22,
         meta: {
           camera: "Nikon D750",
           lens: "70mm",
@@ -285,9 +334,11 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery-compressed/2024/AYZ_5050_01.jpg",  // portrait
+        src: "/photos/gallery-compressed/2024/AYZ_5050_01.jpg", // portrait
         alt: "Calvin",
-        colStart: 1, colSpan: 13, rowStart: 22,
+        colStart: 1,
+        colSpan: 13,
+        rowStart: 22,
         meta: {
           camera: "Nikon D750",
           lens: "70mm",
@@ -297,9 +348,11 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery-compressed/2024/AYZ_5070_01.jpg",  // portrait
+        src: "/photos/gallery-compressed/2024/AYZ_5070_01.jpg", // portrait
         alt: "Calvin Extended",
-        colStart: 29, colSpan: 13, rowStart: 22,
+        colStart: 29,
+        colSpan: 13,
+        rowStart: 22,
         meta: {
           camera: "Nikon D750",
           lens: "82mm",
@@ -316,9 +369,11 @@ const yearGroups = [
     year: "2023",
     photos: [
       {
-        src: "/photos/gallery-compressed/2023/000016520031.jpg",  // landscape
+        src: "/photos/gallery-compressed/2023/000016520031.jpg", // landscape
         alt: "Arches Wide",
-        colStart: 3, colSpan: 36, rowStart: 1,
+        colStart: 3,
+        colSpan: 36,
+        rowStart: 1,
         meta: {
           camera: "Nikon F3",
           film: "Kodak Gold 200",
@@ -327,9 +382,11 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery-compressed/2023/3955912_3955912-R1-076-36A.jpg",  // portrait
+        src: "/photos/gallery-compressed/2023/3955912_3955912-R1-076-36A.jpg", // portrait
         alt: "Pigeon and Moon",
-        colStart: 2, colSpan: 12, rowStart: 45,
+        colStart: 2,
+        colSpan: 12,
+        rowStart: 45,
         meta: {
           camera: "Nikon F3",
           film: "Kodak Gold 200",
@@ -338,9 +395,11 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery-compressed/2023/000044400015.jpg",  // landscape
+        src: "/photos/gallery-compressed/2023/000044400015.jpg", // landscape
         alt: "White Flowers",
-        colStart: 3, colSpan: 36, rowStart: 64,
+        colStart: 3,
+        colSpan: 36,
+        rowStart: 64,
         meta: {
           camera: "Nikon F3",
           film: "Kodak Portra 160",
@@ -348,9 +407,11 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery-compressed/2023/000016500031.jpg",  // portrait
+        src: "/photos/gallery-compressed/2023/000016500031.jpg", // portrait
         alt: "Charly Tesla",
-        colStart: 15, colSpan: 12, rowStart: 45,
+        colStart: 15,
+        colSpan: 12,
+        rowStart: 45,
         meta: {
           camera: "Nikon F3",
           film: "Kodak Gold 200",
@@ -358,9 +419,11 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery-compressed/2023/000067370012.jpg",  // portrait
+        src: "/photos/gallery-compressed/2023/000067370012.jpg", // portrait
         alt: "Lighthouse",
-        colStart: 8, colSpan: 12, rowStart: 26,
+        colStart: 8,
+        colSpan: 12,
+        rowStart: 26,
         meta: {
           camera: "Nikon F3",
           film: "HP5+ 400 (+2 stops)",
@@ -369,9 +432,11 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery-compressed/2023/000067370011.jpg",  // portrait
+        src: "/photos/gallery-compressed/2023/000067370011.jpg", // portrait
         alt: "Coastline",
-        colStart: 22, colSpan: 12, rowStart: 26,
+        colStart: 22,
+        colSpan: 12,
+        rowStart: 26,
         meta: {
           camera: "Nikon F3",
           film: "HP5+ 400 (+2 stops)",
@@ -380,9 +445,11 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery-compressed/2023/3955912_3955912-R1-062-29A.jpg",  // portrait
+        src: "/photos/gallery-compressed/2023/3955912_3955912-R1-062-29A.jpg", // portrait
         alt: "Corner Flower Building",
-        colStart: 28, colSpan: 12, rowStart: 45,
+        colStart: 28,
+        colSpan: 12,
+        rowStart: 45,
         meta: {
           camera: "Nikon F3",
           film: "Kodak Gold 200",
@@ -397,9 +464,11 @@ const yearGroups = [
     year: "2022",
     photos: [
       {
-        src: "/photos/gallery-compressed/2022/ADM_3713.jpg",  // landscape
+        src: "/photos/gallery-compressed/2022/ADM_3713.jpg", // landscape
         alt: "Yellowstone Goat Eating",
-        colStart: 22, colSpan: 19, rowStart: 1,
+        colStart: 22,
+        colSpan: 19,
+        rowStart: 1,
         meta: {
           camera: "Nikon D750",
           lens: "300mm",
@@ -409,9 +478,11 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery-compressed/2022/ADM_3714.jpg",  // landscape
+        src: "/photos/gallery-compressed/2022/ADM_3714.jpg", // landscape
         alt: "Yellowstone Goat Smiling",
-        colStart: 1, colSpan: 19, rowStart: 1,
+        colStart: 1,
+        colSpan: 19,
+        rowStart: 1,
         meta: {
           camera: "Nikon D750",
           lens: "600mm",
@@ -421,9 +492,11 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery-compressed/2022/ADM_3735.jpg",  // landscape
+        src: "/photos/gallery-compressed/2022/ADM_3735.jpg", // landscape
         alt: "Yellowstone Goat on the edge",
-        colStart: 5, colSpan: 32, rowStart: 15,
+        colStart: 5,
+        colSpan: 32,
+        rowStart: 15,
         meta: {
           camera: "Nikon D750",
           lens: "400mm",
@@ -439,14 +512,14 @@ const yearGroups = [
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export const Photography = () => {
-  const [lightbox, setLightbox] = useState(null);
+  const [lightbox, setLightbox] = useLightbox();
   const [rowUnit, setRowUnit] = useState(40);
   const [loadedImages, setLoadedImages] = useState(new Set());
   const gridRef = useRef(null);
 
   const { cells: layout } = useMemo(
     () => computeLayout(yearGroups, rowUnit),
-    [rowUnit]
+    [rowUnit],
   );
 
   const markLoaded = (idx) =>
@@ -465,22 +538,9 @@ export const Photography = () => {
     return () => ro.disconnect();
   }, []);
 
-  // Lightbox keyboard + scroll lock
-  useEffect(() => {
-    if (!lightbox) return;
-    const onKey = (e) => { if (e.key === "Escape") setLightbox(null); };
-    document.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
-    };
-  }, [lightbox]);
-
   return (
     <div className="min-h-screen pt-24 pb-16">
       <div className="container mx-auto px-6">
-
         {/* Header */}
         <div className="mb-6">
           <div className="animate-fade-in">
@@ -497,7 +557,9 @@ export const Photography = () => {
           </p>
           <h1 className="text-4xl font-bold mb-4 animate-fade-in animation-delay-200">
             Through the{" "}
-            <span className="font-serif italic font-normal text-primary">lens</span>
+            <span className="font-serif italic font-normal text-primary">
+              lens
+            </span>
           </h1>
           <p className="text-muted-foreground max-w-lg animate-fade-in animation-delay-300">
             A collection of moments I've captured. Digital and film.
@@ -506,7 +568,6 @@ export const Photography = () => {
 
         {/* White canvas */}
         <div className="bg-white py-10 px-4 md:px-10 animate-fade-in animation-delay-500">
-
           {/* Mobile: 2-column masonry layout (shortest-column-first) */}
           <div className="md:hidden">
             {yearGroups.map((group) => {
@@ -524,7 +585,10 @@ export const Photography = () => {
 
               return (
                 <div key={group.year}>
-                  <div id={`mobile-year-${group.year}`} className="flex items-center gap-4 mb-3">
+                  <div
+                    id={`mobile-year-${group.year}`}
+                    className="flex items-center gap-4 mb-3"
+                  >
                     <div className="flex-1 h-px bg-neutral-300" />
                     <span className="text-[10px] font-mono text-neutral-500 tracking-[0.2em] select-none">
                       {group.year}
@@ -541,7 +605,11 @@ export const Photography = () => {
                             <div
                               key={idx}
                               className="relative cursor-pointer overflow-hidden"
-                              style={{ aspectRatio: dims ? `${dims.w} / ${dims.h}` : "1" }}
+                              style={{
+                                aspectRatio: dims
+                                  ? `${dims.w} / ${dims.h}`
+                                  : "1",
+                              }}
                               onClick={() => setLightbox(photo)}
                             >
                               <img
@@ -577,7 +645,10 @@ export const Photography = () => {
                   <div
                     key={`divider-${cell.year}`}
                     id={`year-${cell.year}`}
-                    style={{ gridColumn: cell.gridColumn, gridRow: cell.gridRow }}
+                    style={{
+                      gridColumn: cell.gridColumn,
+                      gridRow: cell.gridRow,
+                    }}
                     className="flex items-center gap-4"
                   >
                     <div className="flex-1 h-px bg-neutral-300" />
@@ -614,7 +685,9 @@ export const Photography = () => {
                       <div className="flex flex-col gap-0.5">
                         {(meta.camera || meta.lens) && (
                           <p className="text-white text-[11px] font-medium leading-snug">
-                            {[meta.camera, meta.lens].filter(Boolean).join(" · ")}
+                            {[meta.camera, meta.lens]
+                              .filter(Boolean)
+                              .join(" · ")}
                           </p>
                         )}
                         {meta.settings?.length && (
@@ -629,7 +702,9 @@ export const Photography = () => {
                         )}
                         {(meta.location || meta.date) && (
                           <p className="text-white/60 text-[10px] mt-1">
-                            {[meta.location, meta.date].filter(Boolean).join(" · ")}
+                            {[meta.location, meta.date]
+                              .filter(Boolean)
+                              .join(" · ")}
                           </p>
                         )}
                       </div>
@@ -659,48 +734,68 @@ export const Photography = () => {
             className="flex flex-col md:flex-row items-stretch gap-0"
             onClick={(e) => e.stopPropagation()}
           >
-              <img
-                src={lightbox.src}
-                alt={lightbox.alt}
-                className="block w-auto h-auto max-h-[90vh] max-w-[75vw]"
-              />
-              {lightbox.meta && Object.values(lightbox.meta).some(Boolean) && (
-                <div className="w-full md:w-auto shrink-0 bg-neutral-100 flex flex-col justify-center gap-4 px-5 py-5">
-                  {(lightbox.meta.camera || lightbox.meta.lens) && (
-                    <div>
-                      <p className="text-neutral-400 text-[10px] uppercase tracking-widest mb-1">Camera</p>
-                      <p className="text-neutral-800 text-sm font-medium leading-snug">
-                        {[lightbox.meta.camera, lightbox.meta.lens].filter(Boolean).join(" · ")}
-                      </p>
-                    </div>
-                  )}
-                  {lightbox.meta.film && (
-                    <div>
-                      <p className="text-neutral-400 text-[10px] uppercase tracking-widest mb-1">Film</p>
-                      <p className="text-neutral-800 text-sm italic">{lightbox.meta.film}</p>
-                    </div>
-                  )}
-                  {lightbox.meta.settings?.length && (
-                    <div>
-                      <p className="text-neutral-400 text-[10px] uppercase tracking-widest mb-1">Exposure</p>
-                      <p className="text-neutral-800 text-sm font-mono">{lightbox.meta.settings.join(" · ")}</p>
-                    </div>
-                  )}
-                  {lightbox.meta.location && (
-                    <div>
-                      <p className="text-neutral-400 text-[10px] uppercase tracking-widest mb-1">Location</p>
-                      <p className="text-neutral-800 text-sm">{lightbox.meta.location}</p>
-                    </div>
-                  )}
-                  {lightbox.meta.date && (
-                    <div>
-                      <p className="text-neutral-400 text-[10px] uppercase tracking-widest mb-1">Date</p>
-                      <p className="text-neutral-800 text-sm">{lightbox.meta.date}</p>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
+            <img
+              src={lightbox.src}
+              alt={lightbox.alt}
+              className="block w-auto h-auto max-h-[90vh] max-w-[75vw]"
+            />
+            {lightbox.meta && Object.values(lightbox.meta).some(Boolean) && (
+              <div className="w-full md:w-auto shrink-0 bg-neutral-100 flex flex-col justify-center gap-4 px-5 py-5">
+                {(lightbox.meta.camera || lightbox.meta.lens) && (
+                  <div>
+                    <p className="text-neutral-400 text-[10px] uppercase tracking-widest mb-1">
+                      Camera
+                    </p>
+                    <p className="text-neutral-800 text-sm font-medium leading-snug">
+                      {[lightbox.meta.camera, lightbox.meta.lens]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </p>
+                  </div>
+                )}
+                {lightbox.meta.film && (
+                  <div>
+                    <p className="text-neutral-400 text-[10px] uppercase tracking-widest mb-1">
+                      Film
+                    </p>
+                    <p className="text-neutral-800 text-sm italic">
+                      {lightbox.meta.film}
+                    </p>
+                  </div>
+                )}
+                {lightbox.meta.settings?.length && (
+                  <div>
+                    <p className="text-neutral-400 text-[10px] uppercase tracking-widest mb-1">
+                      Exposure
+                    </p>
+                    <p className="text-neutral-800 text-sm font-mono">
+                      {lightbox.meta.settings.join(" · ")}
+                    </p>
+                  </div>
+                )}
+                {lightbox.meta.location && (
+                  <div>
+                    <p className="text-neutral-400 text-[10px] uppercase tracking-widest mb-1">
+                      Location
+                    </p>
+                    <p className="text-neutral-800 text-sm">
+                      {lightbox.meta.location}
+                    </p>
+                  </div>
+                )}
+                {lightbox.meta.date && (
+                  <div>
+                    <p className="text-neutral-400 text-[10px] uppercase tracking-widest mb-1">
+                      Date
+                    </p>
+                    <p className="text-neutral-800 text-sm">
+                      {lightbox.meta.date}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

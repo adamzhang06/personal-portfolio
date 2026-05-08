@@ -1,4 +1,5 @@
-import { useState, useEffect, useLayoutEffect, useRef } from "react";
+import { useState, useLayoutEffect, useRef } from "react";
+import { useLightbox } from "@/hooks/useLightbox";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, X } from "lucide-react";
 import manifest from "@/data/photo-manifest.json";
@@ -49,7 +50,7 @@ const SESSION_SLOTS = [
 
 export const Portraits = () => {
   const navigate = useNavigate();
-  const [lightbox, setLightbox] = useState(null);
+  const [lightbox, setLightbox] = useLightbox();
   const [rowUnit, setRowUnit] = useState(40);
   const [loadedImages, setLoadedImages] = useState(new Set());
   const gridRefs = useRef({});
@@ -73,17 +74,6 @@ export const Portraits = () => {
     });
     return () => observers.forEach((ro) => ro.disconnect());
   }, []);
-
-  useEffect(() => {
-    if (!lightbox) return;
-    const onKey = (e) => { if (e.key === "Escape") setLightbox(null); };
-    document.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
-    };
-  }, [lightbox]);
 
   return (
     <div className="min-h-screen pt-24 pb-16">

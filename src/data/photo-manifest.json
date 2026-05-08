@@ -107,6 +107,10 @@
     "w": 2732,
     "h": 3416
   },
+  "gallery/2026/AYZ_3221.jpg": {
+    "w": 5127,
+    "h": 3845
+  },
   "gallery/2026/AYZ_3399.jpg": {
     "w": 3499,
     "h": 4667
@@ -218,6 +222,10 @@
   "gallery-compressed/2026/AYZ_2052.jpg": {
     "w": 2400,
     "h": 3001
+  },
+  "gallery-compressed/2026/AYZ_3221.jpg": {
+    "w": 2400,
+    "h": 1800
   },
   "gallery-compressed/2026/AYZ_3399.jpg": {
     "w": 2400,

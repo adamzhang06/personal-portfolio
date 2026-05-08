@@ -36,9 +36,6 @@ export const Contact = () => {
           Contact
         </p>
         <h2 className="text-4xl font-bold mb-4">Let's connect</h2>
-        <p className="text-muted-foreground mb-12">
-          {/* I'm always open to new conversations, please reach out! */}
-        </p>
         <div className="space-y-4 mb-12">
           {links.map((link) => (
             <a
@@ -46,7 +43,7 @@ export const Contact = () => {
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="glass rounded-2xl px-6 py-4 flex items-center gap-4 hover:glow-border transition-all duration-300 group"
+              className="glass rounded-2xl px-6 py-4 flex items-center gap-4 hover:glow-border hover:scale-[1.025] hover:border-primary/55 transition-all duration-300 group"
             >
               <link.icon className="w-5 h-5 text-primary shrink-0" />
               <span className="text-sm font-medium">{link.label}</span>

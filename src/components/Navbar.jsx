@@ -32,6 +32,16 @@ const navLinks = [
   { href: "/#skills", label: "Skills", sectionId: "skills" },
 ];
 
+function scrollToYear(year) {
+  const a = document.getElementById(`year-${year}`);
+  const b = document.getElementById(`mobile-year-${year}`);
+  const el = a && a.offsetParent !== null ? a : b;
+  if (el) {
+    const top = el.getBoundingClientRect().top + window.scrollY - 88;
+    window.scrollTo({ top, behavior: "smooth" });
+  }
+}
+
 const itemBase = "px-4 py-2 text-sm rounded-full transition-colors";
 const itemActive = "text-foreground font-medium bg-primary/20";
 const itemInactive =
@@ -79,9 +89,12 @@ export const Navbar = () => {
         if (!el) continue;
         if (el.getBoundingClientRect().top < threshold) active = link.href;
       }
-      const contactEl = document.getElementById("contact");
-      if (contactEl && contactEl.getBoundingClientRect().top < threshold)
-        active = null;
+      // const contactEl = document.getElementById("contact");
+      // if (
+      //   contactEl &&
+      //   contactEl.getBoundingClientRect().top < window.innerHeight * 0.5
+      // )
+      //   active = null;
       setActiveLink(active);
     };
     compute();
@@ -224,16 +237,7 @@ export const Navbar = () => {
                     <button
                       key={year}
                       onClick={() => {
-                        const a = document.getElementById(`year-${year}`);
-                        const b = document.getElementById(`mobile-year-${year}`);
-                        const el = (a && a.offsetParent !== null) ? a : b;
-                        if (el) {
-                          const top =
-                            el.getBoundingClientRect().top +
-                            window.scrollY -
-                            88;
-                          window.scrollTo({ top, behavior: "smooth" });
-                        }
+                        scrollToYear(year);
                         setIsDesktopYearDropdownOpen(false);
                       }}
                       className={`w-full text-left px-4 py-2 text-sm transition-colors ${activeYear === year ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"}`}
@@ -354,16 +358,7 @@ export const Navbar = () => {
                     <button
                       key={year}
                       onClick={() => {
-                        const a = document.getElementById(`year-${year}`);
-                        const b = document.getElementById(`mobile-year-${year}`);
-                        const el = (a && a.offsetParent !== null) ? a : b;
-                        if (el) {
-                          const top =
-                            el.getBoundingClientRect().top +
-                            window.scrollY -
-                            88;
-                          window.scrollTo({ top, behavior: "smooth" });
-                        }
+                        scrollToYear(year);
                         setIsYearDropdownOpen(false);
                       }}
                       className={`w-full text-left px-3 py-2 text-xs transition-colors ${activeYear === year ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"}`}
