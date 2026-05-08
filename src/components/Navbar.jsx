@@ -67,6 +67,22 @@ export const Navbar = () => {
   const [isYearDropdownOpen, setIsYearDropdownOpen] = useState(false);
   const [isDesktopYearDropdownOpen, setIsDesktopYearDropdownOpen] =
     useState(false);
+  const desktopYearRef = useRef(null);
+  const mobileYearRef = useRef(null);
+
+  // Close year dropdowns on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (desktopYearRef.current && !desktopYearRef.current.contains(e.target)) {
+        setIsDesktopYearDropdownOpen(false);
+      }
+      if (mobileYearRef.current && !mobileYearRef.current.contains(e.target)) {
+        setIsYearDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -217,7 +233,7 @@ export const Navbar = () => {
 
           {/* Year dropdown — outside overflow-hidden so the panel can escape clipping */}
           {photoNavState !== "idle-hidden" && isOnGallery && (
-            <div className="relative ml-2 shrink-0">
+            <div ref={desktopYearRef} className="relative ml-2 shrink-0">
               <div className="glass rounded-full px-2 py-1 flex items-center">
                 <button
                   onClick={() => setIsDesktopYearDropdownOpen((p) => !p)}
@@ -231,22 +247,27 @@ export const Navbar = () => {
                   </span>
                 </button>
               </div>
-              {isDesktopYearDropdownOpen && (
-                <div className="absolute top-full mt-1 left-0 glass-strong rounded-xl py-1 z-50 min-w-[80px] animate-fade-in">
-                  {PHOTO_YEARS.map((year) => (
-                    <button
-                      key={year}
-                      onClick={() => {
-                        scrollToYear(year);
-                        setIsDesktopYearDropdownOpen(false);
-                      }}
-                      className={`w-full text-left px-4 py-2 text-sm transition-colors ${activeYear === year ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"}`}
-                    >
-                      {year}
-                    </button>
-                  ))}
+              <div
+                className={`absolute top-full mt-1 left-1/2 -translate-x-1/2 z-50 w-full min-w-fit grid transition-[grid-template-rows] duration-250 ease-out ${isDesktopYearDropdownOpen ? '' : 'pointer-events-none'}`}
+                style={{ gridTemplateRows: isDesktopYearDropdownOpen ? '1fr' : '0fr' }}
+              >
+                <div className="overflow-hidden">
+                  <div className="glass-strong rounded-xl py-1">
+                    {PHOTO_YEARS.map((year) => (
+                      <button
+                        key={year}
+                        onClick={() => {
+                          scrollToYear(year);
+                          setIsDesktopYearDropdownOpen(false);
+                        }}
+                        className={`w-full text-center py-2 text-sm transition-colors ${activeYear === year ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"}`}
+                      >
+                        {year}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              )}
+              </div>
             </div>
           )}
         </div>
@@ -340,10 +361,10 @@ export const Navbar = () => {
 
           {/* Year dropdown — outside overflow-hidden so the dropdown panel can escape */}
           {isOnGallery && photoNavState !== "idle-hidden" && (
-            <div className="relative shrink-0">
+            <div ref={mobileYearRef} className="relative shrink-0">
               <button
                 onClick={() => setIsYearDropdownOpen((p) => !p)}
-                className={`glass rounded-full px-2 py-0.5 text-[11px] flex items-center gap-0.5 transition-colors whitespace-nowrap ${isYearDropdownOpen ? "text-foreground" : "text-muted-foreground"}`}
+                className={`glass rounded-full px-2 py-[3px] text-[11px] flex items-center gap-0.5 transition-colors whitespace-nowrap ${isYearDropdownOpen ? "text-foreground" : "text-muted-foreground"}`}
               >
                 {activeYear ?? PHOTO_YEARS[0]}
                 <span
@@ -352,22 +373,27 @@ export const Navbar = () => {
                   ▾
                 </span>
               </button>
-              {isYearDropdownOpen && (
-                <div className="absolute top-full mt-1 left-0 glass-strong rounded-xl py-1 z-[100] min-w-[70px] animate-fade-in">
-                  {PHOTO_YEARS.map((year) => (
-                    <button
-                      key={year}
-                      onClick={() => {
-                        scrollToYear(year);
-                        setIsYearDropdownOpen(false);
-                      }}
-                      className={`w-full text-left px-3 py-2 text-xs transition-colors ${activeYear === year ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"}`}
-                    >
-                      {year}
-                    </button>
-                  ))}
+              <div
+                className={`absolute top-full mt-1 left-1/2 -translate-x-1/2 z-[100] w-full min-w-fit grid transition-[grid-template-rows] duration-250 ease-out ${isYearDropdownOpen ? '' : 'pointer-events-none'}`}
+                style={{ gridTemplateRows: isYearDropdownOpen ? '1fr' : '0fr' }}
+              >
+                <div className="overflow-hidden">
+                  <div className="glass-strong rounded-xl py-1">
+                    {PHOTO_YEARS.map((year) => (
+                      <button
+                        key={year}
+                        onClick={() => {
+                          scrollToYear(year);
+                          setIsYearDropdownOpen(false);
+                        }}
+                        className={`w-full text-center py-1.5 text-xs transition-colors ${activeYear === year ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"}`}
+                      >
+                        {year}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              )}
+              </div>
             </div>
           )}
         </div>
