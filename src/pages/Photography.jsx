@@ -124,16 +124,15 @@ const yearGroups = [
         },
       },
       {
-        src: "/photos/gallery-compressed/2026/AYZ_3399.jpg", // portrait
-        alt: "Charly Bell Tower",
+        src: "/photos/gallery-compressed/2026/AYZ_3432.jpg", // portrait
+        alt: "Charly and John Purdue",
         colStart: 18,
         colSpan: 11,
         rowStart: 17,
         meta: {
           camera: "Nikon Z5II",
           lens: "50mm",
-          settings: ["f/1.4", "1/1000s", "ISO 100"],
-          location: "West Lafayette, IN",
+          settings: ["f/1.4", "1/800s", "ISO 100"],
           date: "May 2026",
         },
       },
@@ -191,6 +190,200 @@ const yearGroups = [
           settings: ["f/5.6", "1/160s", "ISO 2500"],
           location: "West Lafayette, IN",
           date: "April 2026",
+        },
+      },
+      {
+        src: "/photos/gallery-compressed/2026/AYZ_3405.jpg", // portrait
+        alt: "Bell Tower and Plane",
+        colStart: 1,
+        colSpan: 16,
+        rowStart: 61,
+        meta: {
+          camera: "Nikon Z5II",
+          lens: "50mm",
+          settings: ["f/1.4", "1/2500s", "ISO 100"],
+          date: "May 2026",
+          location: "West Lafayette, IN",
+        },
+      },
+      {
+        src: "/photos/gallery-compressed/2026/AYZ_4205.jpg", // portrait
+        alt: "SKYTREE",
+        colStart: 2,
+        colSpan: 9,
+        rowStart: 107,
+        meta: {
+          camera: "Nikon Z5II",
+          lens: "63mm",
+          settings: ["f/2.8", "1/320s", "ISO 100"],
+          date: "May 2026",
+          location: "Tokyo, Japan",
+        },
+      },
+      {
+        src: "/photos/gallery-compressed/2026/AYZ_4235.jpg", // portrait
+        alt: "Tokyo Street Blur",
+        colStart: 12,
+        colSpan: 9,
+        rowStart: 107,
+        meta: {
+          camera: "Nikon Z5II",
+          lens: "75mm",
+          settings: ["f/16", "1s", "ISO 100"],
+          date: "May 2026",
+          location: "Tokyo, Japan",
+        },
+      },
+      {
+        src: "/photos/gallery-compressed/2026/AYZ_4398.jpg", // landscape
+        alt: "Gunma Cooking Group",
+        colStart: 1,
+        colSpan: 30,
+        rowStart: 83,
+        meta: {
+          camera: "Nikon Z5II",
+          lens: "28mm",
+          settings: ["f/8", "1/400s", "ISO 14400"],
+          date: "May 2026",
+          location: "Maebashi, Japan",
+        },
+      },
+      {
+        src: "/photos/gallery-compressed/2026/AYZ_4459.jpg", // landscape
+        alt: "Jin",
+        colStart: 32,
+        colSpan: 9,
+        rowStart: 85,
+        meta: {
+          camera: "Nikon Z5II",
+          lens: "34mm",
+          settings: ["f/2.8", "1/400s", "ISO 450"],
+          date: "May 2026",
+          location: "Minakami, Japan",
+        },
+      },
+      {
+        src: "/photos/gallery-compressed/2026/AYZ_4619.jpg", // landscape
+        alt: "7-11 Shutter Drag",
+        colStart: 18,
+        colSpan: 13,
+        rowStart: 72,
+        meta: {
+          camera: "Nikon Z5II",
+          lens: "36mm",
+          settings: ["f/11", "1s", "ISO 100"],
+          date: "May 2026",
+          location: "Nagasaki, Japan",
+        },
+      },
+      {
+        src: "/photos/gallery-compressed/2026/AYZ_4667.jpg", // portrait
+        alt: "Nagasaki Mountain",
+        colStart: 32,
+        colSpan: 9,
+        rowStart: 94,
+        meta: {
+          camera: "Nikon Z5II",
+          lens: "75mm",
+          settings: ["f/2.8", "1/50s", "ISO 12800"],
+          date: "May 2026",
+          location: "Nagasaki, Japan",
+        },
+      },
+      {
+        src: "/photos/gallery-compressed/2026/AYZ_4766v1.nef.jpg", // portrait
+        alt: "Shimabara Castle",
+        colStart: 22,
+        colSpan: 9,
+        rowStart: 107,
+        meta: {
+          camera: "Nikon Z5II",
+          lens: "32mm",
+          settings: ["f/2.8", "1/1250s", "ISO 140"],
+          date: "May 2026",
+          location: "Nagasaki, Japan",
+        },
+      },
+      {
+        src: "/photos/gallery-compressed/2026/AYZ_4848.jpg", // landscape
+        alt: "Dolphin Boats",
+        colStart: 22,
+        colSpan: 20,
+        rowStart: 120,
+        meta: {
+          camera: "Nikon Z5II",
+          lens: "28mm",
+          settings: ["f/8", "1/2000s", "ISO 560"],
+          date: "May 2026",
+          location: "Nagasaki, Japan",
+        },
+      },
+      {
+        src: "/photos/gallery-compressed/2026/AYZ_4869.jpg", // landscape
+        alt: "Nagasaki Coastline",
+        colStart: 1,
+        colSpan: 20,
+        rowStart: 120,
+        meta: {
+          camera: "Nikon Z5II",
+          lens: "28mm",
+          settings: ["f/2.8", "1/2000s", "ISO 140"],
+          date: "May 2026",
+          location: "Nagasaki, Japan",
+        },
+      },
+      {
+        src: "/photos/gallery-compressed/2026/AYZ_4902.jpg", // portrait
+        alt: "House in Japan",
+        colStart: 32,
+        colSpan: 9,
+        rowStart: 107,
+        meta: {
+          camera: "Nikon Z5II",
+          lens: "28mm",
+          settings: ["f/4", "1/1000s", "ISO 140"],
+          date: "May 2026",
+          location: "Nagasaki, Japan",
+        },
+      },
+      {
+        src: "/photos/gallery-compressed/2026/AYZ_5057.jpg", // portrait
+        alt: "Chongqing Shutter Drag",
+        colStart: 32,
+        colSpan: 9,
+        rowStart: 72,
+        meta: {
+          camera: "Nikon Z5II",
+          lens: "63mm",
+          settings: ["f/13", "1s", "ISO 100"],
+          date: "June 2026",
+          location: "Chongqing, China",
+        },
+      },
+      {
+        src: "/photos/gallery-compressed/2026/001829630023.jpg", // portrait
+        alt: "Dad Sitting at House",
+        colStart: 7,
+        colSpan: 14,
+        rowStart: 136,
+        meta: {
+          camera: "Nikon FE2",
+          film: "Fuji 200",
+          location: "Ballwin, MO",
+          date: "May 2026",
+        },
+      },
+      {
+        src: "/photos/gallery-compressed/2026/001829630024.jpg", // portrait
+        alt: "Dad Standing at House",
+        colStart: 22,
+        colSpan: 14,
+        rowStart: 136,
+        meta: {
+          camera: "Nikon FE2",
+          film: "Fuji 200",
+          location: "Ballwin, MO",
+          date: "May 2026",
         },
       },
     ],
