@@ -42,6 +42,20 @@ const projects = [
     logo: "/projects/axi6/logo.png",
     logoOnly: true,
   },
+  {
+    title: "StyleSnapped",
+    description:
+      "Presented an end-to-end AI web application at the ML@Purdue Symposium that classifies clothing aesthetics using a custom fine-tuned ResNet-50 vision model served via FastAPI and React. Engineered a semi-supervised data pipeline to label 44,000 images by extracting 2048-dimensional embeddings, clustering with K-Means, and propagating Gemini VLM centroid labels to bypass API costs. Achieved 83% validation accuracy despite a 14x class imbalance by implementing a two-phase progressive unfreezing training strategy and applying inverse-frequency class weights in PyTorch.",
+    highlights: ["ML@Purdue Symposium", "ResNet-50 vision model", "44,000 images", "83% validation accuracy"],
+    tags: ["PyTorch", "Python", "FastAPI", "React", "sklearn", "Gemini API"],
+    logo: "/projects/stylesnapped/logo.svg",
+    github: "https://github.com/adamzhang06/style-snapped",
+    media: [
+      { src: "/projects/stylesnapped/webpage.png", caption: "" },
+      { src: "/projects/stylesnapped/match.png", caption: "" },
+      { src: "/projects/stylesnapped/board.png", caption: "" },
+    ],
+  },
 ];
 
 const getYouTubeId = (url) => {

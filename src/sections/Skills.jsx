@@ -1,19 +1,19 @@
 const skillCategories = [
   {
     label: "Languages",
-    skills: ["Python", "R", "Java", "JavaScript", "HTML/CSS"],
+    skills: ["Python", "Java", "R", "C++", "JavaScript", "HTML/CSS", "SQL", "NoSQL"],
   },
   {
     label: "Frameworks",
-    skills: ["React", "React Native", "FastAPI", "MongoDB", "Tailwind CSS"],
+    skills: ["React", "ROS 2", "React Native", "FastAPI", "MongoDB", "Tailwind CSS"],
   },
   {
     label: "Libraries",
-    skills: ["Pandas", "NumPy", "Matplotlib", "sk-learn", "Keras", "Seurat", "sc-type", "Shiny", "ggplot2", "Rsamtools"],
+    skills: ["Pandas", "NumPy", "sklearn", "PyTorch", "TensorFlow", "Keras", "OpenCV", "Matplotlib", "Gymnasium", "Seurat"],
   },
   {
     label: "Tools",
-    skills: ["Git", "GitHub", "VS Code", "Antigravity", "Claude Code", "RStudio", "PyCharm", "IntelliJ", "Android Studio", "Xenium"],
+    skills: ["Git", "GitHub", "Claude Code", "VS Code", "Antigravity", "RStudio", "PyCharm", "Android Studio"],
   },
 ];
 

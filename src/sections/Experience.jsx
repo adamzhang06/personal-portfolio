@@ -2,6 +2,22 @@ import { highlight } from "@/utils/highlight";
 
 const experiences = [
   {
+    title: "Board Member",
+    company: "CS Undergraduate Student Board",
+    period: "Mar. 2026 – Present",
+    description:
+      "Amplifying student engagement by directing digital media strategies to increase department visibility. Advocating for the undergraduate body by collaborating with Purdue CS department heads and faculty.",
+    highlights: ["digital media strategies", "department visibility", "Purdue CS department heads"],
+    links: [
+      {
+        href: "https://www.purdueusb.com/",
+        label: "Purdue CS Undergraduate Student Board",
+        description: "purdueusb.com",
+      },
+    ],
+    tags: ["Leadership", "Digital Media", "Student Advocacy", "Faculty Relations"],
+  },
+  {
     title: "Undergrad Researcher",
     company: "AIDA3 Research – AI for Autonomous Aviation",
     period: "Jan. 2026 – Present",
