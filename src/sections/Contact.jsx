@@ -17,8 +17,8 @@ const links = [
   {
     icon: Linkedin,
     label: "LinkedIn",
-    href: "https://www.linkedin.com/in/adam-zhang-8b2b44382/",
-    display: "linkedin.com/in/adam-zhang",
+    href: "https://www.linkedin.com/in/adam-yixuan-zhang/",
+    display: "linkedin.com/in/adam-yixuan-zhang",
   },
   {
     icon: Instagram,

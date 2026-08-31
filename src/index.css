@@ -212,26 +212,6 @@
     animation: carousel-fade 0.2s ease-out both;
   }
 
-  @keyframes animated-border {
-    0% {
-      stroke-dashoffset: 400;
-    }
-    100% {
-      stroke-dashoffset: -550;
-    }
-  }
-
-  .group:hover .animated-border-path {
-    animation: animated-border 1.5s linear infinite;
-  }
-
-  .animated-border:hover {
-    background-color: colormix(in srgb, var(--color-primary) 15%, transparent);
-    backdrop-filter: blur(16px);
-    box-shadow: 0 0 20px
-      color-mix(in srgb, var(--color-primary) 20%, transparent);
-  }
-
   @keyframes shimmer {
     0% { background-position: -200% 0; }
     100% { background-position: 200% 0; }

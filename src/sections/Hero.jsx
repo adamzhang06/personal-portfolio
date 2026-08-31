@@ -6,7 +6,7 @@ import {
   Linkedin,
   Mail,
 } from "lucide-react";
-import { AnimatedBorderButton } from "../components/AnimatedBorderButton";
+import { Link } from "react-router-dom";
 
 
 export const Hero = () => {
@@ -20,10 +20,10 @@ export const Hero = () => {
             <div className="animate-fade-in">
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm text-primary">
                 <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-                Software Engineer · AI @ Purdue
+                AI + Honors @ Purdue
               </span>
             </div>
-
+            
             {/* Headline */}
             <div className="space-y-4">
               <h1 className="text-5xl md:text-6xl lg:text-6xl font-bold leading-tight animate-fade-in animation-delay-100">
@@ -38,9 +38,16 @@ export const Hero = () => {
               </h1>
               <p className="text-lg text-muted-foreground max-w-lg animate-fade-in animation-delay-200">
                 Hi, I'm Adam Zhang - an Artifical Intelliegence major at Purdue
-                passionate in robotics and computer vision. I'm working to
+                passionate in robotics and machine learning. I'm working to
                 implement AI/ML for physical systems to solve real-world
                 problems.
+              </p>
+              <p className="text-sm text-muted-foreground/60 italic max-w-lg animate-fade-in animation-delay-200">
+                *feel free to check out my{" "}
+                <Link to="/photography" className="hover:text-primary transition-colors">
+                  photography
+                </Link>{" "}
+                too!
               </p>
             </div>
 
@@ -49,7 +56,6 @@ export const Hero = () => {
               <Button size="lg" onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}>
                 Contact Me <ArrowRight className="w-5 h-5" />
               </Button>
-              <AnimatedBorderButton />
             </div>
 
             {/* Social Links */}
@@ -58,7 +64,7 @@ export const Hero = () => {
               {[
                 { icon: Mail, href: "mailto:reachadamzhang@gmail.com" },
                 { icon: Github, href: "https://github.com/adamzhang06" },
-                { icon: Linkedin, href: "https://www.linkedin.com/in/adam-zhang-8b2b44382/" },
+                { icon: Linkedin, href: "https://www.linkedin.com/in/adam-yixuan-zhang/" },
                 { icon: Instagram, href: "https://www.instagram.com/_adamzhang/" },
               ].map((social, idx) => (
                 <a
