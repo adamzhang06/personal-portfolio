@@ -2,6 +2,33 @@ import { highlight } from "@/utils/highlight";
 
 const experiences = [
   {
+    title: "Co-Founder",
+    company: "Raccoon Dynamics",
+    period: "Aug. 2026 – Present",
+    description:
+      "Co-founded Raccoon Dynamics and am building an autonomous ground robot for agricultural data collection, owning the system architecture across sensing, compute, and actuation.",
+    bullets: [
+      "Fusing LiDAR with computer vision so the robot can sense and navigate uneven outdoor terrain without a human operator.",
+      "Bringing up the embedded compute stack across a Jetson Nano, Raspberry Pi, and Arduino, running on-board perception and inference on the Jetson and handing real-time sensor and motor I/O to the Arduino.",
+      "Building the robot's software on ROS 2 in Python and C++, adopting C++ for the performance-critical real-time nodes.",
+    ],
+    highlights: ["LiDAR", "computer vision", "Jetson Nano", "Raspberry Pi", "Arduino", "ROS 2", "Python", "C++", "autonomous ground robot"],
+    tags: ["ROS 2", "Python", "C++", "LiDAR", "Computer Vision", "Jetson Nano", "Raspberry Pi", "Arduino"],
+  },
+  {
+    title: "Undergraduate Data Science Researcher",
+    company: "The Data Mine, Purdue University",
+    period: "Aug. 2026 – Present",
+    description:
+      "Partnered with the Nesin Math Village through The Data Mine's Corporate Partners program to replace their fully manual, paper-based library with a digital catalog and full-stack app.",
+    bullets: [
+      "Scoping the build around how the village actually runs day to day, planning the system in sprints on an Agile (Scrum) team.",
+      "Designing a SQL database, a Python backend, and API integrations to digitize and automate a previously all-paper cataloging and lending process.",
+    ],
+    highlights: ["Nesin Math Village", "full-stack", "Agile (Scrum)", "SQL", "Python", "API integrations"],
+    tags: ["Python", "SQL", "Agile/Scrum", "Full-Stack", "API Integration"],
+  },
+  {
     title: "Board Member",
     company: "CS Undergraduate Student Board",
     period: "Mar. 2026 – Present",
@@ -18,12 +45,18 @@ const experiences = [
     tags: ["Leadership", "Digital Media", "Student Advocacy", "Faculty Relations"],
   },
   {
-    title: "Undergrad Researcher",
+    title: "Undergraduate Researcher in VIP",
     company: "AIDA3 Research – AI for Autonomous Aviation",
     period: "Jan. 2026 – Present",
     description:
-      "Applying deep reinforcement learning to GNC and path planning for autonomous robotic systems. Creating custom Gym environments to simulate fixed-wing flight for a DRL agent and developing a ROS2 wrapper for cross-validation.",
-    highlights: ["deep reinforcement learning", "autonomous robotic systems", "ROS2"],
+      "Applying reinforcement learning to guidance, navigation, and control for autonomous aviation.",
+    bullets: [
+      "Built a custom Gymnasium environment with a discrete state and action space to model a UAV path-planning task.",
+      "Implemented and compared dynamic programming, SARSA, and Q-learning agents in the environment, establishing RL baselines for guidance, navigation, and control.",
+      "Formulated safe-flight requirements as Signal Temporal Logic (STL) specifications, using STL robustness to measure how far each trajectory stays inside the safe envelope, and ran evaluations across simulated flight scenarios to validate that trained agents hold to those constraints.",
+      "Tested a ROS 2-based wrapper to cross-validate agent performance across multiple simulated scenarios.",
+    ],
+    highlights: ["reinforcement learning", "Gymnasium", "SARSA", "Q-learning", "dynamic programming", "Signal Temporal Logic (STL)", "ROS 2"],
     links: [
       {
         href: "https://github.com/sbrunswi/VIP_Intro_deep_reinforcement_learning",
@@ -31,7 +64,7 @@ const experiences = [
         description: "github.com/sbrunswi",
       },
     ],
-    tags: ["Python", "Deep RL", "Gym", "ROS2", "GNC"],
+    tags: ["Python", "Gymnasium", "Reinforcement Learning", "SARSA", "Q-Learning", "ROS 2", "STL"],
   },
   {
     title: "Business Subteam Member",
@@ -54,17 +87,25 @@ const experiences = [
     company: "Washington University in St. Louis",
     period: "May 2024 – Aug. 2024",
     description:
-      "Analyzed real gene expression data from cancer tissues using single-cell and spatial transcriptomics AI tools. Managed large datasets in R and Python, applied K-means clustering to identify cancer marker correlations, and created data visualizations using Seurat and Sc-type.",
-    highlights: ["single-cell and spatial transcriptomics", "K-means clustering", "cancer marker correlations"],
-    tags: ["Python", "R", "Machine Learning", "Seurat", "sc-type", "K-means"],
+      "Processed single-cell RNA-seq data from wet-lab experiments to support research into predicting breast cancer with marker-relationship signatures rather than single markers.",
+    bullets: [
+      "Clustered cells in R using K-means across 158 breast cancer markers.",
+      "Annotated the resulting clusters into 12 cell populations using Seurat and ScType, then visualized inter-marker relationships.",
+    ],
+    highlights: ["single-cell RNA-seq", "158 breast cancer markers", "12 cell populations", "Seurat", "ScType", "K-means", "R"],
+    tags: ["R", "Seurat", "ScType", "K-means", "scRNA-seq"],
   },
   {
     title: "Software Development Intern",
     company: "St. Louis University",
     period: "May 2023 – Aug. 2023",
     description:
-      "Used R to reduce processing time for TSS analysis of RNA sequencing data by 36.6%. Doubled the read speed of BAM files using multicore processing for both Windows and Linux environments.",
-    highlights: ["reduce processing time", "36.6%", "Doubled the read speed"],
+      "Optimized a bioinformatics sequencing pipeline for both throughput and runtime.",
+    bullets: [
+      "Doubled processing throughput on a ~700 MB, 33M-read BAM sequencing dataset by parallelizing an original single-core pipeline across multiple cores on Windows and Linux.",
+      "Cut TSS-clustering runtime by 36.6% in R by removing redundant sliding-window sweeps once a cluster had been identified.",
+    ],
+    highlights: ["bioinformatics", "Doubled processing throughput", "36.6%", "Linux", "R"],
     links: [
       {
         href: "https://docs.google.com/presentation/d/1gs9peDbaCVoPULaPnjPjkK-eCSsU5LRSpG_mCmAVlME/edit?usp=sharing",
@@ -72,15 +113,19 @@ const experiences = [
         description: "docs.google.com",
       },
     ],
-    tags: ["R", "Rsamtools", "Bioinformatics", "Multicore Processing"],
+    tags: ["R", "Linux", "Multicore Processing", "Bioinformatics"],
   },
   {
-    title: "Lead Programmer & AI Camera Vision",
+    title: "Lead Programmer and Camera Vision",
     company: "FIRST Tech Challenge – Robotics",
     period: "Sept. 2022 – Apr. 2025",
     description:
-      "2025 MO State Champions; placed 85th out of ~8,000 teams globally at the 2025 FTC World Championship. Built PID motor control and camera vision pipelines in Java, and trained vision models using ML algorithms with new AI cameras.",
-    highlights: ["2025 MO State Champions", "85th out of ~8,000 teams"],
+      "Served as lead programmer on a 5-person team ranked 85th worldwide (of ~8,000) that won the FTC Missouri/Kansas State Championship in 2025.",
+    bullets: [
+      "Programmed and tuned PID-based motor control in Java to improve the reliability of autonomous routines.",
+      "Trained an object-detection model on a self-collected dataset of game-element images using FTC's TensorFlow-based ML tool.",
+    ],
+    highlights: ["85th worldwide (of ~8,000)", "FTC Missouri/Kansas State Championship", "Java", "TensorFlow", "PID-based motor control"],
     links: [
       {
         href: "https://ftcscout.org/teams/16498?season=2024",
@@ -93,7 +138,7 @@ const experiences = [
         description: "ftcstats.org",
       },
     ],
-    tags: ["Java", "Android Studio", "PID Control", "Computer Vision", "ML"],
+    tags: ["Java", "TensorFlow", "Android Studio", "PID Control", "Computer Vision"],
   },
 ];
 
@@ -120,14 +165,14 @@ export const Experience = () => {
               return (
                 <div
                   key={idx}
-                  className={`relative flex items-start md:items-center gap-0 ${
+                  className={`relative flex items-start md:items-center gap-0 pointer-events-none ${
                     idx !== 0 ? "md:-mt-32" : ""
                   }`}
                 >
                   {/* Left slot */}
                   <div className="hidden md:flex w-1/2 justify-end pr-10">
                     {isLeft && (
-                      <div className="card-vivid rounded-2xl p-8 w-full" style={cardStyle}>
+                      <div className="card-vivid rounded-2xl p-8 w-full pointer-events-auto" style={cardStyle}>
                         <CardContent exp={exp} />
                       </div>
                     )}
@@ -141,7 +186,7 @@ export const Experience = () => {
                   {/* Right slot */}
                   <div className="hidden md:flex w-1/2 pl-10">
                     {!isLeft && (
-                      <div className="card-vivid rounded-2xl p-8 w-full" style={cardStyle}>
+                      <div className="card-vivid rounded-2xl p-8 w-full pointer-events-auto" style={cardStyle}>
                         <CardContent exp={exp} />
                       </div>
                     )}
@@ -153,7 +198,7 @@ export const Experience = () => {
                       <div className="w-4 h-4 rounded-full bg-primary border-2 border-background shrink-0" />
                       <div className="w-px flex-1 bg-border mt-1" />
                     </div>
-                    <div className="card-vivid rounded-2xl p-8 flex-1 mb-6 min-w-0" style={cardStyle}>
+                    <div className="card-vivid rounded-2xl p-8 flex-1 mb-6 min-w-0 pointer-events-auto" style={cardStyle}>
                       <CardContent exp={exp} />
                     </div>
                   </div>
@@ -177,6 +222,13 @@ const CardContent = ({ exp }) => (
     <p className="text-muted-foreground text-base leading-relaxed mb-4">
       {highlight(exp.description, exp.highlights)}
     </p>
+    {exp.bullets?.length > 0 && (
+      <ul className="text-muted-foreground text-base leading-relaxed mb-4 space-y-2 list-disc pl-5 marker:text-primary/60">
+        {exp.bullets.map((bullet) => (
+          <li key={bullet}>{highlight(bullet, exp.highlights)}</li>
+        ))}
+      </ul>
+    )}
     {exp.links && exp.links.length > 0 && (
       <div className="flex flex-col gap-2 mb-4">
         {exp.links.map((link) => (

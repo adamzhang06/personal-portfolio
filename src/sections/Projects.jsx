@@ -4,30 +4,35 @@ import { highlight } from "@/utils/highlight";
 
 const projects = [
   {
-    title: "BarBabes",
+    title: "StyleSnapped",
+    period: "Apr. 2026",
     description:
-      "1st Overall and Best Use of AI at InnovateHER Hacks 2026 (33 teams). A cross-platform mobile app using React Native with a FastAPI backend and MongoDB for real-time data and frictionless NFC tap-to-log events. Integrated Google Gemini API to analyze Widmark BAC results, reaction latency, and drinking history for holistic impairment assessments.",
-    highlights: ["1st Overall", "Best Use of AI", "NFC tap-to-log", "Google Gemini API"],
-    tags: ["Python", "JavaScript", "React Native", "FastAPI", "MongoDB", "Gemini API"],
-    logo: "/projects/barbabes/BARBABES-LOGO-2.png",
-    github: "https://github.com/Azeemme/BarBabes",
-    links: [
-      { label: "Devpost", href: "https://devpost.com/software/barbabes" },
+      "Presented at the ML@Purdue Symposium: a full-stack web app (React, FastAPI, PyTorch) that classifies outfit photos into clothing aesthetics with a fine-tuned ResNet-50, giving users its top three predictions based on confidence.",
+    bullets: [
+      "Cut labeling to just 300 VLM API calls (from one per image) by embedding a 44K-image dataset with ResNet-50, clustering with K-Means (k=100), and propagating majority-vote Gemini labels from 3 centroids per cluster into a 41K-image training set.",
+      "Trained the ResNet-50 classifier to 83% validation accuracy despite a 14x class imbalance, applying inverse-frequency class weighting and progressive unfreezing in PyTorch.",
     ],
+    highlights: ["ML@Purdue Symposium", "ResNet-50", "83% validation accuracy", "PyTorch", "FastAPI", "React", "K-Means", "Gemini"],
+    tags: ["PyTorch", "Python", "FastAPI", "React", "Scikit-Learn", "Gemini API"],
+    logo: "/projects/stylesnapped/logo.svg",
+    github: "https://github.com/adamzhang06/style-snapped",
     media: [
-      { src: "/projects/barbabes/gallery.jpg", caption: "" },
-      { src: "/projects/barbabes/win.jpeg", caption: "1st Overall at InnovateHER Hacks 2026" },
-      { src: "/projects/barbabes/inaction.jpeg", caption: "In action" },
-      { src: "/projects/barbabes/gallery (1).jpg", caption: "" },
-      { src: "https://www.youtube.com/watch?v=GhaOiUV3mbk", caption: "Demo video" },
+      { src: "/projects/stylesnapped/webpage.png", caption: "" },
+      { src: "/projects/stylesnapped/match.png", caption: "" },
+      { src: "/projects/stylesnapped/board.png", caption: "" },
     ],
   },
   {
     title: "AXI6 Cinema Robotics",
+    period: "Feb. 2026 – Apr. 2026",
     description:
-      "A fully automated robotic camera slider system for cinematic motion control. Built custom firmware and control software to drive precise stepper motor movements, enabling programmable camera paths for film and photography applications.",
-    highlights: ["robotic camera slider", "stepper motor", "programmable camera paths"],
-    tags: ["Python", "JavaScript", "React","FastAPI", "Viam", "OpenCV", "Robotics"],
+      "Control software for a motorized 2-axis camera slider, built with a 2-person team: a React/FastAPI app with timeline-based keyframing for custom slide-and-pan moves, costing only ~$200 in parts versus $800+ commercial rigs.",
+    bullets: [
+      "Ran a YOLOv8 + OpenCV tracking pipeline on a laptop and streamed target trajectories to the Raspberry Pi over WebSockets, which put heavy compute on the laptop instead of the weak Raspberry Pi.",
+      "Wrote a Python axis-synchronization algorithm that computes counter-rotations on the pan axis to cancel parasitic motion from the mechanically-coupled axes, keeping the subject framed while the camera slides.",
+    ],
+    highlights: ["~$200 in parts versus $800+", "YOLOv8", "OpenCV", "Raspberry Pi", "WebSockets", "React", "FastAPI", "Python", "axis-synchronization algorithm"],
+    tags: ["Python", "JavaScript", "React", "FastAPI", "WebSockets", "OpenCV", "YOLO", "Raspberry Pi"],
     github: "https://github.com/adamzhang06/AXI6-cinema-robotics",
     links: [
       { label: "Devpost", href: "https://devpost.com/software/axi6-cinema-robotics-camera-slider" },
@@ -43,17 +48,27 @@ const projects = [
     logoOnly: true,
   },
   {
-    title: "StyleSnapped",
+    title: "BarBabes",
+    period: "Feb. 2026",
     description:
-      "Presented an end-to-end AI web application at the ML@Purdue Symposium that classifies clothing aesthetics using a custom fine-tuned ResNet-50 vision model served via FastAPI and React. Engineered a semi-supervised data pipeline to label 44,000 images by extracting 2048-dimensional embeddings, clustering with K-Means, and propagating Gemini VLM centroid labels to bypass API costs. Achieved 83% validation accuracy despite a 14x class imbalance by implementing a two-phase progressive unfreezing training strategy and applying inverse-frequency class weights in PyTorch.",
-    highlights: ["ML@Purdue Symposium", "ResNet-50 vision model", "44,000 images", "83% validation accuracy"],
-    tags: ["PyTorch", "Python", "FastAPI", "React", "sklearn", "Gemini API"],
-    logo: "/projects/stylesnapped/logo.svg",
-    github: "https://github.com/adamzhang06/style-snapped",
+      "Won 1st Place Overall (of 33 teams) and Best Use of AI at InnovateHER Hacks 2026 — a mobile app that helps friends gauge each other's level of intoxication.",
+    bullets: [
+      "Ideated the product and built the React Native frontend, including the drink-logging interface and a tap-based reaction-time mini-game that averages multiple trials.",
+      "Wired the frontend to a Gemini-powered FastAPI backend that estimated intoxication from a demographics-based BAC formula and NFC-logged drink history.",
+    ],
+    highlights: ["1st Place Overall", "Best Use of AI", "React Native", "FastAPI", "Gemini", "NFC-logged drink history"],
+    tags: ["Python", "JavaScript", "React Native", "FastAPI", "MongoDB", "Gemini API"],
+    logo: "/projects/barbabes/BARBABES-LOGO-2.png",
+    github: "https://github.com/Azeemme/BarBabes",
+    links: [
+      { label: "Devpost", href: "https://devpost.com/software/barbabes" },
+    ],
     media: [
-      { src: "/projects/stylesnapped/webpage.png", caption: "" },
-      { src: "/projects/stylesnapped/match.png", caption: "" },
-      { src: "/projects/stylesnapped/board.png", caption: "" },
+      { src: "/projects/barbabes/gallery.jpg", caption: "" },
+      { src: "/projects/barbabes/win.jpeg", caption: "1st Overall at InnovateHER Hacks 2026" },
+      { src: "/projects/barbabes/inaction.jpeg", caption: "In action" },
+      { src: "/projects/barbabes/gallery (1).jpg", caption: "" },
+      { src: "https://www.youtube.com/watch?v=GhaOiUV3mbk", caption: "Demo video" },
     ],
   },
 ];
@@ -184,34 +199,49 @@ export const Projects = () => {
                 ) : (
                   <h3 className="text-2xl font-semibold">{project.title}</h3>
                 )}
-                <div className="flex items-center gap-2 shrink-0">
-                  {project.github && (
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-1.5 rounded-full hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      <Github className="w-5 h-5" />
-                    </a>
+                <div className="flex flex-col items-end gap-2 shrink-0">
+                  <div className="flex items-center gap-2">
+                    {project.github && (
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-1.5 rounded-full hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        <Github className="w-5 h-5" />
+                      </a>
+                    )}
+                    {project.links?.map((link) => (
+                      <a
+                        key={link.href}
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-1 rounded-full text-xs font-medium hover:bg-primary/10 text-muted-foreground hover:text-primary border border-border hover:border-primary/40 transition-colors"
+                      >
+                        {link.label}
+                      </a>
+                    ))}
+                  </div>
+                  {project.period && (
+                    <span className="text-sm text-muted-foreground glass rounded-full px-3 py-1 whitespace-nowrap">
+                      {project.period}
+                    </span>
                   )}
-                  {project.links?.map((link) => (
-                    <a
-                      key={link.href}
-                      href={link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-3 py-1 rounded-full text-xs font-medium hover:bg-primary/10 text-muted-foreground hover:text-primary border border-border hover:border-primary/40 transition-colors"
-                    >
-                      {link.label}
-                    </a>
-                  ))}
                 </div>
               </div>
 
               <p className="text-muted-foreground text-base leading-relaxed">
                 {highlight(project.description, project.highlights)}
               </p>
+
+              {project.bullets?.length > 0 && (
+                <ul className="text-muted-foreground text-base leading-relaxed space-y-2 list-disc pl-5 marker:text-primary/60">
+                  {project.bullets.map((bullet) => (
+                    <li key={bullet}>{highlight(bullet, project.highlights)}</li>
+                  ))}
+                </ul>
+              )}
 
               <MediaCarousel media={project.media} />
 
