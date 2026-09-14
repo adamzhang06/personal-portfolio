@@ -153,7 +153,7 @@ export const Experience = () => {
           <h2 className="text-4xl font-bold">What I've worked on</h2>
         </div>
 
-        <div className="relative max-w-5xl mx-auto">
+        <div className="relative">
           {/* Center line */}
           <div className="hidden md:block absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px bg-border" />
 
@@ -166,7 +166,7 @@ export const Experience = () => {
                 <div
                   key={idx}
                   className={`relative flex items-start md:items-center gap-0 pointer-events-none ${
-                    idx !== 0 ? "md:-mt-32" : ""
+                    idx !== 0 ? "md:-mt-40" : ""
                   }`}
                 >
                   {/* Left slot */}
