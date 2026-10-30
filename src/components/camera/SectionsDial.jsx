@@ -1,15 +1,23 @@
+import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { useUi } from "@/context/uiContext";
 import { useHistoryBack } from "@/hooks/useHistoryBack";
 import { dialPages } from "@/data/pages";
 
 // Picker opened from the mode dial. Hovering or focusing an option turns the dial to it; clicking goes there.
-// 'float' sits beside the hero camera; 'inline' is a row inside the camera legend (expanded dock, phone).
-export function SectionsDial({ variant, flipped = false }) {
+// 'float' sits beside the hero camera; 'dock' is a panel that slides in from the right under the expanded
+// dock's Camera controls (always mounted, `open` slides it in); 'inline' is a row in the phone legend.
+export function SectionsDial({ variant, open = false, flipped = false }) {
   const { sectionIndex, setDialPreview, closeDial } = useUi();
   const { go } = useHistoryBack();
   const { pathname } = useLocation();
+  const panelRef = useRef(null);
   const leave = () => setDialPreview(null);
+
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (open) (panel?.querySelector('[aria-current="page"]') ?? panel?.querySelector(".lgb"))?.focus({ preventScroll: true });
+  }, [open]);
 
   const options = dialPages.map((p, i) => {
     const on = i === sectionIndex;
@@ -25,6 +33,21 @@ export function SectionsDial({ variant, flipped = false }) {
       },
     };
   });
+
+  if (variant === "dock") {
+    return (
+      <div className={"secwrap" + (open ? " open" : "")}>
+        <div ref={panelRef} className={"legend secdock" + (open ? " open" : "")} role="group" aria-label="Sections" inert={!open} onMouseLeave={leave}>
+          <span className="mono lt">Turn to a section</span>
+          {options.map((o) => (
+            <button key={o.key} type="button" className="lgb" aria-current={o.on ? "page" : undefined} onMouseEnter={o.preview} onFocus={o.preview} onClick={o.pick}>
+              {o.label} <em>{o.letter}</em>
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   if (variant === "inline") {
     return (

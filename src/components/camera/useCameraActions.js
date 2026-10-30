@@ -1,16 +1,13 @@
 import { useMemo } from "react";
-import { useLocation } from "react-router-dom";
 import { useUi } from "@/context/uiContext";
 import { useHistoryBack } from "@/hooks/useHistoryBack";
-import { projects } from "@/data/projects";
 import { pageByKey } from "@/data/pages";
 
 // What each camera control does, by key.
 export function useCameraActions() {
   const ui = useUi();
   const { go, trayOpen, openTray, closeTray } = useHistoryBack();
-  const { pathname } = useLocation();
-  const { shutter, dialOpen, closeDial, setDialOpen, setOverlay, setView, highlighted } = ui; // dialogs leave the expanded camera up
+  const { shutter, dialOpen, closeDial, setDialOpen, setOverlay, setView } = ui; // dialogs leave the expanded camera up
 
   return useMemo(
     () => ({
@@ -23,8 +20,8 @@ export function useCameraActions() {
       play: () => go(pageByKey("photography").path),
       menu: () => setOverlay("menu"),
       info: () => setOverlay("info"),
-      ok: () => (pathname === "/projects" ? go(`/projects/${projects[highlighted]?.slug ?? projects[0].slug}`) : go("/projects")),
+      ok: () => go("/"),
     }),
-    [shutter, dialOpen, closeDial, setDialOpen, setOverlay, setView, highlighted, go, trayOpen, openTray, closeTray, pathname]
+    [shutter, dialOpen, closeDial, setDialOpen, setOverlay, setView, go, trayOpen, openTray, closeTray]
   );
 }

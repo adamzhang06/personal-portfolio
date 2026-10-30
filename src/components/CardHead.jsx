@@ -11,15 +11,15 @@ export function Crumb() {
   );
 }
 
-// Section page head: crumb, eyebrow (the card's count), H1, and that page's SD card on the right,
+// Section page head: crumb, H1, eyebrow (the card's count), the card's one-line sub, and that page's SD card on the right,
 // so the page mirrors the card you clicked.
-export function CardHead({ card, sub, aside }) {
+export function CardHead({ card, sub = card.sub, aside }) {
   return (
     <div className="chead">
       <div className="ph">
         <Crumb />
-        <p className="eyebrow">{card.count}</p>
         <h1>{card.name}</h1>
+        <p className="eyebrow">{card.count}</p>
         {sub && <p className="sub">{sub}</p>}
       </div>
       {aside ?? <SdCard card={card} />}

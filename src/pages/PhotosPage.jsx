@@ -7,7 +7,7 @@ import { CardHead } from "@/components/CardHead";
 export function PhotosPage() {
   return (
     <div className="wrap page">
-      <CardHead card={cardByKey("photos")} sub="A collection of moments I’ve captured. Digital and film." />
+      <CardHead card={cardByKey("photos")} />
       <div className="cta">
         <a className="btn primary" href={contact.photos.href} target="_blank" rel="noopener noreferrer">
           {contact.photos.value} <span aria-hidden="true">↗</span>
