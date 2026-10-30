@@ -65,7 +65,7 @@ export const roles = [
   {
     slug: "aida3",
     group: "experience",
-    role: "Undergraduate Researcher in VIP (team lead)",
+    role: "Undergraduate Researcher Team Lead",
     org: "AIDA3 Research: AI for Autonomous Aviation",
     dates: "Jan. 2026 – Present",
     current: true,
@@ -89,6 +89,27 @@ export const roles = [
     oneLine: "",
     bullets: [],
     links: [{ label: "Purdue Formula SAE", href: "https://engineering.purdue.edu/fsae/wordpress/" }],
+    media: [],
+  },
+  {
+    slug: "serves-day",
+    group: "leadership",
+    role: "Parkway Representative Board Member",
+    org: "Parkway South High School",
+    dates: "Aug. 2023 – May 2025",
+    current: false,
+    oneLine: "Led the 2024 “Serves Day” and earned a Missouri House of Representatives resolution.",
+    bullets: [
+      "Directed a leadership-team project that engaged 92% of the student body and raised over $17,000 through community partnerships.",
+      "Provided hands-on volunteer help to over 50 community sites across St. Louis County, including parks, schools, and nursing homes.",
+      "Honored with Missouri House of Representatives House Resolution No. 6832 (June 2024) recognizing the event’s community impact.",
+    ],
+    links: [
+      {
+        label: "Parkway South High School launches ‘Day of Service’ · KSDK",
+        href: "https://www.ksdk.com/article/news/community/parkway-south-high-school-students-day-of-service/63-fcb1fe41-3731-41ac-8de0-682a0096d5e4",
+      },
+    ],
     media: [],
   },
   {
@@ -128,10 +149,11 @@ export const roles = [
     org: "FIRST Tech Challenge",
     dates: "Sept. 2022 – Apr. 2025",
     current: false,
-    oneLine: "5-person team ranked 85th worldwide of ~8,000; 2025 Missouri/Kansas State Champions.",
+    oneLine: "5-person team ranked 85th worldwide of ~8,000;\n2025 Missouri/Kansas State Champions.",
     bullets: [
       "Programmed and tuned PID-based motor control in Java to improve the reliability of autonomous routines.",
       "Trained an object-detection model on a self-collected dataset of game-element images using FTC’s TensorFlow-based ML tool.",
+      "Mentored younger team members and brought them into FTC from FIRST LEGO League (FLL).",
     ],
     links: [
       { label: "Team 16498 · FTC Scout", href: "https://ftcscout.org/teams/16498?season=2024" },

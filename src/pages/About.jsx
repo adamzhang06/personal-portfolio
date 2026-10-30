@@ -1,4 +1,10 @@
-import { AWARD, EDUCATION, INTERESTS, INTRO } from "@/data/site";
+import {
+  ABOUT_PHOTOS,
+  ABOUT_BLURB,
+  AWARDS,
+  EDUCATION,
+  INTERESTS,
+} from "@/data/site";
 import { skills } from "@/data/skills";
 import { cardByKey } from "@/data/cards";
 import { CardHead } from "@/components/CardHead";
@@ -6,47 +12,91 @@ import { CardHead } from "@/components/CardHead";
 export function About() {
   return (
     <div className="wrap page">
-      <CardHead card={cardByKey("about")} />
       <div className="about-top">
         <div>
-          <p>{INTRO}</p>
-          <h2>Award</h2>
-          <p className="muted">{AWARD}</p>
-          <h2>Interests</h2>
-          <p className="muted">{INTERESTS}</p>
-        </div>
-        <section className="edu" aria-labelledby="edu-h">
-          <h2 id="edu-h">Education</h2>
-          <p className="muted">
-            <span className="school">{EDUCATION.school}</span>
-            <br />
-            {EDUCATION.degree}
-            <br />
-            {EDUCATION.college}
-          </p>
-          <p className="muted">{EDUCATION.abroad}</p>
-          <p className="muted" style={{ marginBottom: 0 }}>
-            Coursework: {EDUCATION.coursework.join(", ")}.
-          </p>
-        </section>
-      </div>
-      <section className="skills" aria-labelledby="sk-h">
-        <h2 id="sk-h">Skills</h2>
-        <div className="skgrid">
-          {skills.map((k) => (
-            <div key={k.group}>
-              <h3>{k.group}</h3>
-              <div className="tags">
-                {k.items.map((t) => (
-                  <span key={t} className="tag">
-                    {t}
-                  </span>
+          <CardHead
+            card={cardByKey("about")}
+            aside={
+              <div className="about-polaroids">
+                {ABOUT_PHOTOS.map((p, i) => (
+                  <figure key={i} className="mini-polaroid">
+                    <img src={p.src} alt={p.alt} width="140" height="140" />
+                    {p.caption && <figcaption>{p.caption}</figcaption>}
+                  </figure>
                 ))}
               </div>
-            </div>
+            }
+          />
+          {ABOUT_BLURB.map((t) => (
+            <p key={t}>{t}</p>
           ))}
+          <h2>Honors &amp; Awards</h2>
+          <ul className="awards">
+            {AWARDS.map((a) => (
+              <li key={a.title}>
+                <div className="aw-main">
+                  <span className="aw-title">{a.title}</span>
+                  {a.detail && <span className="aw-detail">{a.detail}</span>}
+                </div>
+                <span className="aw-date mono">{a.date}</span>
+              </li>
+            ))}
+          </ul>
         </div>
-      </section>
+        <div className="about-side">
+          <section className="side-sec" aria-labelledby="edu-h">
+            <h2 id="edu-h">Education</h2>
+            <p className="edu-school">{EDUCATION.school}</p>
+            <p className="edu-degree">{EDUCATION.degree}</p>
+            <p className="edu-college">{EDUCATION.college}</p>
+            <dl className="edu-rows">
+              <div>
+                <dt className="mono">Abroad</dt>
+                <dd>{EDUCATION.abroad}</dd>
+              </div>
+              <div>
+                <dt className="mono">Coursework</dt>
+                <dd className="tags">
+                  {EDUCATION.coursework.map((c) => (
+                    <span key={c} className="tag">
+                      {c}
+                    </span>
+                  ))}
+                </dd>
+              </div>
+            </dl>
+          </section>
+          <section className="side-sec" aria-labelledby="int-h">
+            <h2 id="int-h">Interests</h2>
+            <div className="tags tags-lg">
+              {INTERESTS.map((t) => (
+                <span key={t} className="tag">
+                  {t}
+                </span>
+              ))}
+            </div>
+          </section>
+          <section aria-labelledby="sk-h">
+            <h2 id="sk-h" className="sk-h">
+              Skills
+            </h2>
+            <div className="skgrid">
+              {skills.map((k) => (
+                <div key={k.group} className="skbox">
+                  <h3>{k.group}</h3>
+                  <div className="tags">
+                    {k.items.map((t) => (
+                      <span key={t} className="tag">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+      </div>
     </div>
   );
 }
