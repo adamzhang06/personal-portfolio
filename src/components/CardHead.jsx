@@ -13,7 +13,7 @@ export function Crumb() {
 
 // Section page head: crumb, eyebrow (the card's count), H1, and that page's SD card on the right,
 // so the page mirrors the card you clicked.
-export function CardHead({ card, sub }) {
+export function CardHead({ card, sub, aside }) {
   return (
     <div className="chead">
       <div className="ph">
@@ -22,7 +22,7 @@ export function CardHead({ card, sub }) {
         <h1>{card.name}</h1>
         {sub && <p className="sub">{sub}</p>}
       </div>
-      <SdCard card={card} />
+      {aside ?? <SdCard card={card} />}
     </div>
   );
 }

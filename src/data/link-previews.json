@@ -69,6 +69,13 @@
     "domain": "engineering.purdue.edu",
     "image": "/previews/f4d2caf92e59.webp"
   },
+  "https://www.ksdk.com/article/news/community/parkway-south-high-school-students-day-of-service/63-fcb1fe41-3731-41ac-8de0-682a0096d5e4": {
+    "title": null,
+    "description": null,
+    "site": null,
+    "domain": "ksdk.com",
+    "image": null
+  },
   "https://docs.google.com/presentation/d/1gs9peDbaCVoPULaPnjPjkK-eCSsU5LRSpG_mCmAVlME/edit?usp=sharing": {
     "title": "8/16 - End of Internship Presentation",
     "description": "Overview Multicore added to “getTSS” A second multicore added to “clusterTSS” New clustering method (faster)",
