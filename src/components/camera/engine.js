@@ -11,7 +11,8 @@ import { bezier, EASE } from "@/lib/motion";
      data-tilt="off"         disable cursor tilt + bob
      data-fit="0.9"          framing (lower = larger camera)
      data-hotspots="off"     hide every hotspot (collapsed dock)
-     data-intro="1"          one-time glow sweep across the buttons
+     data-sweep="<id>"       the buttons glow purple in sequence for each new id ("0" = none; an id seen before is not replayed)
+     data-sweep-delay="500"  ms before that sweep starts
      data-dial="0..4"        mode-dial notch (H · A · P · E · L)
      data-door="open|closed" memory-card door; changes swing it on its hinge
      data-slot="lit"         the card slot behind the door pulses purple (a card is going in)
@@ -237,14 +238,19 @@ export function createEngine({ onFirstFrame, onNoWebGL } = {}) {
       lcdMat.needsUpdate = true;
     }
 
-    // intro glow sweep: the buttons glow once in sequence, 160 ms apart
-    if (el.getAttribute("data-intro") !== "1") m.introDone = false;
-    if (!m.introDone && el.getAttribute("data-intro") === "1") {
-      m.introDone = true;
-      INTRO_KEYS.forEach((k, i) => {
-        m.flash[k] = t + 500 + i * 160;
-      });
-      m.t0b = t;
+    // glow sweep: the buttons glow once in sequence, 160 ms apart, for each new data-sweep id
+    const sweep = el.getAttribute("data-sweep") || "0";
+    if (sweep !== m.sweep) {
+      m.sweep = sweep;
+      m.swept ??= new Set();
+      if (sweep !== "0" && !m.swept.has(sweep)) {
+        m.swept.add(sweep);
+        const delay = parseFloat(el.getAttribute("data-sweep-delay")) || 500;
+        INTRO_KEYS.forEach((k, i) => {
+          m.flash[k] = t + delay + i * 160;
+        });
+        m.t0b = t + delay - 500; // keep drawing until the sweep has finished
+      }
     }
 
     // mode dial rests on the current section; data-dial may preview another notch
@@ -352,7 +358,7 @@ export function createEngine({ onFirstFrame, onNoWebGL } = {}) {
     if (!cv) return "";
     const r = cv.getBoundingClientRect(), mr = el.getBoundingClientRect();
     return [
-      el.getAttribute("data-cam"), el.getAttribute("data-page"), el.getAttribute("data-count"), el.getAttribute("data-hotspots"), el.getAttribute("data-intro"),
+      el.getAttribute("data-cam"), el.getAttribute("data-page"), el.getAttribute("data-count"), el.getAttribute("data-hotspots"), el.getAttribute("data-sweep"),
       el.getAttribute("data-sub"), el.getAttribute("data-dial"), el.getAttribute("data-door"), el.getAttribute("data-slot"),
       Math.round(r.left - mr.left), Math.round(r.top - mr.top), Math.round(r.width), Math.round(r.height),
       el.querySelectorAll("[data-lead]").length, el.querySelectorAll("[data-hs]").length, m.hot,

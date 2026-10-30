@@ -8,6 +8,7 @@ import {
 import { skills } from "@/data/skills";
 import { cardByKey } from "@/data/cards";
 import { CardHead } from "@/components/CardHead";
+import { Rich } from "@/components/Rich";
 
 export function About() {
   return (
@@ -28,7 +29,9 @@ export function About() {
             }
           />
           {ABOUT_BLURB.map((t) => (
-            <p key={t}>{t}</p>
+            <p key={t} className="blurb">
+              <Rich text={t} />
+            </p>
           ))}
           <h2>Honors &amp; Awards</h2>
           <ul className="awards">

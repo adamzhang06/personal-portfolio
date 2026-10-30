@@ -1,15 +1,18 @@
 import { useParams } from "react-router-dom";
 import { useHistoryBack } from "@/hooks/useHistoryBack";
-import { coverOf, projects } from "@/data/projects";
+import { projects } from "@/data/projects";
 import { Crumb } from "@/components/CardHead";
-import { MediaGrid } from "@/components/MediaGrid";
-import { LinkPreviews } from "@/components/LinkPreview";
+import { MediaGrid, VideoEmbed } from "@/components/MediaGrid";
+import { LinkButtons } from "@/components/LinkPreview";
+import { Rich } from "@/components/Rich";
 import { Home } from "./Home";
 
 const pad = (n) => String(n).padStart(2, "0");
 
-// Case study inside a rounded viewfinder frame. Previous / next replace history, so Back still returns
-// to wherever the visitor came from. Links and media blocks are omitted when empty.
+// Case study inside a rounded viewfinder frame: header with the one-line headline, write-up with a
+// Built with / Demo / link buttons sidebar, then the gallery. Previous / next sit beside the counter at the top
+// (arrows only on phones) and replace history, so Back still returns to wherever the visitor came from.
+// The demo, links and gallery are omitted when the project has none.
 export function ProjectCase() {
   const { slug } = useParams();
   const { go } = useHistoryBack();
@@ -24,15 +27,25 @@ export function ProjectCase() {
       <article className="vf" aria-labelledby="case-h1">
         <div className="vf-top">
           <Crumb />
-          <span className="mono muted">
-            {pad(i + 1)} / {pad(projects.length)}
-          </span>
+          <div className="vf-nav">
+            <nav className="pn" aria-label="More projects">
+              <button type="button" className="btn small" aria-label={`Previous: ${prev.name}`} onClick={() => go(`/projects/${prev.slug}`, { replace: true })}>
+                <span aria-hidden="true">←</span> <span className="pn-name">{prev.name}</span>
+              </button>
+              <button type="button" className="btn small" aria-label={`Next: ${next.name}`} onClick={() => go(`/projects/${next.slug}`, { replace: true })}>
+                <span className="pn-name">{next.name}</span> <span aria-hidden="true">→</span>
+              </button>
+            </nav>
+            <span className="mono muted">
+              {pad(i + 1)} / {pad(projects.length)}
+            </span>
+          </div>
         </div>
         <div className="vf-head">
-          <div>
+          <div className="vf-title">
             <p className="eyebrow">{p.period}</p>
             <h1 id="case-h1">{p.name}</h1>
-            <p className="sub">{p.result}</p>
+            <p className="rone">{p.summary}</p>
           </div>
           <div className="result">
             <p className="eyebrow">Result</p>
@@ -43,19 +56,21 @@ export function ProjectCase() {
         <div className="case">
           <div>
             <h2>What it is</h2>
-            <p className="it">{p.lede}</p>
+            <div className="it">
+              {p.lede.split("\n\n").map((para) => (
+                <p key={para}>
+                  <Rich text={para} />
+                </p>
+              ))}
+            </div>
             <h2>What I did</h2>
             <ul>
               {p.bullets.map((b) => (
-                <li key={b}>{b}</li>
+                <li key={b}>
+                  <Rich text={b} />
+                </li>
               ))}
             </ul>
-            {p.media.length > 0 && (
-              <>
-                <h2 style={{ marginTop: 32 }}>Media</h2>
-                <MediaGrid media={p.media} />
-              </>
-            )}
           </div>
           <aside>
             <h2>Built with</h2>
@@ -66,22 +81,21 @@ export function ProjectCase() {
                 </span>
               ))}
             </div>
-            {p.links.length > 0 && (
+            {p.demo && (
               <>
-                <h2 style={{ marginTop: 20 }}>Links</h2>
-                <LinkPreviews links={p.links} fallback={{ image: coverOf(p)?.src, title: p.name }} />
+                <h2 style={{ marginTop: 20 }}>Demo</h2>
+                <VideoEmbed video={p.demo} title={`${p.name} demo video`} />
               </>
             )}
+            <LinkButtons links={p.links} />
           </aside>
         </div>
-        <nav className="pn" aria-label="More projects">
-          <button type="button" className="btn" onClick={() => go(`/projects/${prev.slug}`, { replace: true })}>
-            <span aria-hidden="true">←</span> {prev.name}
-          </button>
-          <button type="button" className="btn" onClick={() => go(`/projects/${next.slug}`, { replace: true })}>
-            {next.name} <span aria-hidden="true">→</span>
-          </button>
-        </nav>
+        {p.media.length > 0 && (
+          <section className="case-sec">
+            <h2>Gallery</h2>
+            <MediaGrid media={p.media} />
+          </section>
+        )}
       </article>
     </div>
   );

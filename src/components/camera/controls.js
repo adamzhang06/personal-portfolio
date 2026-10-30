@@ -10,7 +10,7 @@ export const CONTROLS = {
   play: { label: "Photography", term: "Playback ▶" },
   menu: { label: "Site menu", term: "Menu" },
   info: { label: "Quick facts", term: "i" },
-  ok: { label: "Open highlighted", term: "OK" },
+  ok: { label: "Home", term: "OK" },
 };
 
 export const ariaFor = (k) => `${CONTROLS[k].label} (${CONTROLS[k].term.replace(" ▶", "")} button)`;

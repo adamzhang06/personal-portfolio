@@ -23,8 +23,9 @@ export function Contact() {
     <div className="wrap page">
       <div className="ph">
         <Crumb />
-        <p className="eyebrow">Get in touch</p>
         <h1>Contact</h1>
+        <p className="eyebrow">Get in touch</p>
+        <p className="sub">Email is the fastest way to reach me.</p>
       </div>
       <div className="two">
         <div className="lks">

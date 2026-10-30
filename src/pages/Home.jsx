@@ -4,6 +4,7 @@ import { AVAILABILITY, HEADLINE_LINES, INTRO, NAME } from "@/data/site";
 import { liveCards } from "@/data/cards";
 import { HeroLinks } from "@/components/HeroLinks";
 import { Polaroid } from "@/components/Polaroid";
+import { Rich } from "@/components/Rich";
 import { SdCard } from "@/components/SdCard";
 
 export function Home({ notFound = false }) {
@@ -37,7 +38,9 @@ export function Home({ notFound = false }) {
             <br /> {l2}
             <br /> <span className="nw">{l3}</span>
           </h1>
-          <p className="lede">{INTRO}</p>
+          <p className="lede">
+            <Rich text={INTRO} />
+          </p>
         </div>
         <span className="avail hero-avail">{AVAILABILITY}</span>
         <div className="hero-me">

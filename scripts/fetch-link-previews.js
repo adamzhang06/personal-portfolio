@@ -1,4 +1,4 @@
-// Builds link previews for every project and role link.
+// Builds link previews for every role link (project links show as plain logo buttons).
 // Fetches each page's Open Graph / Twitter card metadata (oEmbed for YouTube and Vimeo), saves the
 // preview image resized to public/previews/, and writes src/data/link-previews.json.
 // Run after adding or changing links:  npm run link-previews
@@ -7,7 +7,6 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { Buffer } from "node:buffer";
 import sharp from "sharp";
-import { projects } from "../src/data/projects.js";
 import { roles } from "../src/data/roles.js";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
@@ -15,7 +14,7 @@ const IMG_DIR = path.join(ROOT, "public/previews");
 const OUT = path.join(ROOT, "src/data/link-previews.json");
 const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130 Safari/537.36";
 
-const links = [...new Set([...projects, ...roles].flatMap((x) => x.links.map((l) => l.href)))];
+const links = [...new Set(roles.flatMap((x) => x.links.map((l) => l.href)))];
 
 const decode = (s) =>
   s

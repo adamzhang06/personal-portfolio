@@ -19,25 +19,32 @@ function initialIntroPhase() {
 
 /* Screen-level UI state shared by the shell, the pages and the camera:
    overlay (dialog: 'menu' | 'info' | 'videos'), whether the docked camera is expanded (it stays expanded
-   under dialogs and the Collections dock), camera view (front / rear), the Sections dial,
-   the highlighted project (camera OK), toast, shutter flash, the intro phase
+   under dialogs and the Collections dock), camera view (front / rear), the Sections dial, toast, shutter flash, the intro phase
    ('cover' → 'opening' → 'sweep' → 'done') and a counter that ticks on every new screen
    (it replays the aperture transition). */
 export function UiProvider({ children }) {
   const location = useLocation();
   const { go } = useHistoryBack();
   const [overlay, setOverlay] = useState(null);
-  const [dockOpen, setDockOpen] = useState(false);
+  const [dockOpen, setDockOpenState] = useState(false);
   const [dockLinger, setDockLinger] = useState(false); // keep it expanded through a card-door page change
   const [view, setView] = useState("front");
   const [dialOpen, setDialOpen] = useState(false);
   const [dialPreview, setDialPreview] = useState(null);
-  const [highlighted, setHighlighted] = useState(0);
   const [screenCount, setScreenCount] = useState(0);
   const [inserting, setInserting] = useState(false); // a card from the Collections dock is going into the camera
   const [toast, setToast] = useState({ text: "", on: false });
   const [flash, setFlash] = useState(false);
   const [introPhase, setIntroPhase] = useState(initialIntroPhase);
+
+  // Collapsing the dock also closes its Sections panel, so the next open starts with just Camera controls.
+  const setDockOpen = useCallback((open) => {
+    setDockOpenState(open);
+    if (!open) {
+      setDialOpen(false);
+      setDialPreview(null);
+    }
+  }, []);
 
   // A new screen closes overlays, faces the camera front and closes the dial.
   // The dial rests on the current section; Contact and unknown routes keep the last one.
@@ -97,7 +104,7 @@ export function UiProvider({ children }) {
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [dialOpen, overlay, dockOpen, closeDial]);
+  }, [dialOpen, overlay, dockOpen, closeDial, setDockOpen]);
 
   useEffect(() => {
     if (!dockLinger) return undefined;
@@ -106,7 +113,7 @@ export function UiProvider({ children }) {
       setDockLinger(false);
     }, 1100);
     return () => clearTimeout(t);
-  }, [dockLinger]);
+  }, [dockLinger, setDockOpen]);
 
   useEffect(() => {
     if (introPhase === "opening") sessionStorage.setItem(INTRO_KEY, "1");
@@ -127,14 +134,13 @@ export function UiProvider({ children }) {
       dockOpen, setDockOpen,
       view, setView,
       dialOpen, setDialOpen, dialPreview, setDialPreview, closeDial, sectionIndex,
-      highlighted, setHighlighted,
       screenCount,
       inserting, setInserting,
       toast, showToast,
       flash, shutter,
       introPhase, setIntroPhase,
     }),
-    [pageKey, overlay, dockOpen, view, dialOpen, dialPreview, closeDial, sectionIndex, highlighted, screenCount, inserting, toast, showToast, flash, shutter, introPhase]
+    [pageKey, overlay, dockOpen, setDockOpen, view, dialOpen, dialPreview, closeDial, sectionIndex, screenCount, inserting, toast, showToast, flash, shutter, introPhase]
   );
 
   return <UiContext.Provider value={value}>{children}</UiContext.Provider>;

@@ -15,13 +15,13 @@ export const AVAILABILITY = "Available for work";
 export const HEADLINE_LINES = ["Building my future", "line-by-line at", "Purdue University"];
 
 export const INTRO =
-  "Hi, I’m Adam Zhang, an Artificial Intelligence major at Purdue who builds across software engineering, robotics, and machine learning. I’m driven by turning real problems into working solutions.";
+  "Hi, I’m Adam Zhang, an Artificial Intelligence major at Purdue who builds across **software engineering, robotics, and machine learning**. I’m driven by turning **real problems into working solutions**.";
 
 // About-page blurb (the Home hero keeps the shorter INTRO).
 export const ABOUT_BLURB = [
-  "I’m Adam Zhang, an Artificial Intelligence major at Purdue. I like building things you can actually put your hands on, whether that’s a React app, a camera slider I built from scratch, or a robot that has to find its way across uneven outdoor terrain. It started with FTC robotics in high school, where I programmed our autonomous routines and we ended up 2025 Missouri/Kansas State Champions.",
-  "Right now I’m co-founding Raccoon Dynamics, where we’re building an autonomous ground robot for agricultural data collection and I own the system architecture from sensors to motors. I’m also doing research with The Data Mine, helping the Nesin Math Village swap a paper-based library for a real digital catalog. On weekends, hackathons are where I test ideas fast: 2nd of 183 at Cal Hacks and 1st of 33 at InnovateHER Hacks.",
-  "I care just as much about the people side. I lead a team of 8 on safe reinforcement learning research in VIP, serve on the Purdue CS Undergraduate Student Board, and TA CS 19300. In high school I helped run Serves Day, which got 92% of our school volunteering across 50+ community sites and earned a resolution from the Missouri House. I’ve always liked pulling younger students up with me, like bringing our FLL kids onto the FTC team, and I want to keep doing that wherever I end up.",
+  "I’m Adam Zhang, an Artificial Intelligence major at Purdue. I like building **things you can actually put your hands on**, whether that’s a React app, a camera slider I built from scratch, or a robot that has to find its way across uneven outdoor terrain. It started with FTC robotics in high school, where I programmed our autonomous routines and we ended up **2025 Missouri/Kansas State Champions**.",
+  "Right now I’m **co-founding Raccoon Dynamics**, where we’re building an autonomous ground robot for agricultural data collection and I own the **system architecture** from sensors to motors. I’m also doing research with **The Data Mine**, helping the Nesin Math Village swap a paper-based library for a real digital catalog. On weekends, hackathons are where I test ideas fast: **2nd of 183 at Cal Hacks** and **1st of 33 at InnovateHER Hacks**.",
+  "I care just as much about **the people side**. I **lead a team of 8** on safe reinforcement learning research in VIP, serve on the **Purdue CS Undergraduate Student Board**, and **TA CS 19300**. In high school I helped run Serves Day, which got **92% of our school volunteering** across 50+ community sites and earned **a resolution from the Missouri House**. I’ve always liked pulling younger students up with me, like bringing our FLL kids onto the FTC team, and I want to keep doing that wherever I end up.",
 ];
 
 export const EDUCATION = {
