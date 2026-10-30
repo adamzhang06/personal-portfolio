@@ -1,0 +1,93 @@
+{
+  "https://github.com/adamzhang06/style-snapped": {
+    "title": "adamzhang06/style-snapped",
+    "description": "Machine learning project for classifying aesthetics",
+    "site": "GitHub",
+    "domain": "github.com",
+    "image": "/previews/5808a677675d.webp"
+  },
+  "https://github.com/adamzhang06/AXI6-cinema-robotics": {
+    "title": "adamzhang06/AXI6-cinema-robotics",
+    "description": "Custom 2-axis camera slider built from scratch",
+    "site": "GitHub",
+    "domain": "github.com",
+    "image": "/previews/dd5f7c8560f9.webp"
+  },
+  "https://devpost.com/software/axi6-cinema-robotics-camera-slider": {
+    "title": null,
+    "description": null,
+    "site": null,
+    "domain": "devpost.com",
+    "image": null
+  },
+  "https://vimeo.com/1184530933": {
+    "title": "AXI6 Cinema Robotics - Camera Slider",
+    "description": "Video by Sanjay Tamilselvan",
+    "site": "Vimeo",
+    "domain": "vimeo.com",
+    "image": "/previews/7e1545e652b8.webp"
+  },
+  "https://github.com/Azeemme/BarBabes": {
+    "title": "Azeemme/BarBabes",
+    "description": "BarBabes is your party's AI safety net. Combining NFC tracking, Gemini sobriety tests, and more, the app assists in responsible drinking, combats hangxiety, and empowers women to enjoy college safely.",
+    "site": "GitHub",
+    "domain": "github.com",
+    "image": "/previews/19379944dbda.webp"
+  },
+  "https://devpost.com/software/barbabes": {
+    "title": null,
+    "description": null,
+    "site": null,
+    "domain": "devpost.com",
+    "image": null
+  },
+  "https://www.youtube.com/watch?v=GhaOiUV3mbk": {
+    "title": "BarBabes",
+    "description": "Video by Ramya Prasanna",
+    "site": "YouTube",
+    "domain": "youtube.com",
+    "image": "/previews/b74e0ccccb1e.webp"
+  },
+  "https://www.purdueusb.com/": {
+    "title": "Purdue USB",
+    "description": null,
+    "site": null,
+    "domain": "purdueusb.com",
+    "image": null
+  },
+  "https://github.com/sbrunswi/VIP_Intro_deep_reinforcement_learning": {
+    "title": "VIP-Team-AIDA3/RL_planner",
+    "description": "This report is for the VIP group that works on reinforcement learning, and includes weekly lessons, code examples, and the groups own research",
+    "site": "GitHub",
+    "domain": "github.com",
+    "image": "/previews/ffb035295f24.webp"
+  },
+  "https://engineering.purdue.edu/fsae/wordpress/": {
+    "title": "Purdue Formula SAE",
+    "description": "Student Built Racecars",
+    "site": "Purdue Formula SAE",
+    "domain": "engineering.purdue.edu",
+    "image": "/previews/f4d2caf92e59.webp"
+  },
+  "https://docs.google.com/presentation/d/1gs9peDbaCVoPULaPnjPjkK-eCSsU5LRSpG_mCmAVlME/edit?usp=sharing": {
+    "title": "8/16 - End of Internship Presentation",
+    "description": "Overview Multicore added to “getTSS” A second multicore added to “clusterTSS” New clustering method (faster)",
+    "site": "Google Docs",
+    "domain": "docs.google.com",
+    "image": "/previews/b7c13cb41b0b.webp"
+  },
+  "https://ftcscout.org/teams/16498?season=2024": {
+    "title": null,
+    "description": null,
+    "site": null,
+    "domain": "ftcscout.org",
+    "image": null
+  },
+  "https://www.ftcstats.org/2025/wall.html": {
+    "title": "FTC Stats",
+    "description": null,
+    "site": null,
+    "domain": "ftcstats.org",
+    "image": null
+  }
+}
