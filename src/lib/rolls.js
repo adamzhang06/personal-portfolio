@@ -134,10 +134,11 @@ export function byYear(list) {
   return out;
 }
 
-/* Carton sizes for a window width. Wider screens lay cartons on a grid of `cols` columns (.wrap width, 24 px gaps),
-   a carton spanning one column per roll up to the full width and wrapping its slots after that; each slot holds a
-   canister and its leader, which shows only the peek frames that fit the slot. Phones drop the leaders and stand
-   canisters side by side, three to a row, so cartons sit next to each other. --scw is the canister width. */
+/* Carton sizes for a window width. Wider screens lay cartons on a grid of `cols` columns (.wrap width, 28 px gaps),
+   a carton spanning one column per roll up to the full width; box(n) keeps a carton's n slots on one row as long as
+   each still has room for a canister and a leader, and only then wraps them. Each leader shows only the peek frames
+   that fit its slot. Phones drop the leaders and stand canisters side by side, three to a row, so cartons sit next to
+   each other. --scw is the canister width. */
 export function shelfGeometry(vw) {
   const phone = vw <= 860;
   const pad = phone ? 20 : vw <= 1240 ? 48 : 80;
@@ -146,13 +147,19 @@ export function shelfGeometry(vw) {
   if (phone) {
     const cw = Math.floor(clamp(84, (content - walls) / 3 - 16, 104));
     const slot = cw + 16;
-    return { phone, cw, cols: Math.max(1, Math.floor((content - walls) / slot)), slot: () => slot, walls, fit: () => [] };
+    const per = Math.max(1, Math.floor((content - walls) / slot));
+    return { phone, cw, walls, box: (n) => ({ span: 1, per: Math.min(n, per), slot }), fit: () => [] };
   }
-  const gap = 24;
+  const gap = 28;
   const cols = vw <= 1180 ? 2 : 4;
   const colW = (content - (cols - 1) * gap) / cols;
-  const slot = (span) => (span * colW + (span - 1) * gap - walls) / span;
-  const cw = Math.round(clamp(100, slot(1) * 0.36, 124));
+  const cw = Math.round(clamp(100, (colW - walls) * 0.36, 124));
+  const box = (n) => {
+    const span = Math.min(n, cols);
+    const inner = span * colW + (span - 1) * gap - walls;
+    const per = clamp(1, Math.floor(inner / (cw + 110)), n); // a slot needs the canister and a little leader
+    return { span, per, slot: inner / per };
+  };
   const peekH = Math.round(cw * 0.75);
   const fit = (peek, w) => {
     const room = w - (14 + cw * 0.95) - 22 - 8;
@@ -165,5 +172,5 @@ export function shelfGeometry(vw) {
     }
     return out;
   };
-  return { phone, cw, cols, slot, walls, peekH, fit };
+  return { phone, cw, walls, box, peekH, fit };
 }
