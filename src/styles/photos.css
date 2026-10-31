@@ -98,16 +98,25 @@ button.fr:hover img{outline:3px solid var(--green);outline-offset:-3px}
 .walls i{position:absolute;inset:0;
  background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.45)),linear-gradient(90deg,#5d4329 0,#3b2a1a var(--d),#3b2a1a calc(100% - var(--d)),#5d4329 100%);
  clip-path:polygon(0 calc(100% - var(--wall)),var(--d) 0,var(--d) 100%,calc(100% - var(--d)) 100%,calc(100% - var(--d)) 0,100% calc(100% - var(--wall)),100% 100%,0 100%)}
-.rc{--dx:calc(14px + var(--scw) / 2);--dw:calc(var(--scw) * .62);--dh:calc(var(--scw) * .5);view-transition-class:roll;position:relative;display:block;min-width:0;height:calc(var(--scw) * 5 / 3 + 40px)}
+.rc{--dx:calc(14px + var(--scw) / 2);--dw:calc(var(--scw) * .62);--dh:calc(var(--scw) * .5);view-transition-class:roll;position:relative;display:block;min-width:0;height:calc(var(--scw) * 5 / 3 + 40px);clip-path:inset(-300px -1px 0 -1px)}
 .rc .can{--cw:var(--scw);--ch:calc(var(--scw) * 5 / 3);position:absolute;left:14px;bottom:14px;z-index:2;transition:transform .35s var(--out)}
-.rc .shade{position:absolute;left:0;right:0;bottom:calc(var(--wall) - 30px);height:70px;z-index:3;pointer-events:none;background:linear-gradient(180deg,rgba(20,12,4,0),rgba(20,12,4,.5))}
-/* front wall: the layer itself is the corrugated cut edge; ::after, 3 px lower, is the printed face */
+/* Each slot is its own stacking context (its view-transition name), so a slot is clipped to its own width (.rc) and
+   nothing in it, like its canister's drop shadow, can darken the next slot's front wall. Its shadow is drawn 12 px
+   wider than the slot, to blur evenly up to the edges, then clipped back to the slot. */
+.rc .shade{position:absolute;left:-12px;right:-12px;bottom:0;height:var(--wall);z-index:3;pointer-events:none;filter:blur(5px);clip-path:inset(-140px 12px 0 12px)}
+/* the front wall's shadow on what stands behind it: the wall's own shape (scoop and all), raised a little and blurred */
+.rc .shade i{position:absolute;inset:0;transform:translateY(-8px);background:rgba(14,8,3,.6);
+ -webkit-mask:radial-gradient(var(--dw) var(--dh) at calc(var(--dx) + 12px) 0,transparent calc(100% - 1px),#000 100%);mask:radial-gradient(var(--dw) var(--dh) at calc(var(--dx) + 12px) 0,transparent calc(100% - 1px),#000 100%)}
+/* and less light the deeper into the box, all the way to the floor, so nothing in a scoop is lit more than above it */
+.rc .shade::before{content:"";position:absolute;left:0;right:0;bottom:0;height:calc(var(--wall) + 70px);background:linear-gradient(180deg,rgba(14,8,3,0),rgba(14,8,3,.38))}
+/* front wall: the layer itself is the corrugated cut edge; ::after, 3 px lower, is the printed face. --gx shifts its
+   grain by the slot's place in the row, so the card's texture runs on unbroken from slot to slot. */
 .rc .lip{position:absolute;left:-1px;right:-1px;bottom:0;height:var(--wall);z-index:4;pointer-events:none;
  background:repeating-linear-gradient(90deg,#dcc196 0 1.5px,#a78258 1.5px 3.5px);
  -webkit-mask:radial-gradient(var(--dw) var(--dh) at var(--dx) 0,transparent calc(100% - 1px),#000 100%);mask:radial-gradient(var(--dw) var(--dh) at var(--dx) 0,transparent calc(100% - 1px),#000 100%)}
 .rc .lip::after{content:"";position:absolute;inset:3px 0 0;
  background:url(/assets/grain.png),linear-gradient(180deg,transparent 0 calc(100% - 15px),#c9962e calc(100% - 15px) calc(100% - 12px),transparent calc(100% - 12px) calc(100% - 10px),#5B2BA0 calc(100% - 10px) calc(100% - 7px),transparent calc(100% - 7px)),linear-gradient(180deg,#bd9566,#a17a50 55%,#83623f);
- background-size:256px 256px,auto,auto;background-blend-mode:multiply,normal,normal;box-shadow:inset 0 1px 0 rgba(255,236,204,.35);
+ background-size:256px 256px,auto,auto;background-position:var(--gx,0) 0,0 0,0 0;background-blend-mode:multiply,normal,normal;box-shadow:inset 0 1px 0 rgba(255,236,204,.35);
  -webkit-mask:radial-gradient(var(--dw) var(--dh) at var(--dx) 0,transparent calc(100% - 1px),#000 100%);mask:radial-gradient(var(--dw) var(--dh) at var(--dx) 0,transparent calc(100% - 1px),#000 100%)}
 .peek{--u:.8;position:absolute;left:calc(14px + var(--scw) * .42);bottom:calc(var(--wall) - 8px);z-index:1;transition:--u .7s var(--expo),transform .35s var(--out)}
 .peek .fw{filter:drop-shadow(0 14px 12px rgba(0,0,0,.6))}

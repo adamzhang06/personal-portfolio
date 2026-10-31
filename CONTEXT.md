@@ -37,7 +37,7 @@ Bordered interactive boxes lift slightly and a green streak runs around their ou
 
 ## Content
 
-All copy and facts live in `src/data/` (`site.js`, `projects.js`, `roles.js`, `skills.js`, `cards.js`, `contact.js`, `pages.js`); one fact, one file edit. Projects and roles share a media schema (`image` | `video` | `embed`) rendered by `MediaGrid` with a lightbox. Role link cards come from `npm run link-previews` (`src/data/link-previews.json`, images in `public/previews/`); a link listed in the script's `IMAGE_FILES` uses a hand-picked image from `scripts/link-preview-images/` (Purdue Formula SAE does).
+All copy and facts live in `src/data/` (`site.js`, `projects.js`, `roles.js`, `skills.js`, `cards.js`, `contact.js`, `pages.js`); one fact, one file edit. Projects and roles share a media schema (`image` | `video` | `embed`) rendered by `MediaGrid` with a lightbox. Every case study has a Links section: GitHub and Devpost as logo buttons, any other project link (dor's live site) as a preview card. Role and those project link cards come from `npm run link-previews` (`src/data/link-previews.json`, images in `public/previews/`; `npm run link-previews -- <url>` refreshes just that card); a link listed in the script's `IMAGE_FILES` uses a hand-picked image from `scripts/link-preview-images/` (Purdue Formula SAE, Purdue USB and dor's site do).
 
 ## Photography (being redesigned)
 

@@ -34,7 +34,7 @@ export function RollShelf({ rolls, vw, onOpen }) {
               <span className="walls" aria-hidden="true">
                 <i />
               </span>
-              {rs.map((r) => {
+              {rs.map((r, i) => {
                 const n = r.photos.length;
                 return (
                   <button
@@ -43,7 +43,7 @@ export function RollShelf({ rolls, vw, onOpen }) {
                     className="rc"
                     aria-label={`Open roll: ${r.name} ${r.yearSpan}, ${n} ${n === 1 ? "photo" : "photos"}`}
                     onClick={() => onOpen(r)}
-                    style={{ viewTransitionName: `roll-${r.id}` }}
+                    style={{ viewTransitionName: `roll-${r.id}`, "--gx": `${-(i % per) * slot}px` }}
                   >
                     {!s.phone && (
                       <span className="peek" aria-hidden="true">
@@ -62,13 +62,15 @@ export function RollShelf({ rolls, vw, onOpen }) {
                       </span>
                     )}
                     <FilmCanister kind={r.kind} name={r.name} year={r.yearLabel} band={exposures(n)} />
-                    <span className="shade" aria-hidden="true" />
+                    <span className="shade" aria-hidden="true">
+                      <i />
+                    </span>
                     <span className="lip" aria-hidden="true" />
                   </button>
                 );
               })}
               {Array.from({ length: fill }, (_, k) => (
-                <span key={`fill-${k}`} className="rc empty" aria-hidden="true">
+                <span key={`fill-${k}`} className="rc empty" aria-hidden="true" style={{ "--gx": `${-((rs.length + k) % per) * slot}px` }}>
                   <span className="lip" />
                 </span>
               ))}

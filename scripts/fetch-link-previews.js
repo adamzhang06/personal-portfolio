@@ -1,24 +1,39 @@
-// Builds link previews for every role link (project links show as plain logo buttons).
+// Builds link previews for every role link, and every project link that isn't GitHub or Devpost (those show as
+// plain logo buttons).
 // Fetches each page's Open Graph / Twitter card metadata (oEmbed for YouTube and Vimeo), saves the
 // preview image resized to public/previews/, and writes src/data/link-previews.json.
 // A link listed in IMAGE_FILES uses that hand-picked image (in scripts/link-preview-images/) instead of the page's own.
 // Run after adding or changing links:  npm run link-previews
+// Or refresh only some, keeping every other card as it is:  npm run link-previews -- <url> [<url> …]
 import fs from "node:fs/promises";
 import path from "node:path";
 import crypto from "node:crypto";
 import { Buffer } from "node:buffer";
+import process from "node:process";
 import sharp from "sharp";
 import { roles } from "../src/data/roles.js";
+import { projects } from "../src/data/projects.js";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
 const IMG_DIR = path.join(ROOT, "public/previews");
 const OUT = path.join(ROOT, "src/data/link-previews.json");
 const IMAGE_FILES = {
   "https://engineering.purdue.edu/fsae/wordpress/": "purdue-fsae.jpg", // the site's own og:image isn't the hero
+  "https://www.purdueusb.com/": "purdue-usb.jpg", // the site has no og:image
+  "https://doratcalhacks.site/": "dor-site.jpg", // the site has no og:image; a screenshot of its opening screen
 };
 const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130 Safari/537.36";
 
-const links = [...new Set(roles.flatMap((x) => x.links.map((l) => l.href)))];
+const BUTTON_HOSTS = ["github.com", "devpost.com"]; // as LinkButtons in src/components/LinkPreview.jsx
+const host = (href) => new URL(href).hostname.replace(/^www\./, "");
+const links = [
+  ...new Set([
+    ...roles.flatMap((x) => x.links.map((l) => l.href)),
+    ...projects.flatMap((p) => p.links.map((l) => l.href)).filter((href) => !BUTTON_HOSTS.includes(host(href))),
+  ]),
+];
+const only = process.argv.slice(2);
+for (const href of only) if (!links.includes(href)) throw new Error(`${href} is not a role or project link`);
 
 const decode = (s) =>
   s
@@ -78,8 +93,9 @@ async function saveImage(src, href) {
 }
 
 await fs.mkdir(IMG_DIR, { recursive: true });
+const kept = only.length ? JSON.parse(await fs.readFile(OUT, "utf8")) : {};
 const out = {};
-for (const href of links) {
+for (const href of only.length ? only : links) {
   try {
     const data = (await oembed(href)) ?? (await scrape(href));
     let image = null;
@@ -88,14 +104,15 @@ for (const href of links) {
       title: data.title?.slice(0, 140) || null,
       description: data.description?.slice(0, 220) || null,
       site: data.site || null,
-      domain: new URL(href).hostname.replace(/^www\./, ""),
+      domain: host(href),
       image,
     };
     console.log(`✓ ${href}${image ? "" : " (no image)"}`);
   } catch (e) {
-    out[href] = { title: null, description: null, site: null, domain: new URL(href).hostname.replace(/^www\./, ""), image: null };
+    out[href] = { title: null, description: null, site: null, domain: host(href), image: null };
     console.warn(`✗ ${href}: ${e.message}`);
   }
 }
-await fs.writeFile(OUT, JSON.stringify(out, null, 2) + "\n");
-console.log(`wrote ${path.relative(ROOT, OUT)} (${links.length} links)`);
+const all = Object.fromEntries(links.map((href) => [href, out[href] ?? kept[href]]).filter(([, v]) => v));
+await fs.writeFile(OUT, JSON.stringify(all, null, 2) + "\n");
+console.log(`wrote ${path.relative(ROOT, OUT)} (${only.length ? `${only.length} of ` : ""}${links.length} links)`);

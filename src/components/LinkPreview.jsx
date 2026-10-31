@@ -44,6 +44,7 @@ const Devpost = ({ size = 24, ...props }) => (
 );
 
 const ICONS = { "github.com": Github, "devpost.com": Devpost };
+const isCode = (l) => !!ICONS[hostOf(l.href)];
 
 // Small logo + label buttons, for a project's GitHub / Devpost links (no preview card).
 export function LinkButtons({ links }) {
@@ -59,6 +60,19 @@ export function LinkButtons({ links }) {
         );
       })}
     </div>
+  );
+}
+
+// A project's Links, the same on every case study: GitHub / Devpost as logo buttons, any other link (a live site)
+// as a preview card.
+export function ProjectLinks({ links }) {
+  if (!links?.length) return null;
+  return (
+    <>
+      <h2 style={{ marginTop: 20 }}>Links</h2>
+      <LinkButtons links={links.filter(isCode)} />
+      <LinkPreviews links={links.filter((l) => !isCode(l))} />
+    </>
   );
 }
 
