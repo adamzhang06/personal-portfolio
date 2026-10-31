@@ -65,6 +65,7 @@ button.fr:hover img{outline:3px solid var(--green);outline-offset:-3px}
 .rolls-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;margin-top:40px}
 .rolls-h h2{font-size:calc(30px*var(--s));line-height:1.1}
 .kinds{display:flex;flex-wrap:wrap;gap:8px}
+.kinds .reset.off{visibility:hidden}
 .chip{gap:10px;color:var(--body)}
 .chip .n{font-family:var(--mo);font-size:calc(12px*var(--s));color:var(--muted)}
 .chip.on{background:var(--pdeep);border-color:var(--ptext);color:var(--text)}

@@ -9,8 +9,8 @@ import { PhotoLightbox } from "./PhotoLightbox";
 const REWIND_MS = 750; // strips roll up (0.55 s), then the sheet fades
 
 /* An opened roll: a see-through sheet over the page with the roll's name and photo count. Its photos unroll in
-   zig-zag strips, each from its own canister on alternating sides, whose band counts that strip's photos out of the
-   roll's. The page behind is locked and the sheet scrolls on its own. Rewind (or Esc, or a click anywhere off the film) rolls the strips back up and closes;
+   zig-zag strips, each from its own canister on alternating sides, whose band counts the photos so far out of the
+   roll's (3/10, then 10/10). The page behind is locked and the sheet scrolls on its own. Rewind (or Esc, or a click anywhere off the film) rolls the strips back up and closes;
    focus returns to the canister, and the shelf never moved. A photo opens the lightbox with its details. */
 export function RollViewer({ roll, onClose }) {
   const [closing, setClosing] = useState(false);
@@ -80,7 +80,7 @@ export function RollViewer({ roll, onClose }) {
                 frames={s.frames}
                 side={s.side}
                 H={g.H}
-                can={{ kind: roll.kind, name: roll.name, year: roll.yearLabel, band: exposures(s.frames.length, n) }}
+                can={{ kind: roll.kind, name: roll.name, year: roll.yearLabel, band: exposures(s.upTo, n) }}
                 onOpen={(p) => setShown(roll.photos.indexOf(p))}
               />
             ))}

@@ -29,7 +29,8 @@ export function dateLabel(takenAt) {
 export const photoWhen = (p) => [dateLabel(p.takenAt), p.place].filter(Boolean).join(" · ");
 export const photoTech = (p) => [p.camera.replace("Canon PowerShot ", ""), p.lens, p.exposure ?? p.film].filter(Boolean).join(" · ");
 export const photoLabel = (p) => `${p.title}, ${dateLabel(p.takenAt)}`;
-export const exposures = (n, total = n) => (n === total ? `${n} EXP` : `${n}/${total} EXP`);
+// "17 EXP" on a shelf canister; "3/10 EXP" on a strip's, counting every photo up to the end of that strip
+export const exposures = (n, total) => (total == null ? `${n} EXP` : `${n}/${total} EXP`);
 
 export const rolls = rollData.rolls
   .map((r) => {
@@ -85,6 +86,12 @@ export const filmVars = (g) => ({
 // Frame width at height H; an empty frame is drawn landscape.
 export const frameWidth = (p, H) => Math.round(p ? (H * p.w) / p.h : H * 1.5);
 
+// Each strip's photo count so far, from the first strip through this one (for the canister bands).
+const counted = (strips) => {
+  let n = 0;
+  return strips.map((s) => ({ ...s, upTo: (n += s.frames.filter(Boolean).length) }));
+};
+
 // Lay frames along strips: a frame that would cross the screen edge starts the next strip, so nothing is cut off.
 function wrap(frames, g) {
   const rows = [];
@@ -104,15 +111,17 @@ function wrap(frames, g) {
 }
 
 // An opened roll: its photos in shot order on strips from canisters on alternating sides, read left to right on each.
-export const rollStrips = (roll, g) => wrap(roll.photos, g).map((frames, k) => ({ side: k % 2 ? "right" : "left", frames }));
+export const rollStrips = (roll, g) => counted(wrap(roll.photos, g).map((frames, k) => ({ side: k % 2 ? "right" : "left", frames })));
 
 /* The favorites: the run of frames wraps onto as many strips as the window needs, each from its own canister,
    alternating left and right down the page and laid out from the canister outward. Empty frames only fill out the
    last strip with photos on it; a strip of nothing but empty frames is dropped. Frames come back drawn left to right. */
 export function favoriteStrips(frames, g) {
-  return wrap(frames, g)
-    .filter((row) => row.some(Boolean))
-    .map((row, k) => ({ side: k % 2 ? "right" : "left", photos: row.filter(Boolean), frames: k % 2 ? [...row].reverse() : row }));
+  return counted(
+    wrap(frames, g)
+      .filter((row) => row.some(Boolean))
+      .map((row, k) => ({ side: k % 2 ? "right" : "left", frames: k % 2 ? [...row].reverse() : row }))
+  );
 }
 
 /* Shelf sizes for a window width: the card width follows .wrap and the grid's columns (photos.css), the canister scales

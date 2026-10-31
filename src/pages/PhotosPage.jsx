@@ -52,7 +52,7 @@ export function PhotosPage() {
               frames={s.frames}
               side={s.side}
               H={g.H}
-              can={{ kind: "fav", name: "Favorites", year: "", band: exposures(s.photos.length, favPhotos.length) }}
+              can={{ kind: "fav", name: "Favorites", year: "", band: exposures(s.upTo, favPhotos.length) }}
               onOpen={(p) => setShown(favPhotos.indexOf(p))}
             />
           ))}
@@ -63,6 +63,17 @@ export function PhotosPage() {
         <div className="rolls-h">
           <h2 id="rolls-h">Rolls</h2>
           <div className="kinds" role="group" aria-label="Show rolls by kind" ref={filters}>
+            {/* Reset sits first and keeps its place while hidden, so the filters never move */}
+            <button
+              type="button"
+              className={`btn small reset${picked.length ? "" : " off"}`}
+              onClick={() => {
+                setPicked([]);
+                filters.current?.querySelector(".chip")?.focus(); // Reset hides; keep focus on the filters
+              }}
+            >
+              Reset
+            </button>
             {KINDS.map((k) => {
               const on = picked.includes(k.kind);
               return (
@@ -72,18 +83,6 @@ export function PhotosPage() {
                 </button>
               );
             })}
-            {picked.length > 0 && (
-              <button
-                type="button"
-                className="btn small"
-                onClick={() => {
-                  setPicked([]);
-                  filters.current?.querySelector("button")?.focus(); // Reset goes away; keep focus on the filters
-                }}
-              >
-                Reset
-              </button>
-            )}
           </div>
         </div>
         <p className="sr" aria-live="polite">

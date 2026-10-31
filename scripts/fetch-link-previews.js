@@ -1,6 +1,7 @@
 // Builds link previews for every role link (project links show as plain logo buttons).
 // Fetches each page's Open Graph / Twitter card metadata (oEmbed for YouTube and Vimeo), saves the
 // preview image resized to public/previews/, and writes src/data/link-previews.json.
+// A link listed in IMAGE_FILES uses that hand-picked image (in scripts/link-preview-images/) instead of the page's own.
 // Run after adding or changing links:  npm run link-previews
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -12,6 +13,9 @@ import { roles } from "../src/data/roles.js";
 const ROOT = path.resolve(import.meta.dirname, "..");
 const IMG_DIR = path.join(ROOT, "public/previews");
 const OUT = path.join(ROOT, "src/data/link-previews.json");
+const IMAGE_FILES = {
+  "https://engineering.purdue.edu/fsae/wordpress/": "purdue-fsae.jpg", // the site's own og:image isn't the hero
+};
 const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130 Safari/537.36";
 
 const links = [...new Set(roles.flatMap((x) => x.links.map((l) => l.href)))];
@@ -67,8 +71,9 @@ async function scrape(href) {
 
 async function saveImage(src, href) {
   const name = crypto.createHash("sha1").update(href).digest("hex").slice(0, 12) + ".webp";
-  const buf = await get(src, "buffer");
-  await sharp(buf).resize({ width: 800, height: 420, fit: "cover", position: "attention" }).webp({ quality: 74 }).toFile(path.join(IMG_DIR, name));
+  const file = IMAGE_FILES[href];
+  const buf = file ? await fs.readFile(path.join(ROOT, "scripts/link-preview-images", file)) : await get(src, "buffer");
+  await sharp(buf).resize({ width: 800, height: 420, fit: "cover", position: file ? "north" : "attention" }).webp({ quality: 74 }).toFile(path.join(IMG_DIR, name));
   return `/previews/${name}`;
 }
 
@@ -78,7 +83,7 @@ for (const href of links) {
   try {
     const data = (await oembed(href)) ?? (await scrape(href));
     let image = null;
-    if (data.image) image = await saveImage(data.image, href).catch((e) => (console.warn(`  image failed: ${e.message}`), null));
+    if (data.image || IMAGE_FILES[href]) image = await saveImage(data.image, href).catch((e) => (console.warn(`  image failed: ${e.message}`), null));
     out[href] = {
       title: data.title?.slice(0, 140) || null,
       description: data.description?.slice(0, 220) || null,
