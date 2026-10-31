@@ -28,7 +28,7 @@ Read the provided image and pull out:
 
 ### 2. Verify the file exists
 ```bash
-ls public/photos/gallery/{year}/
+ls photos-originals/{year}/
 ```
 The file must be present in the **uncompressed** folder before continuing.
 
@@ -40,7 +40,7 @@ node --input-type=module << 'EOF'
 import sharp from "sharp";
 import { mkdirSync, statSync } from "node:fs";
 
-const src = "public/photos/gallery/{year}/{filename}";
+const src = "photos-originals/{year}/{filename}";
 const out = "public/photos/gallery-compressed/{year}/{basename}.jpg";
 
 mkdirSync("public/photos/gallery-compressed/{year}", { recursive: true });
@@ -138,4 +138,4 @@ Leave `alt: ""` — the user fills it in later.
 - The grid is 40 columns; `colStart + colSpan` must not exceed 41
 - `rowStart` is **relative to the year's photo area**, not the absolute grid row
 - Placement is a rough default — the user will adjust `colStart`, `colSpan`, and `rowStart` manually afterward
-- The uncompressed original in `public/photos/gallery/` is preserved — never delete it
+- The uncompressed original in `photos-originals/` (gitignored, local only) is preserved — never delete it

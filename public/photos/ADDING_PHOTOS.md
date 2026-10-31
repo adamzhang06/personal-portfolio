@@ -1,6 +1,8 @@
+> **Legacy gallery only.** For the new `/photos` page, drop originals into `photos-inbox/` and use the `add-photos` skill (see `photos-inbox/README.md`).
+
 # Adding Photos to the Portfolio
 
-> **Shortcut:** If the original file is already in `public/photos/gallery/{year}/`, just run `/add-photo` in Claude Code and attach a macOS "Get Info" screenshot of the file. Claude will handle compression, manifest regeneration, and the code entry automatically.
+> **Shortcut:** If the original file is already in `photos-originals/{year}/`, just run `/add-photo` in Claude Code and attach a macOS "Get Info" screenshot of the file. Claude will handle compression, manifest regeneration, and the code entry automatically.
 
 ## Overview
 
@@ -13,7 +15,7 @@ Gallery photos live in a 40-column CSS grid with aspect-ratio-derived row spans.
 Drop the original (full-res) file into the correct year folder:
 
 ```
-public/photos/gallery/{year}/{filename}
+photos-originals/{year}/{filename}
 ```
 
 The year folder must match the year it was taken (e.g. `2026`). Create the folder if it doesn't exist.
@@ -29,7 +31,7 @@ node --input-type=module << 'EOF'
 import sharp from "sharp";
 import { mkdirSync, statSync } from "node:fs";
 
-const src = "public/photos/gallery/{year}/{filename}";
+const src = "photos-originals/{year}/{filename}";
 const out = "public/photos/gallery-compressed/{year}/{basename}.jpg";
 
 mkdirSync("public/photos/gallery-compressed/{year}", { recursive: true });
@@ -166,7 +168,7 @@ const PHOTO_SRCS = [
 
 ## Quick checklist
 
-- [ ] Original in `public/photos/gallery/{year}/`
+- [ ] Original in `photos-originals/{year}/`
 - [ ] Compressed in `public/photos/gallery-compressed/{year}/` (via sharp, always `.jpg`)
 - [ ] `npm run generate-manifest` run after all files are placed
 - [ ] Entry added to `yearGroups` in `Photography.jsx` with `src` pointing to `gallery-compressed`

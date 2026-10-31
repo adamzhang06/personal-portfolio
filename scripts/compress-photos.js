@@ -3,7 +3,7 @@ import { readdir, mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 
-const SRC_DIR = "public/photos/gallery";
+const SRC_DIR = "photos-originals"; // full-size originals, gitignored
 const OUT_DIR = "public/photos/gallery-compressed";
 const MAX_WIDTH = 2400;
 const QUALITY = 82;
