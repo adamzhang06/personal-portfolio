@@ -101,28 +101,17 @@
       "name": "Digital",
       "photos": [
         "ayz-7313",
-        "ayz-8259"
-      ],
-      "peek": [
-        "ayz-8259",
-        "ayz-7313"
-      ]
-    },
-    {
-      "id": "california-2025",
-      "kind": "trip",
-      "name": "California",
-      "photos": [
         "ayz-7687",
         "ayz-7791",
         "ayz-7803",
         "ayz-7859",
-        "ayz-7910"
+        "ayz-7910",
+        "ayz-8259"
       ],
       "peek": [
+        "ayz-8259",
         "ayz-7803",
-        "ayz-7859",
-        "ayz-7791"
+        "ayz-7313"
       ]
     },
     {

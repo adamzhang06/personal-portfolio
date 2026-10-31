@@ -29,7 +29,7 @@ export function dateLabel(takenAt) {
 export const photoWhen = (p) => [dateLabel(p.takenAt), p.place].filter(Boolean).join(" · ");
 export const photoTech = (p) => [p.camera.replace("Canon PowerShot ", ""), p.lens, p.exposure ?? p.film].filter(Boolean).join(" · ");
 export const photoLabel = (p) => `${p.title}, ${dateLabel(p.takenAt)}`;
-export const exposures = (n) => `${n} EXP`;
+export const exposures = (n, total = n) => (n === total ? `${n} EXP` : `${n}/${total} EXP`);
 
 export const rolls = rollData.rolls
   .map((r) => {
@@ -65,21 +65,20 @@ const PHONE_ROW = Math.max(MAX_ASPECT, 2.3);
 export function filmGeometry(vw) {
   const phone = vw <= 860;
   const k = phone
-    ? { pad: 12, can: 0.5, overlap: 0.25, lead: 0.3, tail: 0.18, edge: 4, gap: 10, tilt: 1.4, tiltOpen: 0.7, capH: 30, film: 52, hole: [7, 8, 17, 22] }
-    : { pad: 36, can: 0.62, overlap: 0.3, lead: 0.4, tail: 0.22, edge: 8, gap: 14, tilt: 1.8, tiltOpen: 0.8, capH: 46, film: 72, hole: [9, 11, 23, 30] };
+    ? { pad: 12, can: 0.5, overlap: 0.25, lead: 0.3, tail: 0.18, edge: 4, gap: 10, tilt: 1.4, capH: 30, film: 52, hole: [7, 8, 17, 22] }
+    : { pad: 36, can: 0.62, overlap: 0.3, lead: 0.4, tail: 0.22, edge: 8, gap: 14, tilt: 1.8, capH: 46, film: 72, hole: [9, 11, 23, 30] };
   const reach = k.can - k.overlap + k.lead + k.tail; // canister, leader and tail, per unit of film height
   const fixed = 2 * k.pad + k.edge;
   const H = Math.round(phone ? clamp(90, (vw - fixed - k.film * reach) / (PHONE_ROW + reach), 130) : clamp(124, vw * 0.112, 172));
   const FH = H + k.film;
   const len = vw - 2 * k.pad; // the longest a strip gets, canister to tail
-  const clear = (tilt) => Math.ceil(len * Math.sin(rad(tilt)) + k.capH / 2 + 14);
-  return { ...k, H, FH, W: vw - fixed - FH * reach, rowGap: clear(k.tilt), rowGapOpen: clear(k.tiltOpen) };
+  return { ...k, H, FH, W: vw - fixed - FH * reach, rowGap: Math.ceil(len * Math.sin(rad(k.tilt)) + k.capH / 2 + 14) };
 }
 
-export const filmVars = (g, open = false) => ({
+export const filmVars = (g) => ({
   "--fh": `${g.FH}px`, "--fcw": `${g.FH * g.can}px`, "--fch": `${g.FH + g.capH}px`, "--fov": `${g.FH * g.overlap}px`,
   "--flead": `${g.FH * g.lead}px`, "--ftail": `${g.FH * g.tail}px`, "--fpad": `${g.pad}px`, "--fgap": `${g.gap}px`,
-  "--ftilt": `${open ? g.tiltOpen : g.tilt}deg`, "--frowgap": `${open ? g.rowGapOpen : g.rowGap}px`,
+  "--ftilt": `${g.tilt}deg`, "--frowgap": `${g.rowGap}px`,
   "--hh": `${g.hole[0]}px`, "--hw": `${g.hole[1]}px`, "--hp": `${g.hole[2]}px`, "--band": `${g.hole[3]}px`,
 });
 
@@ -104,8 +103,8 @@ function wrap(frames, g) {
   return rows;
 }
 
-// An opened roll: its photos in shot order, read left to right on every strip.
-export const rollStrips = (roll, g) => wrap(roll.photos, g);
+// An opened roll: its photos in shot order on strips from canisters on alternating sides, read left to right on each.
+export const rollStrips = (roll, g) => wrap(roll.photos, g).map((frames, k) => ({ side: k % 2 ? "right" : "left", frames }));
 
 /* The favorites: the run of frames wraps onto as many strips as the window needs, each from its own canister,
    alternating left and right down the page and laid out from the canister outward. Empty frames only fill out the
