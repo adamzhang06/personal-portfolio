@@ -1,11 +1,11 @@
 import { byYear, exposures, frameWidth, shelfGeometry } from "@/lib/rolls";
 import { FilmCanister } from "./FilmCanister";
 
-/* The shelves: one open film carton per year, newest first. The lid carries the year and what is inside; the year's
-   canisters stand in the carton, coloured by kind, behind its front lip. On wider screens a short leader comes
-   straight out of each canister's slot showing the roll's peek frames (as many as fit) and unrolls the rest of the
-   way on hover or focus, while the canister lifts out of the carton. Cartons and canisters carry view-transition
-   names so the kind filters can animate them. */
+/* The shelves: one kraft counter-display carton per year, newest first. Its printed header carries the year and what
+   is inside; the year's canisters stand in the tray, coloured by kind, behind a front wall die-cut with a scoop under
+   each canister. On wider screens a short leader comes straight out of each canister's slot showing the roll's peek
+   frames (as many as fit) and unrolls the rest of the way on hover or focus, while the canister lifts out of the
+   carton. Cartons and canisters carry view-transition names so the kind filters can animate them. */
 export function RollShelf({ rolls, vw, onOpen }) {
   const s = shelfGeometry(vw);
   return (
@@ -26,7 +26,7 @@ export function RollShelf({ rolls, vw, onOpen }) {
               ...(s.phone ? { width: span * slot + s.walls } : { gridColumn: `span ${span}` }),
             }}
           >
-            <div className="lid" aria-hidden="true">
+            <div className="hdr" aria-hidden="true">
               <b>{year}</b>
               <span>{inside}</span>
             </div>
@@ -59,6 +59,7 @@ export function RollShelf({ rolls, vw, onOpen }) {
                       </span>
                     )}
                     <FilmCanister kind={r.kind} name={r.name} year={r.yearLabel} band={exposures(n)} />
+                    <span className="shade" aria-hidden="true" />
                     <span className="lip" aria-hidden="true" />
                   </button>
                 );

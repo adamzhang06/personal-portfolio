@@ -63,7 +63,7 @@ button.fr:hover img{outline:3px solid var(--green);outline-offset:-3px}
    every roll. Reset comes first and keeps its place while hidden, so the filters never move. */
 .rolls-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;margin-top:40px}
 .rolls-h h2{font-size:calc(30px*var(--s));line-height:1.1}
-.kinds{display:flex;flex-wrap:wrap;gap:8px}
+.kinds{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px;margin-left:auto}
 .kinds .reset.off{visibility:hidden}
 .chip{gap:10px;color:var(--body)}
 .chip .n{font-family:var(--mo);font-size:calc(12px*var(--s));color:var(--muted)}
@@ -72,28 +72,47 @@ button.fr:hover img{outline:3px solid var(--green);outline-offset:-3px}
 .swatch{width:14px;height:22px;border-radius:2px;background:linear-gradient(var(--lab) 0 70%,var(--bandbg) 70% 86%,var(--lab) 86%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.25)}
 .swatch.k-year{background:linear-gradient(transparent 0 70%,var(--bandbg) 70% 86%,transparent 86%),var(--pix)}
 
-/* cartons: one open film carton per year (shelfGeometry). The lid leans back with the year and what is inside; the
-   tray holds the year's canisters behind a front lip that hides their bottom caps. Hover or keyboard focus lifts a
-   canister out of the carton and draws its leader the rest of the way; the focus ring goes round the label. */
-.cartons{display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));gap:40px 24px;margin-top:28px;align-items:start}
-.cartons.phone{display:flex;flex-wrap:wrap;gap:28px 14px}
-.carton{view-transition-class:carton;min-width:0;container-type:inline-size}
-.lid{display:flex;align-items:baseline;justify-content:space-between;gap:4px 12px;height:56px;padding:10px 16px 0;background:linear-gradient(180deg,#4d3a29,#3a2b1e);border-radius:6px 6px 0 0;box-shadow:inset 0 1px 0 rgba(255,230,190,.14);transform:perspective(520px) rotateX(24deg);transform-origin:50% 100%}
-.lid b{font-family:var(--hd);font-weight:700;font-size:26px;line-height:1;letter-spacing:-.01em;color:#F2D28A}
-.lid span{font-family:var(--mo);font-size:11px;line-height:1.3;letter-spacing:.08em;text-transform:uppercase;color:rgba(242,210,138,.82);white-space:nowrap}
-@container (max-width:240px){.lid{flex-direction:column;align-items:flex-start;justify-content:center;padding:6px 10px 0}.lid b{font-size:22px}.lid span{font-size:10px}}
-.tray{display:grid;background:linear-gradient(180deg,#0e0a07,#1a130d);border:3px solid #4d3a29;border-top-width:2px;border-radius:2px 2px 8px 8px;box-shadow:0 18px 30px rgba(0,0,0,.45)}
-.rc{view-transition-class:roll;position:relative;display:block;min-width:0;height:calc(var(--scw) * 5 / 3 + 46px)}
-.rc .can{--cw:var(--scw);--ch:calc(var(--scw) * 5 / 3);position:absolute;left:14px;bottom:18px;z-index:2;transition:transform .35s var(--out)}
-.rc .lip{position:absolute;left:-1px;right:-1px;bottom:0;height:30px;z-index:3;background:linear-gradient(180deg,rgba(255,230,190,.16) 0 2px,#5c4431 2px,#45321f)}
-.peek{--u:.8;position:absolute;left:calc(14px + var(--scw) * .42);bottom:calc(18px + var(--scw) * .3);z-index:1;transition:--u .7s var(--expo),transform .35s var(--out)}
+/* cartons: one kraft counter-display carton per year (shelfGeometry). A single panel (::before, cut with shoulders so
+   the header is narrower than the box) forms the printed header and, below a fold, the inside of the back wall,
+   darkening toward the floor; the side walls sit in shade. Each slot's
+   front wall is die-cut with a scoop under its canister, the corrugated edge showing along the cut, and casts a
+   shadow up the canister. Hover or keyboard focus lifts a canister out and draws its leader the rest of the way;
+   the focus ring goes round the label. */
+.cartons{display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));gap:44px 28px;margin-top:28px;align-items:start}
+.cartons.phone{display:flex;flex-wrap:wrap;gap:32px 14px}
+.carton{--sh:16px;view-transition-class:carton;position:relative;min-width:0;container-type:inline-size;filter:drop-shadow(0 18px 18px rgba(0,0,0,.55)) drop-shadow(0 2px 2px rgba(0,0,0,.4))}
+.carton::before{content:"";position:absolute;inset:0;border-radius:3px 3px 4px 4px;
+ background:url(/assets/grain.png),linear-gradient(180deg,#c29a69 0,#ad865c 58px,#5e452c 60px,#8f6c47 62px,#6b4f33 45%,#2c1f13 100%);background-size:256px 256px,auto;background-blend-mode:multiply,normal;
+ box-shadow:inset 2px 0 0 rgba(255,232,196,.22),inset -2px 0 0 rgba(0,0,0,.25),inset 0 2px 0 rgba(255,232,196,.3);
+ clip-path:polygon(var(--sh) 0,calc(100% - var(--sh)) 0,calc(100% - var(--sh)) 40px,100% 60px,100% 100%,0 100%,0 60px,var(--sh) 40px)}
+.cartons.phone .carton{--sh:8px}
+.carton > *{position:relative}
+.hdr{display:flex;align-items:baseline;justify-content:space-between;gap:4px 12px;height:60px;padding:12px 30px 0;color:#2a1a0c}
+.hdr b{font-family:var(--hd);font-weight:700;font-size:30px;line-height:1;letter-spacing:-.02em;opacity:.86;text-shadow:0 1px 0 rgba(255,236,204,.28)}
+.hdr span{font-family:var(--mo);font-weight:500;font-size:11px;line-height:1.3;letter-spacing:.1em;text-transform:uppercase;opacity:.72;white-space:nowrap}
+@container (max-width:240px){.hdr{flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;padding:6px 14px 0}.hdr b{font-size:24px}.hdr span{font-size:9.5px;letter-spacing:.02em}}
+/* the side walls' inner faces, in shade */
+.tray{display:grid;position:relative;box-shadow:inset 14px 0 14px -8px rgba(0,0,0,.55),inset -14px 0 14px -8px rgba(0,0,0,.55)}
+.rc{--wall:calc(var(--scw) * .6 + 14px);--dx:calc(14px + var(--scw) / 2);--dw:calc(var(--scw) * .62);--dh:calc(var(--scw) * .5);view-transition-class:roll;position:relative;display:block;min-width:0;height:calc(var(--scw) * 5 / 3 + 40px)}
+.rc .can{--cw:var(--scw);--ch:calc(var(--scw) * 5 / 3);position:absolute;left:14px;bottom:14px;z-index:2;transition:transform .35s var(--out)}
+.rc .shade{position:absolute;left:0;right:0;bottom:calc(var(--wall) - 30px);height:70px;z-index:3;pointer-events:none;background:linear-gradient(180deg,rgba(20,12,4,0),rgba(20,12,4,.5))}
+/* front wall: the layer itself is the corrugated cut edge; ::after, 3 px lower, is the printed face */
+.rc .lip{position:absolute;left:-1px;right:-1px;bottom:0;height:var(--wall);z-index:4;pointer-events:none;
+ background:repeating-linear-gradient(90deg,#dcc196 0 1.5px,#a78258 1.5px 3.5px);
+ -webkit-mask:radial-gradient(var(--dw) var(--dh) at var(--dx) 0,transparent calc(100% - 1px),#000 100%);mask:radial-gradient(var(--dw) var(--dh) at var(--dx) 0,transparent calc(100% - 1px),#000 100%)}
+.rc .lip::after{content:"";position:absolute;inset:3px 0 0;
+ background:url(/assets/grain.png),linear-gradient(180deg,transparent 0 calc(100% - 15px),#c9962e calc(100% - 15px) calc(100% - 12px),transparent calc(100% - 12px) calc(100% - 10px),#5B2BA0 calc(100% - 10px) calc(100% - 7px),transparent calc(100% - 7px)),linear-gradient(180deg,#bd9566,#a17a50 55%,#83623f);
+ background-size:256px 256px,auto,auto;background-blend-mode:multiply,normal,normal;box-shadow:inset 0 1px 0 rgba(255,236,204,.35);
+ -webkit-mask:radial-gradient(var(--dw) var(--dh) at var(--dx) 0,transparent calc(100% - 1px),#000 100%);mask:radial-gradient(var(--dw) var(--dh) at var(--dx) 0,transparent calc(100% - 1px),#000 100%)}
+.peek{--u:.8;position:absolute;left:calc(14px + var(--scw) * .42);bottom:calc(var(--wall) - 8px);z-index:1;transition:--u .7s var(--expo),transform .35s var(--out)}
 .peek .fw{filter:drop-shadow(0 14px 12px rgba(0,0,0,.6))}
 .peek .film{--hh:7px;--hw:8px;--hp:17px;--band:20px;height:calc(var(--scw) * 1.08);padding:0 22px 0 calc(var(--scw) * .53)}
 .peek .frames{gap:9px}
-.rc:is(:hover,:focus-visible) :is(.can,.peek){transform:translateY(-12px)}
+.rc:is(:hover,:focus-visible) :is(.can,.peek){transform:translateY(-14px)}
 .rc:is(:hover,:focus-visible) .peek{--u:1}
 .site .rc:focus-visible{outline:none}
 .rc:focus-visible .lbl{outline:3px solid var(--focus);outline-offset:3px;border-radius:3px}
+.cartons.phone .rc{--dx:calc(8px + var(--scw) / 2)}
 .cartons.phone .rc .can{left:8px}
 
 /* filter changes (view transitions): cartons and canisters glide to their new places; new ones rise in, leaving ones sink out */
