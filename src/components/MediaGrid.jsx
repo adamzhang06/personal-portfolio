@@ -26,8 +26,8 @@ export function VideoEmbed({ video, title }) {
 }
 
 /* One photo at full size over the page. ← → step through the grid's photos, wrapping; Esc, Close or a
-   click outside the photo closes it. */
-function Lightbox({ images, index, onIndex }) {
+   click outside the photo closes it. Also used by the Photos page. */
+export function Lightbox({ images, index, onIndex }) {
   const m = images[index];
   const step = (d) => onIndex((index + d + images.length) % images.length);
   const onKey = (e) => {

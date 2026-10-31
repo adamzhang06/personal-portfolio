@@ -2,8 +2,7 @@
 
 Drop new originals here (JPEG, PNG, TIFF or WebP; export raw and HEIC files to JPEG first), then in Claude Code run `/add-photos`.
 
-One-time setup: the skill's file is at `scripts/skills/add-photos/SKILL.md`; move it into place with
-`mkdir -p .claude/skills/add-photos && mv scripts/skills/add-photos/SKILL.md .claude/skills/add-photos/ && rmdir -p scripts/skills/add-photos`, then run `npm install` once for `exifr`.
+The skill lives at `.claude/skills/add-photos/SKILL.md`; it needs `npm install` once for `exifr`.
 
 It reads each photo's metadata, puts it in the right roll, asks you only for what the file can't tell it (title, place, film details), and then files everything:
 

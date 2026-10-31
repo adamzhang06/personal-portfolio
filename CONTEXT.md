@@ -42,7 +42,7 @@ All copy and facts live in `src/data/` (`site.js`, `projects.js`, `roles.js`, `s
 ## Photography (being redesigned)
 
 ### Photos page
-`/photos` — the Photography entry point in the Camera UI. Switched on (`PHOTOGRAPHY_ENABLED = true` in `src/data/site.js`): nav item, Photos SD card, Playback hotspot and the seventh LCD page all lead here. Today it is a stub: the card head and an @ayz.nef Instagram button. Its design is the open work in `docs/spec-v3.md`.
+`/photos` — the Photography entry point in the Camera UI. Switched on (`PHOTOGRAPHY_ENABLED = true` in `src/data/site.js`): nav item, Photos SD card, Playback hotspot and the seventh LCD page all lead here. Built as design D, **Film rolls** (`PhotosPage` + `src/components/photos/`, data via `src/lib/rolls.js`, styles in `src/styles/photos.css`): three favorites strips unroll from their canisters as they scroll into view; below, shelves hold one canister per roll, newest first, with a year tag where each year starts. A canister opens the roll in an overlay that only Rewind (or Esc) closes; any photo opens the lightbox.
 
 ### Legacy gallery
 `/photography` (Gallery) and `/photography/portraits` (Portraits), rendered by `LegacyPhotoLayout` with the pre-v2 navbar on a cream background. Not linked from the Camera UI.
@@ -54,7 +54,7 @@ All copy and facts live in `src/data/` (`site.js`, `projects.js`, `roles.js`, `s
 One gallery entry: `src` (compressed path), `alt`, `colStart`, `colSpan`, `rowStart` (relative to the year), `meta` (camera, lens, settings or film, location, date). Placement is **manual** in a 40-column grid; `rowSpan` is derived from the photo's aspect ratio via `src/data/photo-manifest.json`.
 
 ### Photo intake (new, for `/photos`)
-Data lives in `src/data/photos.json` (one entry per photo) and `src/data/rolls.json` (three favorites strips plus the rolls: `trip`, `film` per camera and year, or a `year` roll for other digital photos). Drop originals into `photos-inbox/` (gitignored except its README), then run the `add-photos` Claude Code skill, or by hand: `npm run photos:scan` → fill `photos-inbox/pending.json` → `npm run photos:apply` → `npm run photos:check`. The script reads EXIF (date, camera, lens, exposure, GPS), suggests a roll, compresses to `public/photos/gallery-compressed/<year>/` and moves the original to `photos-originals/<year>/`. Nothing is placed by hand. The skill's source is `scripts/skills/add-photos/SKILL.md`; it must sit at `.claude/skills/add-photos/SKILL.md` to load.
+Data lives in `src/data/photos.json` (one entry per photo) and `src/data/rolls.json` (three favorites strips plus the rolls: `trip`, `film` per camera and year, or a `year` roll for other digital photos). Drop originals into `photos-inbox/` (gitignored except its README), then run the `add-photos` Claude Code skill, or by hand: `npm run photos:scan` → fill `photos-inbox/pending.json` → `npm run photos:apply` → `npm run photos:check`. The script reads EXIF (date, camera, lens, exposure, GPS), suggests a roll, compresses to `public/photos/gallery-compressed/<year>/` and moves the original to `photos-originals/<year>/`. Nothing is placed by hand. The skill is `.claude/skills/add-photos/SKILL.md`.
 
 ### Image files
 - **Originals:** `photos-originals/<year>/` at the repo root. **Gitignored, local only** — never deployed. (Older commits still contain them in history.)
