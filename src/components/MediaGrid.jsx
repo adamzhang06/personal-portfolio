@@ -26,8 +26,9 @@ export function VideoEmbed({ video, title }) {
 }
 
 /* One photo at full size over the page. ← → step through the grid's photos, wrapping; Esc, Close or a
-   click outside the photo closes it. Also used by the Photos page. */
-export function Lightbox({ images, index, onIndex }) {
+   click outside the photo closes it. Also used by the Photos page, whose `render` draws each photo as the camera's
+   playback screen in place of the plain figure. */
+export function Lightbox({ images, index, onIndex, render }) {
   const m = images[index];
   const step = (d) => onIndex((index + d + images.length) % images.length);
   const onKey = (e) => {
@@ -38,17 +39,21 @@ export function Lightbox({ images, index, onIndex }) {
     <NativeDialog open={index != null} onClose={() => onIndex(null)} className="lbox">
       {m && (
         <div className="lbox-in" onKeyDown={onKey}>
-          <figure>
-            <img src={m.src} alt={m.alt} />
-            <figcaption>
-              {m.caption && <span>{m.caption}</span>}
-              {images.length > 1 && (
-                <span className="mono">
-                  {index + 1} / {images.length}
-                </span>
-              )}
-            </figcaption>
-          </figure>
+          {render ? (
+            render(m, index)
+          ) : (
+            <figure>
+              <img src={m.src} alt={m.alt} />
+              <figcaption>
+                {m.caption && <span>{m.caption}</span>}
+                {images.length > 1 && (
+                  <span className="note">
+                    {index + 1} / {images.length}
+                  </span>
+                )}
+              </figcaption>
+            </figure>
+          )}
           {images.length > 1 && (
             <>
               <button type="button" className="lb-btn lb-prev" aria-label="Previous photo" onClick={() => step(-1)}>

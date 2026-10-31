@@ -8,7 +8,7 @@ const clamp = (x) => Math.min(1, Math.max(0, x));
    Options: self (root is its own scroller, else the window scrolls), first (the first strip is always unrolled),
    once (a strip stays unrolled once it has been), eager (a strip unrolls all the way as soon as it is on screen),
    delay / stagger (seconds between strips on start) and layout (any value that changes when the strips are re-laid
-   out, so new strips are measured). */
+   out, so new strips are measured). A strip that has lain flat is marked [data-dev] for good (its film develops). */
 export function useUnroll(rootRef, { active = true, self = false, first = false, once = false, eager = false, delay = 350, stagger = 0.22, layout } = {}) {
   const refresh = useRef(() => {});
 
@@ -26,6 +26,7 @@ export function useUnroll(rootRef, { active = true, self = false, first = false,
         if ((first && i === 0) || el.matches(":focus-within")) u = 1;
         if (once) u = Math.max(u, Number(el.dataset.u) || 0);
         el.dataset.u = u;
+        if (u >= 0.99) el.dataset.dev = "";
         el.style.setProperty("--u", u.toFixed(3));
       });
     };

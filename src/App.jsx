@@ -1,7 +1,6 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
 import { SiteShell } from "@/components/SiteShell";
-import { LegacyPhotoLayout } from "@/components/LegacyPhotoLayout";
 import { Home } from "@/pages/Home";
 import { About } from "@/pages/About";
 import { Projects } from "@/pages/Projects";
@@ -10,17 +9,11 @@ import { Roles } from "@/pages/Roles";
 import { Contact } from "@/pages/Contact";
 import { PhotosPage } from "@/pages/PhotosPage";
 import { PHOTOGRAPHY_ENABLED } from "@/data/site";
-import { Photography } from "@/pages/Photography";
-import { Portraits } from "@/pages/Portraits";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<LegacyPhotoLayout />}>
-          <Route path="/photography" element={<Photography />} />
-          <Route path="/photography/portraits" element={<Portraits />} />
-        </Route>
         <Route element={<SiteShell />}>
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />
@@ -29,6 +22,8 @@ function App() {
           <Route path="experience" element={<Roles key="experience" group="experience" />} />
           <Route path="leadership" element={<Roles key="leadership" group="leadership" />} />
           {PHOTOGRAPHY_ENABLED && <Route path="photos" element={<PhotosPage />} />}
+          {/* the old gallery's addresses (/photography, /photography/portraits) still lead to the photos */}
+          {PHOTOGRAPHY_ENABLED && <Route path="photography/*" element={<Navigate to="/photos" replace />} />}
           <Route path="contact" element={<Contact />} />
           <Route path="*" element={<Home notFound />} />
         </Route>

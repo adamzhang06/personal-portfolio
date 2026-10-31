@@ -41,7 +41,7 @@ export function About() {
                   <span className="aw-title">{a.title}</span>
                   {a.detail && <span className="aw-detail">{a.detail}</span>}
                 </div>
-                <span className="aw-date mono">{a.date}</span>
+                <span className="aw-date note">{a.date}</span>
               </li>
             ))}
           </ul>
@@ -54,11 +54,11 @@ export function About() {
             <p className="edu-college">{EDUCATION.college}</p>
             <dl className="edu-rows">
               <div>
-                <dt className="mono">Abroad</dt>
+                <dt className="note">Abroad</dt>
                 <dd>{EDUCATION.abroad}</dd>
               </div>
               <div>
-                <dt className="mono">Coursework</dt>
+                <dt className="note">Coursework</dt>
                 <dd className="tags">
                   {EDUCATION.coursework.map((c) => (
                     <span key={c} className="tag">

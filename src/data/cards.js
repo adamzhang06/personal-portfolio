@@ -3,7 +3,7 @@ import { projects } from "./projects";
 import { rolesIn } from "./roles";
 
 // Counts are computed from the data files, never typed.
-const items = (n) => `${String(n).padStart(2, "0")} ${n === 1 ? "item" : "items"}`;
+const items = (n) => `${n} ${n === 1 ? "item" : "items"}`;
 
 // SD cards, in Home / tray order. Each opens its section page; `sub` is the line under that page's heading.
 export const CARDS = [

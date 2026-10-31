@@ -1,5 +1,5 @@
-import { Copy, Github, Instagram, Linkedin, Mail } from "lucide-react";
-import { useUi } from "@/context/uiContext";
+import { useEffect, useRef, useState } from "react";
+import { Github, Instagram, Linkedin } from "lucide-react";
 import { contact } from "@/data/contact";
 import { Crumb } from "@/components/CardHead";
 
@@ -11,12 +11,18 @@ const EXTERNAL = [
   { ...contact.instagram, icon: Instagram },
 ];
 
-// Icon tiles with no visible labels (names are screen-reader text); external links open in a new tab.
+/* The email address is the page's headline: pressing it copies it (the line under it says so, and says when it has),
+   with a link to open it in a mail app. Other accounts and photography sessions sit below; external links open in a
+   new tab. */
 export function Contact() {
-  const { showToast } = useUi();
+  const [copied, setCopied] = useState(false);
+  const timer = useRef(0);
+  useEffect(() => () => clearTimeout(timer.current), []);
   const copyEmail = () => {
     navigator.clipboard?.writeText(contact.email.value).catch(() => {});
-    showToast("Email copied");
+    setCopied(true);
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => setCopied(false), 2400);
   };
 
   return (
@@ -27,40 +33,41 @@ export function Contact() {
         <p className="eyebrow">Get in touch</p>
         <p className="sub">Email is the fastest way to reach me.</p>
       </div>
+      <div className="mailbig">
+        <button type="button" className={"mail-copy" + (copied ? " done" : "")} aria-describedby="mail-hint" onClick={copyEmail}>
+          {contact.email.value}
+        </button>
+        <p className="mail-hint" id="mail-hint">
+          <span aria-live="polite">{copied ? "Copied to your clipboard" : "Press the address to copy it"}</span>
+          <span className="sep" aria-hidden="true">
+            ·
+          </span>
+          <a href={contact.email.href}>Open in your mail app</a>
+        </p>
+      </div>
       <div className="two">
-        <div className="lks">
-          <div className="lk">
-            <a className="lk-a" href={contact.email.href}>
-              <span className="lk-i">
-                <Mail {...ICON} />
-              </span>
-              <span className="lk-t">
-                <span className="sr">Email </span>
-                {contact.email.value}
-              </span>
-            </a>
-            <button type="button" className="lk-copy" aria-label="Copy email address" onClick={copyEmail}>
-              <Copy {...ICON} />
-            </button>
+        <section className="else" aria-labelledby="else-h">
+          <h2 id="else-h" className="else-h">
+            Elsewhere
+          </h2>
+          <div className="lks">
+            {EXTERNAL.map(({ icon, label, value, href }) => {
+              const LinkIcon = icon;
+              return (
+                <a key={href} className="lk lk-a" href={href} target="_blank" rel="noopener noreferrer">
+                  <span className="lk-i">
+                    <LinkIcon {...ICON} />
+                  </span>
+                  <span className="lk-t">{value}</span>
+                  <span className="lk-l">{label}</span>
+                  <span className="lk-go" aria-hidden="true">
+                    ↗
+                  </span>
+                </a>
+              );
+            })}
           </div>
-          {EXTERNAL.map(({ icon, label, value, href }) => {
-            const LinkIcon = icon;
-            return (
-              <a key={href} className="lk lk-a" href={href} target="_blank" rel="noopener noreferrer">
-                <span className="lk-i">
-                  <LinkIcon {...ICON} />
-                </span>
-                <span className="lk-t">
-                  <span className="sr">{label} </span>
-                  {value}
-                </span>
-                <span className="lk-go" aria-hidden="true">
-                  ↗
-                </span>
-              </a>
-            );
-          })}
-        </div>
+        </section>
         <section className="sess" aria-labelledby="sess-h">
           <h2 id="sess-h">Photography sessions</h2>
           <p>Available for grad, portrait, and event sessions. Send a message on the photography account or email me with your date and location.</p>

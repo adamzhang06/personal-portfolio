@@ -7,8 +7,6 @@ import { ProjectLinks } from "@/components/LinkPreview";
 import { Rich } from "@/components/Rich";
 import { Home } from "./Home";
 
-const pad = (n) => String(n).padStart(2, "0");
-
 // Case study inside a rounded viewfinder frame: header with the one-line headline, write-up with a
 // Built with / Demo / Links sidebar, then the gallery. Previous / next sit beside the counter at the top
 // (arrows only on phones) and replace history, so Back still returns to wherever the visitor came from.
@@ -36,8 +34,8 @@ export function ProjectCase() {
                 <span className="pn-name">{next.name}</span> <span aria-hidden="true">→</span>
               </button>
             </nav>
-            <span className="mono muted">
-              {pad(i + 1)} / {pad(projects.length)}
+            <span className="note muted">
+              {i + 1} / {projects.length}
             </span>
           </div>
         </div>

@@ -25,10 +25,9 @@ export function dateLabel(takenAt) {
   return d ? `${MONTHS[m - 1]} ${d}, ${y}` : `${MONTHS[m - 1]} ${y}`;
 }
 
-// The lightbox lines: "date · place" and "camera · lens · exposure or film stock"
-export const photoWhen = (p) => [dateLabel(p.takenAt), p.place].filter(Boolean).join(" · ");
-export const photoTech = (p) => [p.camera.replace("Canon PowerShot ", ""), p.lens, p.exposure ?? p.film].filter(Boolean).join(" · ");
 export const photoLabel = (p) => `${p.title}, ${dateLabel(p.takenAt)}`;
+// Black-and-white stocks (their negatives carry no orange mask)
+export const isMono = (p) => /HP5|FP4|Tri-?X|T-?Max|Delta|Pan ?F|XP2|Fomapan|Kentmere|Acros/i.test(p.film ?? "");
 // "17 EXP" on a shelf canister; "3/10 EXP" on a strip's, counting every photo up to the end of that strip
 export const exposures = (n, total) => (total == null ? `${n} EXP` : `${n}/${total} EXP`);
 

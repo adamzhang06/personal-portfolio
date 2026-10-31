@@ -17,13 +17,18 @@ function pace(e) {
   return Math.min(1, p);
 }
 
-/* Aperture-iris loader: once per session, Home only, no skip. The percent follows real loading
+/* Aperture-iris loader: once per session, Home only. The percent follows real loading
    (three.js parsed, fonts ready, first camera frame); at 100% the blades open past the screen edge
-   while the cover fades and the camera fades up. The clock never jumps when a frame stalls. */
+   while the cover fades and the camera fades up. The clock never jumps when a frame stalls.
+   Skip (a click anywhere, Esc, Enter or Space) jumps to 100% and opens at once, as the give-up does. */
 export function IntroIris() {
   const { introPhase, setIntroPhase } = useUi();
   const cam = useCamera();
   const [frame, setFrame] = useState({ p: 0, o: 0 });
+  const skipped = useRef(false);
+  const skip = () => {
+    skipped.current = true;
+  };
 
   const noCam = cam.status === "nowebgl";
   const loaded = 0.1 + 0.45 * (noCam || cam.moduleLoaded) + 0.2 * (noCam || cam.fontsReady) + 0.25 * (noCam || cam.firstFrame);
@@ -36,6 +41,13 @@ export function IntroIris() {
   useEffect(() => {
     if (!active) return undefined;
     document.documentElement.style.overflow = "hidden";
+    const onKey = (ev) => {
+      if (ev.key === "Escape" || ev.key === "Enter" || ev.key === " ") {
+        ev.preventDefault();
+        skipped.current = true;
+      }
+    };
+    window.addEventListener("keydown", onKey);
     const started = performance.now();
     let e = 0, last = started, p = 0, openAt = null, raf = 0;
     const tick = () => {
@@ -43,7 +55,7 @@ export function IntroIris() {
       e += Math.min(0.05, (now - last) / 1000);
       last = now;
       const gaveUp = (now - started) / 1000 >= GIVE_UP_S; // wall clock: slow frames never stretch the wait
-      const target = gaveUp ? 1 : Math.min(real.current >= 0.999 ? 1 : real.current, pace(e));
+      const target = gaveUp || skipped.current ? 1 : Math.min(real.current >= 0.999 ? 1 : real.current, pace(e));
       p = Math.max(p, target);
       if (p >= 1 && openAt === null) {
         openAt = e;
@@ -60,6 +72,7 @@ export function IntroIris() {
     raf = requestAnimationFrame(tick);
     return () => {
       cancelAnimationFrame(raf);
+      window.removeEventListener("keydown", onKey);
       document.documentElement.style.overflow = "";
     };
   }, [active, setIntroPhase]);
@@ -73,14 +86,14 @@ export function IntroIris() {
   const b = irisBlades(p, o);
 
   return (
-    <div className="ld" role="progressbar" aria-label="Loading adamzhang.org" aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct}>
+    <div className="ld" onPointerDown={skip}>
       <div className="ld-bg" style={{ opacity: bgOp }} />
       {SPECKS.map(([l, t]) => (
         <span key={l} className="speck" style={{ left: l + "%", top: t + "%", opacity: bgOp }} />
       ))}
       <div className="ld-c">
         <p className="ld-eb" style={{ opacity: txtOp }}>Adam Zhang</p>
-        <div className="iris">
+        <div className="iris" role="progressbar" aria-label="Loading adamzhang.org" aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct}>
           <svg viewBox="-200 -200 400 400" aria-hidden="true">
             <g transform={`scale(${(1 + 5 * o).toFixed(3)}) rotate(${(-12 * o).toFixed(2)})`} opacity={(1 - o * o).toFixed(3)}>
               {b.map((pts, i) => (
@@ -108,6 +121,9 @@ export function IntroIris() {
         <p className="ld-t" style={{ opacity: txtOp }}>Adam Zhang</p>
         <p className="ld-l" style={{ opacity: txtOp }}>AI · Robotics · Photography</p>
       </div>
+      <button type="button" className="ld-skip" style={{ opacity: txtOp }} onClick={skip}>
+        Skip intro <kbd>Esc</kbd>
+      </button>
     </div>
   );
 }

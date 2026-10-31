@@ -15,7 +15,7 @@
 .can.k-year .lbl{background:var(--pix)}
 
 /* canister: an upright 35mm cartridge. Its body is always a little taller than the film that comes out of it. */
-.photos .can{position:relative;flex:none;width:var(--cw);height:var(--ch);display:flex;flex-direction:column;z-index:4;filter:drop-shadow(0 16px 16px rgba(0,0,0,.55))}
+.can{position:relative;flex:none;width:var(--cw);height:var(--ch);display:flex;flex-direction:column;z-index:4;filter:drop-shadow(0 16px 16px rgba(0,0,0,.55))}
 .can .nub{align-self:center;width:34%;height:11px;border-radius:3px 3px 0 0;background:linear-gradient(90deg,#0b0b0c,#3d3d44 40%,#141416)}
 .can .cap{flex:none;height:13px;border-radius:6px;background:linear-gradient(90deg,#070708,#4a4a52 34%,#1a1a1d 64%,#050506)}
 .can .lbl{position:relative;flex:1;margin:0 3px;display:flex;flex-direction:column;overflow:hidden;background:var(--lab);color:var(--ink);padding:calc(var(--cw) * .08) calc(var(--cw) * .09) 0;text-align:left}
@@ -51,6 +51,12 @@
 .fr img{display:block;max-width:none;object-fit:cover;background:#140b03}
 /* an empty frame is unexposed film: the base shows through, with a faint frame line */
 .fr.blank i{display:block;background:rgba(255,196,120,.07);box-shadow:inset 0 0 0 1px rgba(255,210,150,.14)}
+/* film frames come off the canister as negatives (colour stock under its orange mask, B&W plain) and develop once the
+   strip has lain flat ([data-dev], set by useUnroll), from the canister outward */
+.fr.neg img{filter:invert(0) contrast(1);transition:filter 1.8s var(--out) calc(.6s + var(--j) * .2s)}
+.fr.neg::after{content:"";position:absolute;inset:0;pointer-events:none;background:#D9782C;mix-blend-mode:multiply;opacity:0;transition:opacity 1.8s var(--out) calc(.6s + var(--j) * .2s)}
+[data-reel]:not([data-dev]) .fr.neg img{filter:invert(1) contrast(.8)}
+[data-reel]:not([data-dev]) .fr.neg:not(.mono-neg)::after{opacity:.9}
 /* hover: a green outline, nothing moves */
 button.fr{cursor:zoom-in}
 button.fr:hover img{outline:3px solid var(--green);outline-offset:-3px}
@@ -62,11 +68,11 @@ button.fr:hover img{outline:3px solid var(--green);outline-offset:-3px}
 /* Rolls heading: the kind filters sit beside it. Any number can be on; Reset (or turning the last one off) shows
    every roll. Reset comes first and keeps its place while hidden, so the filters never move. */
 .rolls-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;margin-top:40px}
-.rolls-h h2{font-size:calc(30px*var(--s));line-height:1.1}
+.rolls-h h2{font-size:calc(28px*var(--s));line-height:1.1}
 .kinds{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px;margin-left:auto}
 .kinds .reset.off{visibility:hidden}
 .chip{gap:10px;color:var(--body)}
-.chip .n{font-family:var(--mo);font-size:calc(12px*var(--s));color:var(--muted)}
+.chip .n{font-size:calc(15px*var(--s));color:var(--muted)}
 .chip.on{background:var(--pdeep);border-color:var(--ptext);color:var(--text)}
 .chip.on .n{color:var(--ptext)}
 .swatch{width:14px;height:22px;border-radius:2px;background:linear-gradient(var(--lab) 0 70%,var(--bandbg) 70% 86%,var(--lab) 86%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.25)}
@@ -86,8 +92,8 @@ button.fr:hover img{outline:3px solid var(--green);outline-offset:-3px}
 .hdr{position:relative;display:flex;align-items:baseline;justify-content:space-between;gap:4px 12px;height:60px;margin:0 var(--d);padding:12px 16px 0;border-radius:6px 6px 0 0;color:#2a1a0c;
  background:url(/assets/grain.png),linear-gradient(180deg,#c49c6b,#ab845a);background-size:256px 256px,auto;background-blend-mode:multiply,normal;box-shadow:inset 0 2px 0 rgba(255,232,196,.3),inset 0 -1px 0 rgba(60,40,20,.35)}
 .hdr b{font-family:var(--hd);font-weight:700;font-size:30px;line-height:1;letter-spacing:-.02em;opacity:.86;text-shadow:0 1px 0 rgba(255,236,204,.28)}
-.hdr span{font-family:var(--mo);font-weight:500;font-size:11px;line-height:1.3;letter-spacing:.1em;text-transform:uppercase;opacity:.72;white-space:nowrap}
-@container (max-width:240px){.hdr{flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;padding:6px 8px 0}.hdr b{font-size:24px}.hdr span{font-size:9.5px;letter-spacing:.02em}}
+.hdr span{font-family:var(--mo);font-weight:500;font-size:12px;line-height:1.3;letter-spacing:.1em;text-transform:uppercase;opacity:.72;white-space:nowrap}
+@container (max-width:240px){.hdr{flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;padding:6px 8px 0}.hdr b{font-size:24px}.hdr span{font-size:11px;letter-spacing:0}}
 .tray{display:grid;position:relative}
 /* the inside: back wall at the top (inset --d each side), opening out to the front wall's corners, darkening to the floor */
 .tray::before{content:"";position:absolute;inset:0;z-index:0;
@@ -147,19 +153,19 @@ button.fr:hover img{outline:3px solid var(--green);outline-offset:-3px}
 @keyframes rvIn{from{opacity:0}to{opacity:1}}
 .rv-scroll{height:100%;overflow-y:auto;overflow-x:clip;overscroll-behavior:contain}
 .rv-head{padding:40px 240px 8px 80px}
-.rv-head h2{font-size:calc(43px*var(--s));line-height:1.08}
+.rv-head h2{font-size:calc(48px*var(--s));line-height:1.08}
 .rv-head .count{color:var(--body);font-size:calc(17px*var(--s));margin-top:8px}
 .rollview .reels{padding:30px 0 140px}
-.rewind{position:fixed;top:32px;right:40px;z-index:5;min-height:52px;gap:10px;padding:0 14px 0 18px;font-size:calc(16px*var(--s));box-shadow:0 10px 30px rgba(0,0,0,.45)}
+.rewind{position:fixed;top:32px;right:40px;z-index:5;min-height:52px;gap:10px;padding:0 14px 0 18px;font-size:calc(17px*var(--s));box-shadow:0 10px 30px rgba(0,0,0,.45)}
 .rewind svg{width:20px;height:20px}
-.rewind kbd{margin-left:4px;padding:1px 6px;border:1px solid rgba(255,255,255,.4);border-radius:5px;font-family:var(--mo);font-size:11px;line-height:1.5;letter-spacing:.04em;text-transform:uppercase;opacity:.85}
+.rewind kbd{margin-left:4px;padding:1px 6px;border:1px solid rgba(255,255,255,.4);border-radius:5px;font-family:var(--mo);font-size:12px;line-height:1.5;letter-spacing:.04em;text-transform:uppercase;opacity:.85}
 /* the large view keeps photos square-cornered, like prints */
 .photos .lbox img{border-radius:0}
 
 @media (max-width:860px){
  .rolls-h{margin-top:24px}
  .rv-head{padding:28px 20px 4px}
- .rv-head h2{font-size:calc(32px*var(--s))}
+ .rv-head h2{font-size:calc(40px*var(--s))}
  .rollview .reels{padding:20px 0 120px}
  /* Rewind sits at the bottom, in reach of a thumb */
  .rewind{top:auto;right:auto;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));translate:-50% 0;padding:0 22px 0 18px}

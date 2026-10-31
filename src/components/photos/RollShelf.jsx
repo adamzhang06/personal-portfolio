@@ -1,3 +1,4 @@
+import { useLcdPeek } from "@/context/uiContext";
 import { byYear, exposures, frameWidth, shelfGeometry } from "@/lib/rolls";
 import { FilmCanister } from "./FilmCanister";
 
@@ -5,9 +6,11 @@ import { FilmCanister } from "./FilmCanister";
    carries the year and what is inside; the year's canisters stand in the tray, coloured by kind, between the side
    walls and behind a front wall die-cut with a scoop under each canister. On wider screens a short leader comes straight out of each canister's slot showing the roll's peek
    frames (as many as fit) and unrolls the rest of the way on hover or focus, while the canister lifts out of the
-   carton. Cartons and canisters carry view-transition names so the kind filters can animate them. */
+   carton. Cartons and canisters carry view-transition names so the kind filters can animate them. A hovered or focused
+   canister shows its roll (name, years, count, cameras and film) on the docked camera's LCD. */
 export function RollShelf({ rolls, vw, onOpen }) {
   const s = shelfGeometry(vw);
+  const peek = useLcdPeek();
   return (
     <div className={`cartons${s.phone ? " phone" : ""}`} style={{ "--scw": `${s.cw}px` }}>
       {byYear(rolls).map(({ year, rolls: rs }) => {
@@ -36,6 +39,7 @@ export function RollShelf({ rolls, vw, onOpen }) {
               </span>
               {rs.map((r, i) => {
                 const n = r.photos.length;
+                const gear = [...new Set(r.photos.flatMap((p) => [p.camera, p.film]).filter(Boolean))].join(" · ");
                 return (
                   <button
                     key={r.id}
@@ -43,6 +47,7 @@ export function RollShelf({ rolls, vw, onOpen }) {
                     className="rc"
                     aria-label={`Open roll: ${r.name} ${r.yearSpan}, ${n} ${n === 1 ? "photo" : "photos"}`}
                     onClick={() => onOpen(r)}
+                    {...peek({ page: r.name, sub: `${r.yearSpan} · ${n} ${n === 1 ? "photo" : "photos"}`, count: gear })}
                     style={{ viewTransitionName: `roll-${r.id}`, "--gx": `${-(i % per) * slot}px` }}
                   >
                     {!s.phone && (

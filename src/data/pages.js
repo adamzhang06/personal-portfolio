@@ -8,7 +8,7 @@ export const PAGES = [
   { key: "projects", label: "Projects", lcd: "Projects", path: "/projects", dial: 2, nav: true },
   { key: "experience", label: "Experience", lcd: "Experience", path: "/experience", dial: 3, nav: true },
   { key: "leadership", label: "Leadership", lcd: "Leadership", path: "/leadership", dial: 4, nav: true },
-  { key: "photography", label: "Photography", lcd: "Photography", path: "/photos", nav: true, photography: true },
+  { key: "photography", label: "Photography", tab: "Photos", lcd: "Photography", path: "/photos", nav: true, photography: true },
   { key: "contact", label: "Contact", lcd: "Contact", path: "/contact", nav: true },
 ];
 
@@ -17,7 +17,8 @@ export const navPages = livePages.filter((p) => p.nav);
 export const dialPages = PAGES.filter((p) => p.dial !== undefined).sort((a, b) => a.dial - b.dial);
 export const pageByKey = (key) => PAGES.find((p) => p.key === key);
 
-export const TAB_KEYS = ["home", "about", "projects", "experience", "contact"];
+// Phone tab bar: Photos takes the last tab while photography is on; Contact stays one tap away in the Menu.
+export const TAB_KEYS = ["home", "about", "projects", "experience", PHOTOGRAPHY_ENABLED ? "photography" : "contact"];
 
 // Route → page key. Case studies belong to Projects; anything unknown is Home with the not-found pill.
 export function pageKeyFor(pathname) {

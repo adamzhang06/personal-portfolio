@@ -6,7 +6,7 @@
    inside it is hovered. The selected item in a list (.on, aria-current) gets no trace. The camera, the top
    bar and things that move on hover (SD cards, polaroids) keep their own hover effects. */
 
-export const TRACE_SEL = [".card", ".rrow", ".lp", ".lk", ".skbox", ".btn", ".hlink", ".lb-btn", ".lk-copy", ".mzoom"].join(",");
+export const TRACE_SEL = [".card", ".rrow", ".lp", ".lk", ".skbox", ".btn", ".hlink", ".lb-btn", ".mzoom"].join(",");
 const SKIP = '.on, [aria-current="page"]';
 const NS = "http://www.w3.org/2000/svg";
 const S = 2; // stroke width

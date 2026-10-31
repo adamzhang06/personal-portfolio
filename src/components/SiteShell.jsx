@@ -51,7 +51,7 @@ function Shell() {
   );
 }
 
-// Everything except the legacy photography routes: one camera, one stage, never re-mounted per page.
+// Every route: one camera, one stage, never re-mounted per page.
 export function SiteShell() {
   return (
     <CameraProvider>

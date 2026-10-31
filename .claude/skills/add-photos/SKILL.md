@@ -1,6 +1,6 @@
 ---
 name: add-photos
-description: Add new photos to adamzhang.org's /photos page. Use when Adam has dropped photos into photos-inbox/ or asks to add, import or upload photos. Reads EXIF, sorts each photo into the right roll, asks only for what the files can't tell, then compresses and records them in src/data/photos.json and src/data/rolls.json. (The older add-photo skill is for the legacy /photography gallery.)
+description: Add new photos to adamzhang.org's /photos page. Use when Adam has dropped photos into photos-inbox/ or asks to add, import or upload photos. Reads EXIF, sorts each photo into the right roll, asks only for what the files can't tell, then compresses and records them in src/data/photos.json and src/data/rolls.json.
 ---
 
 # Add photos
@@ -36,6 +36,5 @@ Grouping rule: a trip gets its own roll (e.g. `japan-china-2026`); film gets a r
 ## Rules
 
 - Never invent a title, place, film stock or date: draft, then confirm.
-- Never edit `src/pages/Photography.jsx`, `Portraits.jsx`, `photoYears.js` or `photo-manifest.json` (the legacy gallery).
 - Never commit anything in `photos-inbox/` or `photos-originals/`.
 - `npm run photos:check` must pass before you call it done.

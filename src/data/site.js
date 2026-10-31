@@ -2,7 +2,7 @@
 
 // Photography entry points: the nav item, the Photos SD card (Home, tray, Site menu), the camera's
 // Playback hotspot and label, and the seventh LCD page. They open the Photography page at /photos.
-// The legacy gallery at /photography and /photography/portraits is left untouched and unlinked.
+// The old gallery's addresses (/photography, /photography/portraits) redirect here.
 export const PHOTOGRAPHY_ENABLED = true;
 
 // Record button → Demo videos dialog. Off by default; the videos stay reachable from case-study Links.
@@ -15,7 +15,7 @@ export const AVAILABILITY = "Available for work";
 export const HEADLINE_LINES = ["Building my future", "line-by-line at", "Purdue University"];
 
 export const INTRO =
-  "Hi, I’m Adam Zhang, an Artificial Intelligence major at Purdue who builds across **software engineering, robotics, and machine learning**. I’m driven by turning **real problems into working solutions**.";
+  "Hi, I’m ==Adam Zhang==, an Artificial Intelligence major at Purdue who builds across **software engineering, robotics, and machine learning**. I’m driven by turning **real problems into working solutions**.";
 
 // About-page blurb (the Home hero keeps the shorter INTRO).
 export const ABOUT_BLURB = [

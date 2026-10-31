@@ -8,7 +8,6 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "generate-manifest": "node scripts/generate-photo-manifest.js",
     "compress-photos": "node scripts/compress-photos.js",
     "link-previews": "node scripts/fetch-link-previews.js",
     "photos:scan": "node scripts/photos.mjs scan",
