@@ -125,7 +125,7 @@ function suggestRoll(e, photos, rolls) {
   if (e.isFilm) {
     const id = `film-${slug(e.camera || 'camera')}-${year}`;
     const exists = rolls.rolls.some((r) => r.id === id);
-    return { roll: id, why: exists ? `${e.camera} film from ${year}` : `new film roll for ${e.camera || 'this camera'}, ${year}`, newRoll: exists ? null : { kind: 'film', name: e.camera || '' } };
+    return { roll: id, why: exists ? `${e.camera} film from ${year}` : `new film roll for ${e.camera || 'this camera'}, ${year}`, newRoll: exists ? null : { kind: 'film', name: 'Film' } };
   }
   const id = `digital-${year}`;
   const exists = rolls.rolls.some((r) => r.id === id);

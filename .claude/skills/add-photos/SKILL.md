@@ -8,7 +8,7 @@ description: Add new photos to adamzhang.org's /photos page. Use when Adam has d
 Photos for `/photos` live in two data files, and nothing is placed by hand:
 
 - `src/data/photos.json`: one entry per photo (`id`, `src`, `w`, `h`, `title`, `alt`, `takenAt`, `camera`, `lens`, `exposure` or `film`, `place`).
-- `src/data/rolls.json`: `favorites` (three strips, written left to right as drawn, `null` = empty frame) and `rolls` (`id`, `kind`: `trip` | `film` | `year`, `name`, `photos` in shot order, `peek`: the 2–3 frames that stick out of the canister on the shelf).
+- `src/data/rolls.json`: `favorites` (one run of frames in order, `null` = an empty frame still to fill; the page wraps them onto as many strips as the screen needs) and `rolls` (`id`, `kind`: `trip` | `film` | `year`, `name`, `photos` in shot order, `peek`: the 2–3 frames that stick out of the canister on the shelf).
 
 Grouping rule: a trip gets its own roll (e.g. `japan-china-2026`); film gets a roll per camera and year (`film-nikon-f3-2023`); every other digital photo goes in its year's roll (`digital-2026`). Themed rolls (e.g. Formula SAE) are trips in this sense: only when Adam asks for one.
 

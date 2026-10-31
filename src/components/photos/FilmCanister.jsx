@@ -1,8 +1,8 @@
-// A 35 mm cartridge standing upright: gold label with the AYZ mark, name, year, and a purple band. Sized by --cw / --ch.
-// Purely visual; whatever opens it carries the text in its own label.
-export function FilmCanister({ name, year, band }) {
+// A 35 mm cartridge standing upright: a label in its kind's colours (fav, trip, film, year) with the AYZ mark, name,
+// year and a band. Sized by --cw / --ch. Purely visual; whatever opens it carries the text in its own label.
+export function FilmCanister({ kind, name, year, band }) {
   return (
-    <span className="can" aria-hidden="true">
+    <span className={`can k-${kind}`} aria-hidden="true">
       <span className="nub" />
       <span className="cap" />
       <span className="lbl">

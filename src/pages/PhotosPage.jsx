@@ -8,20 +8,22 @@ import { RollShelf } from "@/components/photos/RollShelf";
 import { RollViewer } from "@/components/photos/RollViewer";
 import { useUnroll } from "@/hooks/useUnroll";
 import { useViewportWidth } from "@/hooks/useViewportWidth";
-import { favorites, favoriteStrips, filmGeometry, filmVars, rolls, totals } from "@/lib/rolls";
+import { exposures, favorites, favoriteStrips, filmGeometry, filmVars, KINDS, rolls, totals, yearSpan } from "@/lib/rolls";
 import "@/styles/photos.css";
 
 const card = cardByKey("photos");
+const favPhotos = favorites.filter(Boolean);
 
-/* The Photos page (/photos), design D "Film rolls": three favorites strips that unroll from their canisters as they
-   scroll into view (the first on load), then the shelves of rolls. Picking a canister opens that roll over the page.
-   The legacy gallery at /photography is left untouched. */
+/* The Photos page (/photos), design D "Film rolls": the favorites unroll from their canisters as they scroll into
+   view (the first on load), on as many strips as the window needs; then the shelves of rolls, coloured by kind.
+   Picking a canister opens that roll over the page. The legacy gallery at /photography is left untouched. */
 export function PhotosPage() {
-  const g = filmGeometry(useViewportWidth());
+  const vw = useViewportWidth();
+  const g = filmGeometry(vw);
   const strips = favoriteStrips(favorites, g);
   const reels = useRef(null);
   useUnroll(reels, { first: true, layout: `${strips.length}:${g.W}` });
-  const [lb, setLb] = useState(null); // { photos, index } while the lightbox is open
+  const [shown, setShown] = useState(null); // index into favPhotos, or null
   const [roll, setRoll] = useState(null);
 
   return (
@@ -39,28 +41,36 @@ export function PhotosPage() {
 
       {strips.length > 0 && (
         <section className="reels" aria-label="Favorites" ref={reels} style={filmVars(g)}>
-          {strips.map((s, k) => {
-            const n = s.frames.filter(Boolean).length;
-            return (
-              <FilmStrip
-                key={k}
-                frames={s.frames}
-                rtl={s.rtl}
-                H={g.H}
-                can={{ name: "Favorites", year: s.label, band: `${n} ${n === 1 ? "PHOTO" : "PHOTOS"}` }}
-                onOpen={(p) => setLb({ photos: s.photos, index: s.photos.indexOf(p) })}
-              />
-            );
-          })}
+          {strips.map((s, k) => (
+            <FilmStrip
+              key={k}
+              frames={s.frames}
+              side={s.side}
+              fromRight={s.side === "right"}
+              H={g.H}
+              can={{ kind: "fav", name: "Favorites", year: yearSpan(s.photos, true), band: exposures(s.photos.length) }}
+              onOpen={(p) => setShown(favPhotos.indexOf(p))}
+            />
+          ))}
         </section>
       )}
 
       <section className="wrap rolls" aria-labelledby="rolls-h">
-        <h2 id="rolls-h">Rolls</h2>
-        <RollShelf rolls={rolls} onOpen={setRoll} />
+        <div className="rolls-h">
+          <h2 id="rolls-h">Rolls</h2>
+          <ul className="kinds" aria-label="Kinds of roll">
+            {KINDS.map((k) => (
+              <li key={k.kind}>
+                <span className={`swatch k-${k.kind}`} aria-hidden="true" />
+                {k.label} <span className="muted">{k.count}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <RollShelf rolls={rolls} vw={vw} onOpen={setRoll} />
       </section>
 
-      <PhotoLightbox photos={lb?.photos ?? []} index={lb?.index ?? null} onIndex={(i) => setLb(i == null ? null : { ...lb, index: i })} />
+      <PhotoLightbox photos={favPhotos} index={shown} onIndex={setShown} />
       <RollViewer roll={roll} onClose={() => setRoll(null)} />
     </div>
   );

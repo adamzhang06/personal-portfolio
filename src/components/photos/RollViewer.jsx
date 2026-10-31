@@ -2,16 +2,16 @@ import { useEffect, useRef, useState } from "react";
 import { NativeDialog } from "@/components/NativeDialog";
 import { useUnroll } from "@/hooks/useUnroll";
 import { useViewportWidth } from "@/hooks/useViewportWidth";
-import { filmGeometry, filmVars, rollStrips } from "@/lib/rolls";
+import { exposures, filmGeometry, filmVars, rollStrips } from "@/lib/rolls";
 import { FilmStrip } from "./FilmStrip";
 import { PhotoLightbox } from "./PhotoLightbox";
 
 const REWIND_MS = 750; // strips roll up (0.55 s), then the sheet fades
 
-/* An opened roll: a sheet over the page with the roll's name and photo count, its photos unrolling in zig-zag strips.
-   The page behind is locked and the sheet scrolls on its own. The only control is the fixed Rewind button (or Esc),
-   which rolls the strips back up and closes; focus returns to the canister, and the shelf never moved.
-   Any photo opens the lightbox over the sheet. */
+/* An opened roll: a see-through sheet over the page with the roll's name and photo count. The film runs out of one
+   canister and on as cut strips lined up beneath it, unrolling left and right in turn. The page behind is locked and
+   the sheet scrolls on its own. Rewind (or Esc, or a click anywhere off the film) rolls the strips back up and closes;
+   focus returns to the canister, and the shelf never moved. A photo opens the lightbox with its details. */
 export function RollViewer({ roll, onClose }) {
   const [closing, setClosing] = useState(false);
   const [shown, setShown] = useState(null); // index into roll.photos, or null
@@ -19,7 +19,7 @@ export function RollViewer({ roll, onClose }) {
   const timer = useRef(0);
   const g = filmGeometry(useViewportWidth());
   const strips = roll ? rollStrips(roll, g) : [];
-  useUnroll(scroller, { active: !!roll && !closing, self: true, once: true, delay: 150, stagger: 0.25, layout: strips.length });
+  useUnroll(scroller, { active: !!roll && !closing, self: true, once: true, eager: true, delay: 150, stagger: 0.25, layout: strips.length });
 
   useEffect(() => {
     if (!roll) return undefined;
@@ -48,11 +48,16 @@ export function RollViewer({ roll, onClose }) {
     }, REWIND_MS);
   };
 
+  // a click off the film and photos (the lightbox handles its own) leaves the roll
+  const onSheetClick = (e) => {
+    if (!e.target.closest(".film, button, .lbox")) rewind();
+  };
+
   const n = roll?.photos.length ?? 0;
   return (
     <NativeDialog open={!!roll} onClose={rewind} className={`rollview${closing ? " out" : ""}`} labelledBy="rv-h">
       {roll && (
-        <div className="rv-scroll" ref={scroller}>
+        <div className="rv-scroll" ref={scroller} onClick={onSheetClick}>
           <div className="rv-head">
             <h2 id="rv-h">
               {roll.name} · {roll.yearSpan}
@@ -68,15 +73,14 @@ export function RollViewer({ roll, onClose }) {
             </svg>
             Rewind
           </button>
-          <div className="reels" style={filmVars(g)}>
+          <div className="reels" style={filmVars(g, true)}>
             {strips.map((frames, i) => (
               <FilmStrip
                 key={i}
                 frames={frames}
-                rtl={i % 2 === 1}
                 H={g.H}
-                info
-                can={{ name: roll.name, year: roll.yearLabel, band: `${i + 1}/${strips.length}` }}
+                can={i === 0 ? { kind: roll.kind, name: roll.name, year: roll.yearLabel, band: exposures(n) } : null}
+                fromRight={i % 2 === 1}
                 onOpen={(p) => setShown(roll.photos.indexOf(p))}
               />
             ))}

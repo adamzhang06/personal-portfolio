@@ -1,14 +1,13 @@
-import { frameWidth } from "@/lib/rolls";
+import { exposures, frameWidth, shelfGeometry } from "@/lib/rolls";
 import { FilmCanister } from "./FilmCanister";
 
-const PEEK_H = 104;
-
-/* The shelves: one canister per roll, newest first, standing on a run of planks. A brass tag on the plank marks where
-   each year starts. A short leader comes straight out of each canister's slot showing the roll's peek frames, and
-   unrolls a little further on hover or focus. */
-export function RollShelf({ rolls, onOpen }) {
+/* The shelves: one canister per roll, newest first, standing on a run of planks, coloured by kind. A brass tag on the
+   plank marks where each year starts. A short leader comes straight out of each canister's slot showing the roll's
+   peek frames (as many as fit the card), and unrolls the rest of the way on hover or focus. */
+export function RollShelf({ rolls, vw, onOpen }) {
+  const s = shelfGeometry(vw);
   return (
-    <div className="shelf">
+    <div className="shelf" style={{ "--scw": `${s.cw}px` }}>
       {rolls.map((r, i) => {
         const first = i === 0 || rolls[i - 1].year !== r.year;
         const n = r.photos.length;
@@ -24,9 +23,9 @@ export function RollShelf({ rolls, onOpen }) {
               <span className="fw">
                 <span className="film">
                   <span className="frames">
-                    {r.peek.map((p) => (
+                    {s.fit(r.peek).map((p) => (
                       <span key={p.id} className="fr">
-                        <img src={p.src} alt="" loading="lazy" decoding="async" style={{ width: frameWidth(p, PEEK_H), height: PEEK_H }} />
+                        <img src={p.src} alt="" loading="lazy" decoding="async" style={{ width: frameWidth(p, s.peekH), height: s.peekH }} />
                       </span>
                     ))}
                   </span>
@@ -34,7 +33,7 @@ export function RollShelf({ rolls, onOpen }) {
                 <span className="curl" />
               </span>
             </span>
-            <FilmCanister name={r.name} year={r.yearLabel} band={`${n} EXP`} />
+            <FilmCanister kind={r.kind} name={r.name} year={r.yearLabel} band={exposures(n)} />
             <span className="plank" aria-hidden="true" />
             {first && (
               <span className="ytag" aria-hidden="true">

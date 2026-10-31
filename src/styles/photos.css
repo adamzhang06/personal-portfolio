@@ -1,84 +1,90 @@
 /* /photos — design D, film rolls (ported from docs/reference/Rolls.dc.html; read docs/reference/rolls-reference.md).
    Strip sizes come from filmGeometry() in src/lib/rolls.js as custom properties on .reels (--fh film height,
-   --fcw / --fch canister, --fov canister overlap, --flead film leader, --fgap, --ftilt, --fpad, sprocket --hh/--hw/--hp/--band),
-   so the layout that wraps photos and the drawing agree. --u is how far a strip has unrolled: 0 rolled up, 1 laid flat. */
+   --fcw / --fch canister, --fov canister overlap, --flead / --ftail film before and after the photos, --fgap, --ftilt,
+   --frowgap, --fpad, sprocket --hh/--hw/--hp/--band), so the layout that wraps photos and the drawing agree.
+   --u is how far a strip has unrolled: 0 rolled up, 1 laid flat. */
 @property --u{syntax:'<number>';inherits:true;initial-value:0}
 
-.photos{--gold:#F4B41C}
+/* kinds: each has its own label, ink and band. Favorites gold, trips purple, film cream, digital silver. */
+.k-fav{--lab:#F4B41C;--ink:#141414;--bandbg:#5B2BA0;--bandink:#fff}
+.k-trip{--lab:#7348CC;--ink:#fff;--bandbg:#F4B41C;--bandink:#141414}
+.k-film{--lab:#EEE7D4;--ink:#141414;--bandbg:#1E6B54;--bandink:#fff}
+.k-year{--lab:#BDC4CF;--ink:#141414;--bandbg:#26262E;--bandink:#F2EFF7}
 
 /* canister: an upright 35mm cartridge. Its body is always a little taller than the film that comes out of it. */
 .photos .can{position:relative;flex:none;width:var(--cw);height:var(--ch);display:flex;flex-direction:column;z-index:4;filter:drop-shadow(0 16px 16px rgba(0,0,0,.55))}
 .can .nub{align-self:center;width:34%;height:11px;border-radius:3px 3px 0 0;background:linear-gradient(90deg,#0b0b0c,#3d3d44 40%,#141416)}
 .can .cap{flex:none;height:13px;border-radius:6px;background:linear-gradient(90deg,#070708,#4a4a52 34%,#1a1a1d 64%,#050506)}
-.can .lbl{position:relative;flex:1;margin:0 3px;display:flex;flex-direction:column;overflow:hidden;background:var(--gold);color:#141414;padding:calc(var(--cw) * .08) calc(var(--cw) * .09) 0;text-align:left}
+.can .lbl{position:relative;flex:1;margin:0 3px;display:flex;flex-direction:column;overflow:hidden;background:var(--lab);color:var(--ink);padding:calc(var(--cw) * .08) calc(var(--cw) * .09) 0;text-align:left}
 .can .lbl::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.42) 0%,rgba(0,0,0,0) 20%,rgba(255,255,255,.3) 34%,rgba(255,255,255,0) 50%,rgba(0,0,0,.38) 100%)}
 .can .slit{position:absolute;right:0;top:0;bottom:0;width:7px;z-index:1;background:linear-gradient(90deg,#140b1a,#3b2350 50%,#120a17)}
 .can .k{font-family:var(--mo);font-weight:500;font-size:calc(var(--cw) * .075);line-height:1.3;letter-spacing:.12em}
 .can .nm{font-family:var(--hd);font-weight:700;font-size:calc(var(--cw) * .15);line-height:1.02;letter-spacing:-.01em;margin-top:6%;overflow-wrap:anywhere;padding-right:6px}
-.can .yr{font-family:var(--hd);font-weight:700;font-size:calc(var(--cw) * .27);line-height:.9;letter-spacing:-.03em;margin-top:auto;padding-bottom:7%}
-.can .band{margin:0 calc(var(--cw) * -.09);background:#5B2BA0;color:#fff;font-family:var(--mo);font-size:calc(var(--cw) * .075);line-height:1.3;letter-spacing:.1em;text-align:center;padding:5% 0;white-space:nowrap}
+.can .yr{font-family:var(--hd);font-weight:700;font-size:calc(var(--cw) * .27);line-height:.9;letter-spacing:-.03em;margin-top:auto;padding-bottom:7%;white-space:nowrap}
+.can .band{margin:0 calc(var(--cw) * -.09);background:var(--bandbg);color:var(--bandink);font-family:var(--mo);font-size:calc(var(--cw) * .075);line-height:1.3;letter-spacing:.1em;text-align:center;padding:5% 0;white-space:nowrap}
 
-/* reels: full-width rows zig-zagging from a canister on alternating sides */
+/* reels: rows zig-zagging from a canister on alternating sides; each strip is as long as its photos */
 .reels{display:flex;flex-direction:column;gap:var(--frowgap);padding:40px 0 30px}
 .frow{position:relative;display:flex;padding:0 var(--fpad)}
-.frow.rtl{flex-direction:row-reverse}
+.frow.side-right{flex-direction:row-reverse}
+.frow.cut{padding-left:calc(var(--fpad) + var(--fcw) - var(--fov))}
 .reel{--u:0;position:relative;display:flex;align-items:center;flex:none;transition:--u 1.5s var(--expo)}
 /* rotate only: the strip tilts as a flat sheet, so every photo stays a true rectangle */
-.frow.ltr .reel{transform-origin:0 50%;transform:rotate(var(--ftilt))}
-.frow.rtl .reel{flex-direction:row-reverse;transform-origin:100% 50%;transform:rotate(calc(var(--ftilt) * -1))}
+.frow.side-left .reel{transform-origin:0 50%;transform:rotate(var(--ftilt))}
+.frow.side-right .reel{flex-direction:row-reverse;transform-origin:100% 50%;transform:rotate(calc(var(--ftilt) * -1))}
 .reel .can{--cw:var(--fcw);--ch:var(--fch)}
-.fw{position:relative;flex:none;width:calc(100vw + 160px);filter:drop-shadow(0 22px 16px rgba(0,0,0,.6))}
-.frow.ltr .fw{margin-left:calc(var(--fov) * -1)}
-.frow.rtl .fw{margin-right:calc(var(--fov) * -1)}
+.fw{position:relative;flex:none;filter:drop-shadow(0 22px 16px rgba(0,0,0,.6))}
+.frow.side-left .fw{margin-left:calc(var(--fov) * -1)}
+.frow.side-right .fw{margin-right:calc(var(--fov) * -1)}
 /* film: amber-brown base with dark sprocket holes along both edges; photos sit in square windows separated by bars of the base */
-.film{--hole:#060607;position:relative;display:flex;height:var(--fh);align-items:center;background:linear-gradient(180deg,#1c1005 0%,#3b2309 13%,#2c1a07 50%,#3b2309 87%,#1c1005 100%)}
+.film{--hole:#060607;position:relative;display:flex;height:var(--fh);align-items:center;padding:0 var(--ftail) 0 var(--flead);background:linear-gradient(180deg,#1c1005 0%,#3b2309 13%,#2c1a07 50%,#3b2309 87%,#1c1005 100%);clip-path:inset(-2px calc((1 - var(--u)) * 100%) -2px 0)}
+.frow.side-right .film{padding:0 var(--flead) 0 var(--ftail)}
+.from-r .film{clip-path:inset(-2px 0 -2px calc((1 - var(--u)) * 100%))}
 .film::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,rgba(255,255,255,0) 30%,rgba(255,236,200,.07) 44%,rgba(255,255,255,0) 58%)}
-.frow.ltr .film{padding-left:var(--flead);clip-path:inset(-2px calc((1 - var(--u)) * 100%) -2px 0)}
-.frow.rtl .film{justify-content:flex-end;padding-right:var(--flead);clip-path:inset(-2px 0 -2px calc((1 - var(--u)) * 100%))}
 .film::before{content:"";position:absolute;left:0;right:0;top:calc(var(--band) / 2 - var(--hh) / 2);bottom:calc(var(--band) / 2 - var(--hh) / 2);pointer-events:none;
  background:repeating-linear-gradient(90deg,transparent 0 calc((var(--hp) - var(--hw)) / 2),var(--hole) calc((var(--hp) - var(--hw)) / 2) calc((var(--hp) + var(--hw)) / 2),transparent calc((var(--hp) + var(--hw)) / 2) var(--hp)) left top/100% var(--hh) no-repeat,
   repeating-linear-gradient(90deg,transparent 0 calc((var(--hp) - var(--hw)) / 2),var(--hole) calc((var(--hp) - var(--hw)) / 2) calc((var(--hp) + var(--hw)) / 2),transparent calc((var(--hp) + var(--hw)) / 2) var(--hp)) left bottom/100% var(--hh) no-repeat}
 .frames{position:relative;display:flex;gap:var(--fgap)}
 .fr{position:relative;flex:none;display:block}
 .fr img{display:block;max-width:none;object-fit:cover;background:#140b03}
-.fr.blank i{display:block;background:linear-gradient(160deg,#2e1b07,#24150a)}
+/* an empty frame is unexposed film: the base shows through, with a faint frame line */
+.fr.blank i{display:block;background:rgba(255,196,120,.07);box-shadow:inset 0 0 0 1px rgba(255,210,150,.14)}
 /* hover: a green outline, nothing moves */
 button.fr{cursor:zoom-in}
 button.fr:hover img{outline:3px solid var(--green);outline-offset:-3px}
 .site button.fr:focus-visible{border-radius:0}
-/* the roll of film still wound up at the strip's leading edge; it shrinks away as the strip lies flat */
-.curl{position:absolute;top:-4px;bottom:-4px;width:calc(10px + (1 - var(--u)) * 40px);border-radius:999px;background:linear-gradient(90deg,#120a03,#6a4518 32%,#3a230a 62%,#0c0602);box-shadow:0 12px 20px rgba(0,0,0,.6),inset 0 0 0 1px rgba(0,0,0,.4);pointer-events:none;opacity:calc((1 - var(--u)) * 16);z-index:3}
-.frow.ltr .curl{left:calc(var(--u) * 100%);transform:translateX(-50%)}
-.frow.rtl .curl{right:calc(var(--u) * 100%);transform:translateX(50%)}
-/* photo details, in an opened roll */
-.fr .info{position:absolute;left:0;right:0;bottom:0;padding:26px 9px 8px;background:linear-gradient(0deg,rgba(0,0,0,.86),rgba(0,0,0,.55) 60%,rgba(0,0,0,0));text-align:left;opacity:0;transition:opacity .2s var(--out);pointer-events:none}
-.fr .info b{display:block;font-family:var(--hd);font-weight:700;font-size:15px;line-height:1.15;color:#fff}
-.fr .info span{display:block;font-family:var(--mo);font-size:10px;line-height:1.4;letter-spacing:.04em;text-transform:uppercase;color:rgba(242,239,247,.85);margin-top:3px}
-.fr:focus-visible .info{opacity:1}
-@media (hover:hover){.fr:hover .info{opacity:1}}
+/* the roll of film still wound up at the strip's leading edge; it shrinks as the strip lies flat and stops at the strip's end */
+.curl{position:absolute;top:-4px;bottom:-4px;left:calc(var(--u) * 100%);transform:translateX(-50%);width:calc(10px + (1 - var(--u)) * 40px);border-radius:999px;background:linear-gradient(90deg,#120a03,#6a4518 32%,#3a230a 62%,#0c0602);box-shadow:0 12px 20px rgba(0,0,0,.6),inset 0 0 0 1px rgba(0,0,0,.4);pointer-events:none;opacity:calc((1 - var(--u)) * 16);z-index:3}
+.from-r .curl{left:auto;right:calc(var(--u) * 100%);transform:translateX(50%)}
 
 /* shelves: one run of planks, newest first. A tag on the plank front marks where each year starts.
-   A short leader comes straight out of each canister's slot showing a few of the roll's best frames. */
-.rolls h2{font-size:calc(30px*var(--s));line-height:1.1;margin-top:40px}
+   A short leader comes straight out of each canister's slot showing a few of the roll's best frames.
+   Everything is sized from --scw, the canister width (shelfGeometry). */
+.rolls-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;margin-top:40px}
+.rolls-h h2{font-size:calc(30px*var(--s));line-height:1.1}
+.kinds{display:flex;flex-wrap:wrap;gap:8px 20px;margin:0;padding:0;list-style:none;color:var(--body);font-size:calc(15px*var(--s))}
+.kinds li{display:inline-flex;align-items:center;gap:8px}
+.kinds .muted{font-family:var(--mo);font-size:calc(12px*var(--s))}
+.swatch{width:14px;height:22px;border-radius:2px;background:linear-gradient(var(--lab) 0 70%,var(--bandbg) 70% 86%,var(--lab) 86%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.25)}
 .shelf{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));row-gap:34px;margin-top:30px}
-.rc{position:relative;display:block;min-width:0;height:262px;border-radius:12px;overflow:hidden}
+.rc{position:relative;display:block;min-width:0;height:calc(var(--scw) * 5 / 3 + 62px);border-radius:12px;overflow:hidden}
 .site .rc:focus-visible{z-index:1;border-radius:12px;outline-offset:2px}
 .rc .plank{position:absolute;left:0;right:0;bottom:0;height:26px;z-index:5;background:#121216;border-top:1px solid #1d1d23}
 .rc.first .plank{border-left:2px solid #0a0a0c}
 .ytag{position:absolute;left:14px;bottom:5px;z-index:6;padding:1px 8px;border-radius:3px;background:linear-gradient(180deg,#d9c48c,#a98d4f);color:#1b1608;font-family:var(--mo);font-weight:500;font-size:11px;line-height:1.4;letter-spacing:.1em;box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 1px 2px rgba(0,0,0,.5)}
-.rc .can{--cw:120px;--ch:200px;position:absolute;left:16px;bottom:26px;transition:transform .35s var(--out),filter .35s var(--out)}
-.peek{--u:.55;position:absolute;left:66px;bottom:52px;z-index:2;transition:--u .7s var(--expo),transform .35s var(--out)}
-.peek .fw{width:auto;filter:drop-shadow(0 14px 12px rgba(0,0,0,.6))}
-.peek .film{--hh:7px;--hw:8px;--hp:17px;--band:20px;height:150px;padding:0 22px 0 64px;clip-path:inset(-2px calc((1 - var(--u)) * 100%) -2px 0)}
+.rc .can{--cw:var(--scw);--ch:calc(var(--scw) * 5 / 3);position:absolute;left:16px;bottom:26px;transition:transform .35s var(--out),filter .35s var(--out)}
+.peek{--u:.8;position:absolute;left:calc(16px + var(--scw) * .42);bottom:calc(26px + var(--scw) * .3);z-index:2;transition:--u .7s var(--expo),transform .35s var(--out)}
+.peek .fw{filter:drop-shadow(0 14px 12px rgba(0,0,0,.6))}
+.peek .film{--hh:7px;--hw:8px;--hp:17px;--band:20px;height:calc(var(--scw) * 1.08);padding:0 22px 0 calc(var(--scw) * .53)}
 .peek .frames{gap:9px}
-.peek .curl{left:calc(var(--u) * 100%);transform:translateX(-50%)}
 .rc:is(:hover,:focus-visible) .can{transform:translateY(-6px)}
 .rc:is(:hover,:focus-visible) .peek{--u:1;transform:translateY(-6px)}
 
-/* opened roll: a sheet over the page. Only the sheet scrolls; the header scrolls away with the strips, Rewind stays put. */
-.site dialog.rollview{position:fixed;inset:0;width:100%;height:100%;margin:0;overflow:hidden;background:rgba(7,7,9,.97)}
+/* opened roll: a see-through sheet over the page. Only the sheet scrolls; the header scrolls away with the strips,
+   Rewind stays put. Its strips tilt about their middles, in turn, and start under the one canister. */
+.site dialog.rollview{position:fixed;inset:0;width:100%;height:100%;margin:0;overflow:hidden;background:rgba(8,8,10,.74);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 .rollview[open]{animation:rvIn .35s var(--out)}
-.site .rollview::backdrop{background:rgba(4,4,6,.6)}
+.site .rollview::backdrop{background:transparent}
 .rollview.out{opacity:0;transition:opacity .3s var(--out) .45s}
 @keyframes rvIn{from{opacity:0}to{opacity:1}}
 .rv-scroll{height:100%;overflow-y:auto;overflow-x:clip;overscroll-behavior:contain}
@@ -86,6 +92,8 @@ button.fr:hover img{outline:3px solid var(--green);outline-offset:-3px}
 .rv-head h2{font-size:calc(43px*var(--s));line-height:1.08}
 .rv-head .count{color:var(--body);font-size:calc(17px*var(--s));margin-top:8px}
 .rollview .reels{padding:30px 0 140px}
+.rollview .frow .reel{transform-origin:50% 50%;transform:rotate(var(--ftilt))}
+.rollview .frow:nth-child(even) .reel{transform:rotate(calc(var(--ftilt) * -1))}
 .rewind{position:fixed;top:28px;right:40px;z-index:5;display:inline-flex;align-items:center;gap:14px;min-height:68px;padding:0 30px 0 24px;border-radius:999px;background:var(--purple);color:#fff;font-family:var(--hd);font-weight:700;font-size:24px;letter-spacing:-.01em;box-shadow:0 12px 40px rgba(138,85,230,.45),0 2px 8px rgba(0,0,0,.5);transition:transform .2s var(--out),background .2s var(--out)}
 .site .rewind:focus-visible{border-radius:999px}
 .rewind svg{width:30px;height:30px}
@@ -93,9 +101,8 @@ button.fr:hover img{outline:3px solid var(--green);outline-offset:-3px}
 
 @media (max-width:1180px){.shelf{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:860px){
- .rolls h2{margin-top:24px}
+ .rolls-h{margin-top:24px}
  .shelf{grid-template-columns:minmax(0,1fr);row-gap:24px}
- .rc{height:240px}
  .rv-head{padding:28px 20px 4px}
  .rv-head h2{font-size:calc(32px*var(--s))}
  .rollview .reels{padding:20px 0 120px}

@@ -6,9 +6,10 @@ const clamp = (x) => Math.min(1, Math.max(0, x));
    (rolled up in the canister) to 1 (laid flat) and the CSS animates it. A strip holding keyboard focus lies flat.
    On start, the strips already on screen unroll one after another.
    Options: self (root is its own scroller, else the window scrolls), first (the first strip is always unrolled),
-   once (a strip stays unrolled once it has been), delay / stagger (seconds between strips on start) and layout (any
-   value that changes when the strips are re-laid out, so new strips are measured). */
-export function useUnroll(rootRef, { active = true, self = false, first = false, once = false, delay = 350, stagger = 0.22, layout } = {}) {
+   once (a strip stays unrolled once it has been), eager (a strip unrolls all the way as soon as it is on screen),
+   delay / stagger (seconds between strips on start) and layout (any value that changes when the strips are re-laid
+   out, so new strips are measured). */
+export function useUnroll(rootRef, { active = true, self = false, first = false, once = false, eager = false, delay = 350, stagger = 0.22, layout } = {}) {
   const refresh = useRef(() => {});
 
   useEffect(() => {
@@ -20,7 +21,8 @@ export function useUnroll(rootRef, { active = true, self = false, first = false,
     const set = () => {
       const vh = window.innerHeight;
       root.querySelectorAll("[data-reel]").forEach((el, i) => {
-        let u = clamp((vh * 0.95 - el.getBoundingClientRect().top) / (vh * 0.55));
+        const top = el.getBoundingClientRect().top;
+        let u = eager ? Number(top < vh * 0.92) : clamp((vh * 0.95 - top) / (vh * 0.55));
         if ((first && i === 0) || el.matches(":focus-within")) u = 1;
         if (once) u = Math.max(u, Number(el.dataset.u) || 0);
         el.dataset.u = u;
@@ -56,7 +58,7 @@ export function useUnroll(rootRef, { active = true, self = false, first = false,
       window.removeEventListener("resize", queue);
       root.removeEventListener("focusin", queue);
     };
-  }, [rootRef, active, self, first, once, delay, stagger]);
+  }, [rootRef, active, self, first, once, eager, delay, stagger]);
 
   useEffect(() => {
     refresh.current();

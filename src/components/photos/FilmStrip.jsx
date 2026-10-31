@@ -1,14 +1,15 @@
-import { frameWidth, photoLabel, photoTech, photoWhen } from "@/lib/rolls";
+import { frameWidth, photoLabel } from "@/lib/rolls";
 import { FilmCanister } from "./FilmCanister";
 
-/* One row: a canister on the left (or right, rtl) and the amber strip running out of it to past the screen edge.
-   The strip only rotates, so photos stay rectangular; useUnroll sets --u on [data-reel]. Frames are drawn left to
-   right; null is an empty frame. `info` shows each photo's title, date, place and camera on hover. */
-export function FilmStrip({ frames, rtl, can, H, info = false, onOpen }) {
+/* One row of film, as long as its photos plus a short leader and tail. With `can` it runs out of a canister on the
+   left or right `side`; without, it is a cut strip lined up under the first. It unrolls from the left, or from the
+   right with `fromRight`, and only rotates, so photos stay rectangular; useUnroll sets --u on [data-reel].
+   Frames are drawn left to right; null is an empty (unexposed) frame. */
+export function FilmStrip({ frames, side = "left", can, fromRight = false, H, onOpen }) {
   return (
-    <div className={`frow ${rtl ? "rtl" : "ltr"}`}>
+    <div className={`frow ${can ? `side-${side}` : "cut"}${fromRight ? " from-r" : ""}`}>
       <div className="reel" data-reel>
-        <FilmCanister {...can} />
+        {can && <FilmCanister {...can} />}
         <div className="fw">
           <div className="film">
             <div className="frames">
@@ -18,13 +19,6 @@ export function FilmStrip({ frames, rtl, can, H, info = false, onOpen }) {
                 return (
                   <button key={p.id} type="button" className="fr" aria-label={photoLabel(p)} onClick={() => onOpen(p)}>
                     <img src={p.src} alt="" width={p.w} height={p.h} loading="lazy" decoding="async" style={size} />
-                    {info && (
-                      <span className="info" aria-hidden="true">
-                        <b>{p.title}</b>
-                        <span>{photoWhen(p)}</span>
-                        <span>{photoTech(p)}</span>
-                      </span>
-                    )}
                   </button>
                 );
               })}
