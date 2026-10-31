@@ -25,3 +25,10 @@ dist-ssr
 
 Claude outputs
 docs
+
+# Full-size photo originals: local only (compressed copies in public/photos/gallery-compressed are what the site serves)
+photos-originals/
+
+# Photo inbox: drop new originals here; only the README is tracked
+photos-inbox/*
+!photos-inbox/README.md

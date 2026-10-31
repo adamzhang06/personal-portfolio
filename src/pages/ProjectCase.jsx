@@ -3,14 +3,12 @@ import { useHistoryBack } from "@/hooks/useHistoryBack";
 import { projects } from "@/data/projects";
 import { Crumb } from "@/components/CardHead";
 import { MediaGrid, VideoEmbed } from "@/components/MediaGrid";
-import { LinkButtons } from "@/components/LinkPreview";
+import { ProjectLinks } from "@/components/LinkPreview";
 import { Rich } from "@/components/Rich";
 import { Home } from "./Home";
 
-const pad = (n) => String(n).padStart(2, "0");
-
 // Case study inside a rounded viewfinder frame: header with the one-line headline, write-up with a
-// Built with / Demo / link buttons sidebar, then the gallery. Previous / next sit beside the counter at the top
+// Built with / Demo / Links sidebar, then the gallery. Previous / next sit beside the counter at the top
 // (arrows only on phones) and replace history, so Back still returns to wherever the visitor came from.
 // The demo, links and gallery are omitted when the project has none.
 export function ProjectCase() {
@@ -36,8 +34,8 @@ export function ProjectCase() {
                 <span className="pn-name">{next.name}</span> <span aria-hidden="true">→</span>
               </button>
             </nav>
-            <span className="mono muted">
-              {pad(i + 1)} / {pad(projects.length)}
+            <span className="note muted">
+              {i + 1} / {projects.length}
             </span>
           </div>
         </div>
@@ -87,7 +85,7 @@ export function ProjectCase() {
                 <VideoEmbed video={p.demo} title={`${p.name} demo video`} />
               </>
             )}
-            <LinkButtons links={p.links} />
+            <ProjectLinks links={p.links} />
           </aside>
         </div>
         {p.media.length > 0 && (

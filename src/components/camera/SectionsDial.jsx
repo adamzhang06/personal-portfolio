@@ -38,7 +38,7 @@ export function SectionsDial({ variant, open = false, flipped = false }) {
     return (
       <div className={"secwrap" + (open ? " open" : "")}>
         <div ref={panelRef} className={"legend secdock" + (open ? " open" : "")} role="group" aria-label="Sections" inert={!open} onMouseLeave={leave}>
-          <span className="mono lt">Turn to a section</span>
+          <span className="lt note">Turn to a section</span>
           {options.map((o) => (
             <button key={o.key} type="button" className="lgb" aria-current={o.on ? "page" : undefined} onMouseEnter={o.preview} onFocus={o.preview} onClick={o.pick}>
               {o.label} <em>{o.letter}</em>
@@ -71,7 +71,7 @@ export function SectionsDial({ variant, open = false, flipped = false }) {
         style={{ left: "min(calc(50% + 440px), calc(100% - 276px))", top: flipped ? 236 : 402 }}
         onMouseLeave={leave}
       >
-        <span className="mono lt">Turn to a section</span>
+        <span className="lt note">Turn to a section</span>
         {options.map((o) => (
           <button
             key={o.key}

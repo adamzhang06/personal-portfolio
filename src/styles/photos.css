@@ -1,0 +1,173 @@
+/* /photos — design D, film rolls (ported from docs/reference/Rolls.dc.html; read docs/reference/rolls-reference.md).
+   Strip sizes come from filmGeometry() in src/lib/rolls.js as custom properties on .reels (--fh film height,
+   --fcw / --fch canister, --fov canister overlap, --flead / --ftail film before and after the photos, --fgap, --ftilt,
+   --frowgap, --fpad, sprocket --hh/--hw/--hp/--band), so the layout that wraps photos and the drawing agree.
+   --u is how far a strip has unrolled: 0 rolled up, 1 laid flat. */
+@property --u{syntax:'<number>';inherits:true;initial-value:0}
+
+/* kinds: each has its own label, ink and band. Favorites gold, trips purple, film cream, digital a cool steel
+   printed with a pixel grid and a cyan band. */
+.k-fav{--lab:#F4B41C;--ink:#141414;--bandbg:#5B2BA0;--bandink:#fff}
+.k-trip{--lab:#7348CC;--ink:#fff;--bandbg:#F4B41C;--bandink:#141414}
+.k-film{--lab:#EEE7D4;--ink:#141414;--bandbg:#1E6B54;--bandink:#fff}
+.k-year{--lab:#B9C6D6;--ink:#0C1A2A;--bandbg:#2EC4F0;--bandink:#05202C;
+ --pix:repeating-linear-gradient(0deg,rgba(12,40,72,.13) 0 1px,transparent 1px 6px),repeating-linear-gradient(90deg,rgba(12,40,72,.13) 0 1px,transparent 1px 6px),linear-gradient(180deg,#D3DEEA,#9EB0C6)}
+.can.k-year .lbl{background:var(--pix)}
+
+/* canister: an upright 35mm cartridge. Its body is always a little taller than the film that comes out of it. */
+.can{position:relative;flex:none;width:var(--cw);height:var(--ch);display:flex;flex-direction:column;z-index:4;filter:drop-shadow(0 16px 16px rgba(0,0,0,.55))}
+.can .nub{align-self:center;width:34%;height:11px;border-radius:3px 3px 0 0;background:linear-gradient(90deg,#0b0b0c,#3d3d44 40%,#141416)}
+.can .cap{flex:none;height:13px;border-radius:6px;background:linear-gradient(90deg,#070708,#4a4a52 34%,#1a1a1d 64%,#050506)}
+.can .lbl{position:relative;flex:1;margin:0 3px;display:flex;flex-direction:column;overflow:hidden;background:var(--lab);color:var(--ink);padding:calc(var(--cw) * .08) calc(var(--cw) * .09) 0;text-align:left}
+.can .lbl::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.42) 0%,rgba(0,0,0,0) 20%,rgba(255,255,255,.3) 34%,rgba(255,255,255,0) 50%,rgba(0,0,0,.38) 100%)}
+.can .slit{position:absolute;right:0;top:0;bottom:0;width:7px;z-index:1;background:linear-gradient(90deg,#140b1a,#3b2350 50%,#120a17)}
+.can .k{font-family:var(--mo);font-weight:500;font-size:calc(var(--cw) * .075);line-height:1.3;letter-spacing:.12em}
+.can .nm{font-family:var(--hd);font-weight:700;font-size:calc(var(--cw) * .15);line-height:1.02;letter-spacing:-.01em;margin-top:6%;overflow-wrap:anywhere;padding-right:6px}
+.can .yr{font-family:var(--hd);font-weight:700;font-size:calc(var(--cw) * .27);line-height:.9;letter-spacing:-.03em;margin-top:auto;padding-bottom:7%;white-space:nowrap}
+.can .band{margin:0 calc(var(--cw) * -.09);background:var(--bandbg);color:var(--bandink);font-family:var(--mo);font-size:calc(var(--cw) * .075);line-height:1.3;letter-spacing:.1em;text-align:center;padding:5% 0;white-space:nowrap}
+
+/* reels: rows zig-zagging from a canister on alternating sides; each strip is as long as its photos */
+.reels{display:flex;flex-direction:column;gap:var(--frowgap);padding:40px 0 30px}
+.frow{position:relative;display:flex;padding:0 var(--fpad)}
+.frow.side-right{flex-direction:row-reverse}
+.reel{--u:0;position:relative;display:flex;align-items:center;flex:none;transition:--u 1.5s var(--expo)}
+/* rotate only: the strip tilts as a flat sheet, so every photo stays a true rectangle */
+.frow.side-left .reel{transform-origin:0 50%;transform:rotate(var(--ftilt))}
+.frow.side-right .reel{flex-direction:row-reverse;transform-origin:100% 50%;transform:rotate(calc(var(--ftilt) * -1))}
+.reel .can{--cw:var(--fcw);--ch:var(--fch)}
+.fw{position:relative;flex:none;filter:drop-shadow(0 22px 16px rgba(0,0,0,.6))}
+.frow.side-left .fw{margin-left:calc(var(--fov) * -1)}
+.frow.side-right .fw{margin-right:calc(var(--fov) * -1)}
+/* film: amber-brown base with dark sprocket holes along both edges; photos sit in square windows separated by bars of the base */
+.film{--hole:#060607;position:relative;display:flex;height:var(--fh);align-items:center;padding:0 var(--ftail) 0 var(--flead);background:linear-gradient(180deg,#1c1005 0%,#3b2309 13%,#2c1a07 50%,#3b2309 87%,#1c1005 100%);clip-path:inset(-2px calc((1 - var(--u)) * 100%) -2px 0)}
+.frow.side-right .film{padding:0 var(--flead) 0 var(--ftail)}
+.frow.side-right .film{clip-path:inset(-2px 0 -2px calc((1 - var(--u)) * 100%))}
+.film::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,rgba(255,255,255,0) 30%,rgba(255,236,200,.07) 44%,rgba(255,255,255,0) 58%)}
+.film::before{content:"";position:absolute;left:0;right:0;top:calc(var(--band) / 2 - var(--hh) / 2);bottom:calc(var(--band) / 2 - var(--hh) / 2);pointer-events:none;
+ background:repeating-linear-gradient(90deg,transparent 0 calc((var(--hp) - var(--hw)) / 2),var(--hole) calc((var(--hp) - var(--hw)) / 2) calc((var(--hp) + var(--hw)) / 2),transparent calc((var(--hp) + var(--hw)) / 2) var(--hp)) left top/100% var(--hh) no-repeat,
+  repeating-linear-gradient(90deg,transparent 0 calc((var(--hp) - var(--hw)) / 2),var(--hole) calc((var(--hp) - var(--hw)) / 2) calc((var(--hp) + var(--hw)) / 2),transparent calc((var(--hp) + var(--hw)) / 2) var(--hp)) left bottom/100% var(--hh) no-repeat}
+.frames{position:relative;display:flex;gap:var(--fgap)}
+.fr{position:relative;flex:none;display:block}
+.fr img{display:block;max-width:none;object-fit:cover;background:#140b03}
+/* an empty frame is unexposed film: the base shows through, with a faint frame line */
+.fr.blank i{display:block;background:rgba(255,196,120,.07);box-shadow:inset 0 0 0 1px rgba(255,210,150,.14)}
+/* film frames come off the canister as negatives (colour stock under its orange mask, B&W plain) and develop once the
+   strip has lain flat ([data-dev], set by useUnroll), from the canister outward */
+.fr.neg img{filter:invert(0) contrast(1);transition:filter 1.8s var(--out) calc(.6s + var(--j) * .2s)}
+.fr.neg::after{content:"";position:absolute;inset:0;pointer-events:none;background:#D9782C;mix-blend-mode:multiply;opacity:0;transition:opacity 1.8s var(--out) calc(.6s + var(--j) * .2s)}
+[data-reel]:not([data-dev]) .fr.neg img{filter:invert(1) contrast(.8)}
+[data-reel]:not([data-dev]) .fr.neg:not(.mono-neg)::after{opacity:.9}
+/* hover: a green outline, nothing moves */
+button.fr{cursor:zoom-in}
+button.fr:hover img{outline:3px solid var(--green);outline-offset:-3px}
+.site button.fr:focus-visible{border-radius:0}
+/* the roll of film still wound up at the strip's leading edge; it shrinks as the strip lies flat and stops at the strip's end */
+.curl{position:absolute;top:-4px;bottom:-4px;left:calc(var(--u) * 100%);transform:translateX(-50%);width:calc(10px + (1 - var(--u)) * 40px);border-radius:999px;background:linear-gradient(90deg,#120a03,#6a4518 32%,#3a230a 62%,#0c0602);box-shadow:0 12px 20px rgba(0,0,0,.6),inset 0 0 0 1px rgba(0,0,0,.4);pointer-events:none;opacity:calc((1 - var(--u)) * 16);z-index:3}
+.frow.side-right .curl{left:auto;right:calc(var(--u) * 100%);transform:translateX(50%)}
+
+/* Rolls heading: the kind filters sit beside it. Any number can be on; Reset (or turning the last one off) shows
+   every roll. Reset comes first and keeps its place while hidden, so the filters never move. */
+.rolls-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;margin-top:40px}
+.rolls-h h2{font-size:calc(28px*var(--s));line-height:1.1}
+.kinds{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px;margin-left:auto}
+.kinds .reset.off{visibility:hidden}
+.chip{gap:10px;color:var(--body)}
+.chip .n{font-size:calc(15px*var(--s));color:var(--muted)}
+.chip.on{background:var(--pdeep);border-color:var(--ptext);color:var(--text)}
+.chip.on .n{color:var(--ptext)}
+.swatch{width:14px;height:22px;border-radius:2px;background:linear-gradient(var(--lab) 0 70%,var(--bandbg) 70% 86%,var(--lab) 86%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.25)}
+.swatch.k-year{background:linear-gradient(transparent 0 70%,var(--bandbg) 70% 86%,transparent 86%),var(--pix)}
+
+/* cartons: one kraft counter-display carton per year (shelfGeometry), drawn in one-point perspective from slightly
+   above. The front wall is the full width; the back wall, and the printed header that rises from it, sit --d in from
+   each side because they are farther away; the side walls' inner faces (.walls) run from the front wall's top corners
+   back to the back wall, their cut top edges catching the light. The inside darkens toward the floor. Each slot's
+   front wall is die-cut with a scoop under its canister, the corrugated edge showing along the cut, and casts a
+   shadow up the canister. Hover or keyboard focus lifts a canister out and draws its leader the rest of the way;
+   the focus ring goes round the label. */
+.cartons{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:44px 28px;margin-top:28px;align-items:start}
+.cartons.phone{display:flex;flex-wrap:wrap;gap:32px 14px}
+.carton{--d:14px;--wall:calc(var(--scw) * .6 + 14px);view-transition-class:carton;position:relative;min-width:0;overflow-x:clip;container-type:inline-size;filter:drop-shadow(0 18px 18px rgba(0,0,0,.55)) drop-shadow(0 2px 2px rgba(0,0,0,.4))}
+.cartons.phone .carton{--d:6px}
+.hdr{position:relative;display:flex;align-items:baseline;justify-content:space-between;gap:4px 12px;height:60px;margin:0 var(--d);padding:12px 16px 0;border-radius:6px 6px 0 0;color:#2a1a0c;
+ background:url(/assets/grain.png),linear-gradient(180deg,#c49c6b,#ab845a);background-size:256px 256px,auto;background-blend-mode:multiply,normal;box-shadow:inset 0 2px 0 rgba(255,232,196,.3),inset 0 -1px 0 rgba(60,40,20,.35)}
+.hdr b{font-family:var(--hd);font-weight:700;font-size:30px;line-height:1;letter-spacing:-.02em;opacity:.86;text-shadow:0 1px 0 rgba(255,236,204,.28)}
+.hdr span{font-family:var(--mo);font-weight:500;font-size:12px;line-height:1.3;letter-spacing:.1em;text-transform:uppercase;opacity:.72;white-space:nowrap}
+@container (max-width:240px){.hdr{flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;padding:6px 8px 0}.hdr b{font-size:24px}.hdr span{font-size:11px;letter-spacing:0}}
+.tray{display:grid;position:relative}
+/* the inside: back wall at the top (inset --d each side), opening out to the front wall's corners, darkening to the floor */
+.tray::before{content:"";position:absolute;inset:0;z-index:0;
+ background:url(/assets/grain.png),linear-gradient(180deg,#8f6c47 0,#6b4f33 35%,#2c1f13 100%);background-size:256px 256px,auto;background-blend-mode:multiply,normal;
+ clip-path:polygon(var(--d) 0,calc(100% - var(--d)) 0,100% calc(100% - var(--wall)),100% 100%,0 100%,0 calc(100% - var(--wall)))}
+/* the side walls' inner faces, in shade; the drop-shadow is the lit cut edge along their tops */
+.walls{position:absolute;inset:0;z-index:0;pointer-events:none;filter:drop-shadow(0 -2px 0 #c7a06f)}
+.walls i{position:absolute;inset:0;
+ background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.45)),linear-gradient(90deg,#5d4329 0,#3b2a1a var(--d),#3b2a1a calc(100% - var(--d)),#5d4329 100%);
+ clip-path:polygon(0 calc(100% - var(--wall)),var(--d) 0,var(--d) 100%,calc(100% - var(--d)) 100%,calc(100% - var(--d)) 0,100% calc(100% - var(--wall)),100% 100%,0 100%)}
+.rc{--dx:calc(14px + var(--scw) / 2);--dw:calc(var(--scw) * .62);--dh:calc(var(--scw) * .5);view-transition-class:roll;position:relative;display:block;min-width:0;height:calc(var(--scw) * 5 / 3 + 40px);clip-path:inset(-300px -1px 0 -1px)}
+.rc .can{--cw:var(--scw);--ch:calc(var(--scw) * 5 / 3);position:absolute;left:14px;bottom:14px;z-index:2;transition:transform .35s var(--out)}
+/* Each slot is its own stacking context (its view-transition name), so a slot is clipped to its own width (.rc) and
+   nothing in it, like its canister's drop shadow, can darken the next slot's front wall. Its shadow is drawn 12 px
+   wider than the slot, to blur evenly up to the edges, then clipped back to the slot. */
+.rc .shade{position:absolute;left:-12px;right:-12px;bottom:0;height:var(--wall);z-index:3;pointer-events:none;filter:blur(5px);clip-path:inset(-140px 12px 0 12px)}
+/* the front wall's shadow on what stands behind it: the wall's own shape (scoop and all), raised a little and blurred */
+.rc .shade i{position:absolute;inset:0;transform:translateY(-8px);background:rgba(14,8,3,.6);
+ -webkit-mask:radial-gradient(var(--dw) var(--dh) at calc(var(--dx) + 12px) 0,transparent calc(100% - 1px),#000 100%);mask:radial-gradient(var(--dw) var(--dh) at calc(var(--dx) + 12px) 0,transparent calc(100% - 1px),#000 100%)}
+/* and less light the deeper into the box, all the way to the floor, so nothing in a scoop is lit more than above it */
+.rc .shade::before{content:"";position:absolute;left:0;right:0;bottom:0;height:calc(var(--wall) + 70px);background:linear-gradient(180deg,rgba(14,8,3,0),rgba(14,8,3,.38))}
+/* front wall: the layer itself is the corrugated cut edge; ::after, 3 px lower, is the printed face. --gx shifts its
+   grain by the slot's place in the row, so the card's texture runs on unbroken from slot to slot. */
+.rc .lip{position:absolute;left:-1px;right:-1px;bottom:0;height:var(--wall);z-index:4;pointer-events:none;
+ background:repeating-linear-gradient(90deg,#dcc196 0 1.5px,#a78258 1.5px 3.5px);
+ -webkit-mask:radial-gradient(var(--dw) var(--dh) at var(--dx) 0,transparent calc(100% - 1px),#000 100%);mask:radial-gradient(var(--dw) var(--dh) at var(--dx) 0,transparent calc(100% - 1px),#000 100%)}
+.rc .lip::after{content:"";position:absolute;inset:3px 0 0;
+ background:url(/assets/grain.png),linear-gradient(180deg,transparent 0 calc(100% - 15px),#c9962e calc(100% - 15px) calc(100% - 12px),transparent calc(100% - 12px) calc(100% - 10px),#5B2BA0 calc(100% - 10px) calc(100% - 7px),transparent calc(100% - 7px)),linear-gradient(180deg,#bd9566,#a17a50 55%,#83623f);
+ background-size:256px 256px,auto,auto;background-position:var(--gx,0) 0,0 0,0 0;background-blend-mode:multiply,normal,normal;box-shadow:inset 0 1px 0 rgba(255,236,204,.35);
+ -webkit-mask:radial-gradient(var(--dw) var(--dh) at var(--dx) 0,transparent calc(100% - 1px),#000 100%);mask:radial-gradient(var(--dw) var(--dh) at var(--dx) 0,transparent calc(100% - 1px),#000 100%)}
+.peek{--u:.8;position:absolute;left:calc(14px + var(--scw) * .42);bottom:calc(var(--wall) - 8px);z-index:1;transition:--u .7s var(--expo),transform .35s var(--out)}
+.peek .fw{filter:drop-shadow(0 14px 12px rgba(0,0,0,.6))}
+.peek .film{--hh:7px;--hw:8px;--hp:17px;--band:20px;height:calc(var(--scw) * 1.08);padding:0 22px 0 calc(var(--scw) * .53)}
+.peek .frames{gap:9px}
+.rc:is(:hover,:focus-visible) :is(.can,.peek){transform:translateY(-14px)}
+.rc:is(:hover,:focus-visible) .peek{--u:1}
+.site .rc:focus-visible{outline:none}
+.rc:focus-visible .lbl{outline:3px solid var(--focus);outline-offset:3px;border-radius:3px}
+.cartons.phone .rc{--dx:calc(8px + var(--scw) / 2)}
+.cartons.phone .rc .can{left:8px}
+.rc.empty .lip,.rc.empty .lip::after{-webkit-mask:none;mask:none}
+@media (max-width:1180px){.cartons{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* filter changes (view transitions): cartons and canisters glide to their new places; new ones rise in, leaving ones sink out */
+::view-transition-group(.roll),::view-transition-group(.carton){animation-duration:.45s;animation-timing-function:cubic-bezier(.23,1,.32,1)}
+::view-transition-new(.roll):only-child,::view-transition-new(.carton):only-child{animation:vtIn .45s cubic-bezier(.23,1,.32,1) both}
+::view-transition-old(.roll):only-child,::view-transition-old(.carton):only-child{animation:vtOut .25s cubic-bezier(.4,0,1,1) both}
+@keyframes vtIn{from{opacity:0;transform:translateY(24px) scale(.92)}}
+@keyframes vtOut{to{opacity:0;transform:translateY(18px) scale(.94)}}
+
+/* opened roll: a see-through sheet over the page. Only the sheet scrolls; the header scrolls away with the strips,
+   Rewind stays put: a primary .btn (so it gets the site's hover and green trace), a little larger, with its Esc key. */
+.site dialog.rollview{position:fixed;inset:0;width:100%;height:100%;margin:0;overflow:hidden;background:rgba(8,8,10,.55);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.rollview[open]{animation:rvIn .35s var(--out)}
+.site .rollview::backdrop{background:transparent}
+.rollview.out{opacity:0;transition:opacity .3s var(--out) .45s}
+@keyframes rvIn{from{opacity:0}to{opacity:1}}
+.rv-scroll{height:100%;overflow-y:auto;overflow-x:clip;overscroll-behavior:contain}
+.rv-head{padding:40px 240px 8px 80px}
+.rv-head h2{font-size:calc(48px*var(--s));line-height:1.08}
+.rv-head .count{color:var(--body);font-size:calc(17px*var(--s));margin-top:8px}
+.rollview .reels{padding:30px 0 140px}
+.rewind{position:fixed;top:32px;right:40px;z-index:5;min-height:52px;gap:10px;padding:0 14px 0 18px;font-size:calc(17px*var(--s));box-shadow:0 10px 30px rgba(0,0,0,.45)}
+.rewind svg{width:20px;height:20px}
+.rewind kbd{margin-left:4px;padding:1px 6px;border:1px solid rgba(255,255,255,.4);border-radius:5px;font-family:var(--mo);font-size:12px;line-height:1.5;letter-spacing:.04em;text-transform:uppercase;opacity:.85}
+/* the large view keeps photos square-cornered, like prints */
+.photos .lbox img{border-radius:0}
+
+@media (max-width:860px){
+ .rolls-h{margin-top:24px}
+ .rv-head{padding:28px 20px 4px}
+ .rv-head h2{font-size:calc(40px*var(--s))}
+ .rollview .reels{padding:20px 0 120px}
+ /* Rewind sits at the bottom, in reach of a thumb */
+ .rewind{top:auto;right:auto;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));translate:-50% 0;padding:0 22px 0 18px}
+ .rewind kbd{display:none}
+}

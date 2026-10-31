@@ -44,7 +44,7 @@ export function CameraLegend({ variant, open = false, actions }) {
   return (
     <div className="dockpanels">
       <div className={"legend" + (open ? " open" : "")} role="region" aria-label="Camera controls" inert={!open}>
-        <span className="mono lt">Camera controls</span>
+        <span className="lt note">Camera controls</span>
         <LegendButtons keys={DOCK_LEGEND_KEYS} actions={actions} />
         <button ref={closeRef} type="button" className="lgb" onClick={close}>
           Close <em>Esc</em>

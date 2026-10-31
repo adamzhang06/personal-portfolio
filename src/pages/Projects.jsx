@@ -1,12 +1,14 @@
+import { useLcdPeek } from "@/context/uiContext";
 import { useHistoryBack } from "@/hooks/useHistoryBack";
 import { coverOf, projects } from "@/data/projects";
 import { cardByKey } from "@/data/cards";
 import { CardHead } from "@/components/CardHead";
 
 // 2 × 2 project cards led by each project's cover picture (a type cover when it has none yet).
-// The whole card is the link.
+// The whole card is the link; hovering one previews it on the docked camera's LCD.
 export function Projects() {
   const { go } = useHistoryBack();
+  const peek = useLcdPeek();
   return (
     <div className="wrap page">
       <CardHead card={cardByKey("projects")} />
@@ -14,7 +16,7 @@ export function Projects() {
         {projects.map((p, i) => {
           const cover = coverOf(p);
           return (
-            <article key={p.slug} className="card">
+            <article key={p.slug} className="card" {...peek({ page: p.name, sub: p.result, count: p.period })}>
               <div className="card-cover">
                 {cover ? (
                   <img src={cover.src} alt={cover.alt} loading={i < 2 ? "eager" : "lazy"} style={{ objectPosition: cover.position }} />

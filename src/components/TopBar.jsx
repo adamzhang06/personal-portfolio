@@ -42,7 +42,7 @@ export function TopBar() {
   );
 }
 
-// Phone tab bar: Home · About · Projects · Experience · Contact (Leadership and the rest via Menu).
+// Phone tab bar: Home · About · Projects · Experience · Photos (Leadership, Contact and the rest via Menu).
 export function TabBar() {
   const { pageKey } = useUi();
   const { go } = useHistoryBack();
@@ -59,7 +59,7 @@ export function TabBar() {
             aria-current={here === k ? "page" : undefined}
             onClick={routed(go, p.path)}
           >
-            {p.label}
+            {p.tab ?? p.label}
           </a>
         );
       })}

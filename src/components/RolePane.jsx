@@ -1,10 +1,10 @@
 import { useRef, useState } from "react";
+import { useLcdPeek } from "@/context/uiContext";
 import { PHONE_QUERY, useMediaQuery } from "@/hooks/useMediaQuery";
 import { MediaGrid } from "./MediaGrid";
 import { LinkPreviews } from "./LinkPreview";
 import { Rich } from "./Rich";
 
-const pad = (n) => String(n).padStart(2, "0");
 const hasBody = (r) => Boolean(r.oneLine || r.bullets.length || r.links.length || r.media.length);
 
 function RoleBody({ role }) {
@@ -27,12 +27,14 @@ function RoleBody({ role }) {
 }
 
 /* Experience and Leadership: a list on the left and a sticky detail panel on the right.
-   The most recent role (index 0) is selected on load; click a row or press ↑ ↓ to change it.
+   The most recent role (index 0) is selected on load; click a row or press ↑ ↓ to change it. Hovering a row
+   previews it on the docked camera's LCD.
    On phones there is no panel: the picked row opens in place, accordion-style, and tapping it again closes it. */
 export function RolePane({ roles, label }) {
   const phone = useMediaQuery(PHONE_QUERY);
   const [sel, setSel] = useState(0); // -1 = every row closed (phones only)
   const listRef = useRef(null);
+  const peek = useLcdPeek();
   const shown = phone ? sel : Math.max(sel, 0);
   const role = roles[shown] ?? roles[0];
 
@@ -68,6 +70,7 @@ export function RolePane({ roles, label }) {
                 aria-expanded={fold ? on : undefined}
                 aria-controls={phone ? (fold && on ? `role-${r.slug}` : undefined) : "role-detail"}
                 onClick={(e) => pick(i, e.currentTarget)}
+                {...peek({ page: r.role, sub: r.org, count: r.dates })}
               >
                 <span className="dt">{r.dates}</span>
                 <b>{r.role}</b>
@@ -88,8 +91,8 @@ export function RolePane({ roles, label }) {
           <h2>{role.role}</h2>
           <p className="rorg">{role.org}</p>
           <RoleBody role={role} />
-          <p className="rhint mono">
-            {pad(shown + 1)} / {pad(roles.length)} · ↑ ↓ to browse
+          <p className="rhint note">
+            {shown + 1} / {roles.length} · ↑ ↓ to browse
           </p>
         </article>
       )}

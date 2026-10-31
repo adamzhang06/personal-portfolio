@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useUi } from "@/context/uiContext";
+import { usePeek, useUi } from "@/context/uiContext";
 import { useHistoryBack } from "@/hooks/useHistoryBack";
 import { lcdCounter, pageByKey } from "@/data/pages";
 import { useCamera, useCameraMount } from "./cameraContext";
@@ -12,8 +12,10 @@ import { CameraLegend } from "./CameraLegend";
 
 const HOME_SUB = "Purdue AI · Robotics · ML · Photography";
 
-function useLcd(pageKey) {
+// The LCD shows the page, or what is hovered on it (a project, role or roll) while the camera is docked.
+function useLcd(pageKey, peek) {
   const home = pageKey === "home" || pageKey === "notfound";
+  if (peek && !home) return { "data-page": peek.page, "data-sub": peek.sub, "data-count": peek.count ?? "" };
   return {
     "data-page": pageByKey(home ? "home" : pageKey).lcd,
     "data-sub": home ? HOME_SUB : "adamzhang.org",
@@ -66,7 +68,7 @@ export function CameraStage({ variant = "layer" }) {
   const { trayOpen, closeTray } = useHistoryBack();
   const ref = useRef(null);
   useCameraMount(ref);
-  const lcd = useLcd(ui.pageKey);
+  const lcd = useLcd(ui.pageKey, usePeek());
 
   const home = ui.pageKey === "home" || ui.pageKey === "notfound";
   const docked = !home;

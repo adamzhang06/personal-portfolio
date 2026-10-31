@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { UiContext } from "./uiContext";
+import { PeekContext, SetPeekContext, UiContext } from "./uiContext";
 import { useHistoryBack } from "@/hooks/useHistoryBack";
 import { pageByKey, pageKeyFor } from "@/data/pages";
 import { DURATION } from "@/lib/motion";
@@ -36,6 +36,7 @@ export function UiProvider({ children }) {
   const [toast, setToast] = useState({ text: "", on: false });
   const [flash, setFlash] = useState(false);
   const [introPhase, setIntroPhase] = useState(initialIntroPhase);
+  const [peek, setPeek] = useState(null); // the LCD preview (see PeekContext)
 
   // Collapsing the dock also closes its Sections panel, so the next open starts with just Camera controls.
   const setDockOpen = useCallback((open) => {
@@ -63,6 +64,7 @@ export function UiProvider({ children }) {
     setView("front");
     setDialOpen(false);
     setDialPreview(null);
+    setPeek(null);
     if (dialHere !== undefined) setLastSection(dialHere);
   }
   const sectionIndex = dialHere ?? lastSection;
@@ -143,5 +145,11 @@ export function UiProvider({ children }) {
     [pageKey, overlay, dockOpen, setDockOpen, view, dialOpen, dialPreview, closeDial, sectionIndex, screenCount, inserting, toast, showToast, flash, shutter, introPhase]
   );
 
-  return <UiContext.Provider value={value}>{children}</UiContext.Provider>;
+  return (
+    <UiContext.Provider value={value}>
+      <SetPeekContext.Provider value={setPeek}>
+        <PeekContext.Provider value={peek}>{children}</PeekContext.Provider>
+      </SetPeekContext.Provider>
+    </UiContext.Provider>
+  );
 }

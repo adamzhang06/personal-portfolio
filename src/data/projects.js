@@ -2,6 +2,8 @@
 // summary: the one-line headline, on the project's card and under its case-study title.
 // lede: "What it is"; a blank line ("\n\n") starts a new paragraph.
 // demo: { provider: 'youtube' | 'vimeo', id } — the demo video, embedded in the sidebar above Links (omit for none)
+// links: GitHub and Devpost show as logo buttons; any other link (a live site) gets a preview card from
+// npm run link-previews (run it after adding one).
 // media: { type: 'image', src, alt, caption, aspect?, cover? } | { type: 'video', src, poster, caption } | { type: 'embed', provider: 'youtube' | 'vimeo', id, caption }
 // aspect (e.g. "3/4") keeps a photo's own shape in the gallery instead of the default 16:10 crop;
 // cover: true (or a CSS object-position, e.g. "50% 8%", to frame the crop) picks the card picture,
@@ -28,6 +30,7 @@ export const projects = [
     links: [
       { label: "GitHub", href: "https://github.com/rishibagri/dor-calhacks" },
       { label: "Devpost", href: "https://devpost.com/software/dor" },
+      { label: "Website", href: "https://doratcalhacks.site/" },
     ],
     media: [
       { type: "image", src: "/projects/dor/app-door.jpg", alt: "dor’s opening screen: an illustrated wooden door with a name plate and a prompt to tap the lock", caption: "The door", aspect: "900/1819", cover: "50% 8%" },
