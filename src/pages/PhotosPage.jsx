@@ -1,4 +1,5 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { cardByKey } from "@/data/cards";
 import { contact } from "@/data/contact";
 import { CardHead } from "@/components/CardHead";
@@ -14,6 +15,10 @@ import "@/styles/photos.css";
 const card = cardByKey("photos");
 const favPhotos = favorites.filter(Boolean);
 
+// Filter changes animate where the browser has view transitions: cartons and canisters slide to their new places,
+// and those coming or going fade and scale (photos.css). Elsewhere the shelf just changes.
+const animate = (change) => (document.startViewTransition ? document.startViewTransition(() => flushSync(change)) : change());
+
 /* The Photos page (/photos), design D "Film rolls": the favorites unroll from their canisters as they scroll into
    view (the first on load), on as many strips as the window needs; then the shelves of rolls, coloured by kind, with
    a filter per kind (any number on at once; none on shows every roll). Picking a canister opens that roll over the
@@ -24,11 +29,24 @@ export function PhotosPage() {
   const strips = favoriteStrips(favorites, g);
   const reels = useRef(null);
   const filters = useRef(null);
+  const shelfBox = useRef(null);
   useUnroll(reels, { first: true, layout: `${strips.length}:${g.W}` });
   const [shown, setShown] = useState(null); // index into favPhotos, or null
   const [roll, setRoll] = useState(null);
   const [picked, setPicked] = useState([]); // kinds switched on in the filter
-  const toggle = (kind) => setPicked((on) => (on.includes(kind) ? on.filter((k) => k !== kind) : [...on, kind]));
+  // While filters are on the shelf keeps the tallest height it has had, so a shorter shelf never pulls the page up
+  // under the reader (and the view transition has nothing else to move); with every roll shown it sizes to fit again.
+  const hold = () => {
+    const el = shelfBox.current;
+    if (el) el.style.minHeight = `${Math.max(el.offsetHeight, parseFloat(el.style.minHeight) || 0)}px`;
+  };
+  useEffect(() => {
+    if (!picked.length && shelfBox.current) shelfBox.current.style.minHeight = "";
+  }, [picked]);
+  const toggle = (kind) => {
+    hold();
+    animate(() => setPicked((on) => (on.includes(kind) ? on.filter((k) => k !== kind) : [...on, kind])));
+  };
   const shelf = picked.length ? rolls.filter((r) => picked.includes(r.kind)) : rolls;
 
   return (
@@ -68,7 +86,7 @@ export function PhotosPage() {
               type="button"
               className={`btn small reset${picked.length ? "" : " off"}`}
               onClick={() => {
-                setPicked([]);
+                animate(() => setPicked([]));
                 filters.current?.querySelector(".chip")?.focus(); // Reset hides; keep focus on the filters
               }}
             >
@@ -88,7 +106,9 @@ export function PhotosPage() {
         <p className="sr" aria-live="polite">
           {picked.length ? `Showing ${shelf.length} of ${rolls.length} rolls` : ""}
         </p>
-        <RollShelf rolls={shelf} vw={vw} onOpen={setRoll} />
+        <div ref={shelfBox}>
+          <RollShelf rolls={shelf} vw={vw} onOpen={setRoll} />
+        </div>
       </section>
 
       <PhotoLightbox photos={favPhotos} index={shown} onIndex={setShown} />

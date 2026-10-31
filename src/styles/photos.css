@@ -59,9 +59,8 @@ button.fr:hover img{outline:3px solid var(--green);outline-offset:-3px}
 .curl{position:absolute;top:-4px;bottom:-4px;left:calc(var(--u) * 100%);transform:translateX(-50%);width:calc(10px + (1 - var(--u)) * 40px);border-radius:999px;background:linear-gradient(90deg,#120a03,#6a4518 32%,#3a230a 62%,#0c0602);box-shadow:0 12px 20px rgba(0,0,0,.6),inset 0 0 0 1px rgba(0,0,0,.4);pointer-events:none;opacity:calc((1 - var(--u)) * 16);z-index:3}
 .frow.side-right .curl{left:auto;right:calc(var(--u) * 100%);transform:translateX(50%)}
 
-/* shelves: one canister per roll, newest first. A short leader comes straight out of each canister's slot showing
-   a few of the roll's best frames. Everything is sized from --scw, the canister width (shelfGeometry).
-   The kind filters sit beside the heading: any number on, Reset (or turning the last one off) shows every roll. */
+/* Rolls heading: the kind filters sit beside it. Any number can be on; Reset (or turning the last one off) shows
+   every roll. Reset comes first and keeps its place while hidden, so the filters never move. */
 .rolls-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;margin-top:40px}
 .rolls-h h2{font-size:calc(30px*var(--s));line-height:1.1}
 .kinds{display:flex;flex-wrap:wrap;gap:8px}
@@ -72,44 +71,62 @@ button.fr:hover img{outline:3px solid var(--green);outline-offset:-3px}
 .chip.on .n{color:var(--ptext)}
 .swatch{width:14px;height:22px;border-radius:2px;background:linear-gradient(var(--lab) 0 70%,var(--bandbg) 70% 86%,var(--lab) 86%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.25)}
 .swatch.k-year{background:linear-gradient(transparent 0 70%,var(--bandbg) 70% 86%,transparent 86%),var(--pix)}
-.shelf{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px 0;margin-top:24px}
-.rc{position:relative;display:block;min-width:0;height:calc(var(--scw) * 5 / 3 + 44px);border-radius:12px;overflow:hidden}
-.site .rc:focus-visible{z-index:1;border-radius:12px;outline-offset:2px}
-.rc .can{--cw:var(--scw);--ch:calc(var(--scw) * 5 / 3);position:absolute;left:16px;bottom:8px;transition:transform .35s var(--out),filter .35s var(--out)}
-.peek{--u:.8;position:absolute;left:calc(16px + var(--scw) * .42);bottom:calc(8px + var(--scw) * .3);z-index:2;transition:--u .7s var(--expo),transform .35s var(--out)}
+
+/* cartons: one open film carton per year (shelfGeometry). The lid leans back with the year and what is inside; the
+   tray holds the year's canisters behind a front lip that hides their bottom caps. Hover or keyboard focus lifts a
+   canister out of the carton and draws its leader the rest of the way; the focus ring goes round the label. */
+.cartons{display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));gap:40px 24px;margin-top:28px;align-items:start}
+.cartons.phone{display:flex;flex-wrap:wrap;gap:28px 14px}
+.carton{view-transition-class:carton;min-width:0;container-type:inline-size}
+.lid{display:flex;align-items:baseline;justify-content:space-between;gap:4px 12px;height:56px;padding:10px 16px 0;background:linear-gradient(180deg,#4d3a29,#3a2b1e);border-radius:6px 6px 0 0;box-shadow:inset 0 1px 0 rgba(255,230,190,.14);transform:perspective(520px) rotateX(24deg);transform-origin:50% 100%}
+.lid b{font-family:var(--hd);font-weight:700;font-size:26px;line-height:1;letter-spacing:-.01em;color:#F2D28A}
+.lid span{font-family:var(--mo);font-size:11px;line-height:1.3;letter-spacing:.08em;text-transform:uppercase;color:rgba(242,210,138,.82);white-space:nowrap}
+@container (max-width:240px){.lid{flex-direction:column;align-items:flex-start;justify-content:center;padding:6px 10px 0}.lid b{font-size:22px}.lid span{font-size:10px}}
+.tray{display:grid;background:linear-gradient(180deg,#0e0a07,#1a130d);border:3px solid #4d3a29;border-top-width:2px;border-radius:2px 2px 8px 8px;box-shadow:0 18px 30px rgba(0,0,0,.45)}
+.rc{view-transition-class:roll;position:relative;display:block;min-width:0;height:calc(var(--scw) * 5 / 3 + 46px)}
+.rc .can{--cw:var(--scw);--ch:calc(var(--scw) * 5 / 3);position:absolute;left:14px;bottom:18px;z-index:2;transition:transform .35s var(--out)}
+.rc .lip{position:absolute;left:-1px;right:-1px;bottom:0;height:30px;z-index:3;background:linear-gradient(180deg,rgba(255,230,190,.16) 0 2px,#5c4431 2px,#45321f)}
+.peek{--u:.8;position:absolute;left:calc(14px + var(--scw) * .42);bottom:calc(18px + var(--scw) * .3);z-index:1;transition:--u .7s var(--expo),transform .35s var(--out)}
 .peek .fw{filter:drop-shadow(0 14px 12px rgba(0,0,0,.6))}
 .peek .film{--hh:7px;--hw:8px;--hp:17px;--band:20px;height:calc(var(--scw) * 1.08);padding:0 22px 0 calc(var(--scw) * .53)}
 .peek .frames{gap:9px}
-.rc:is(:hover,:focus-visible) .can{transform:translateY(-6px)}
-.rc:is(:hover,:focus-visible) .peek{--u:1;transform:translateY(-6px)}
+.rc:is(:hover,:focus-visible) :is(.can,.peek){transform:translateY(-12px)}
+.rc:is(:hover,:focus-visible) .peek{--u:1}
+.site .rc:focus-visible{outline:none}
+.rc:focus-visible .lbl{outline:3px solid var(--focus);outline-offset:3px;border-radius:3px}
+.cartons.phone .rc .can{left:8px}
+
+/* filter changes (view transitions): cartons and canisters glide to their new places; new ones rise in, leaving ones sink out */
+::view-transition-group(.roll),::view-transition-group(.carton){animation-duration:.45s;animation-timing-function:cubic-bezier(.23,1,.32,1)}
+::view-transition-new(.roll):only-child,::view-transition-new(.carton):only-child{animation:vtIn .45s cubic-bezier(.23,1,.32,1) both}
+::view-transition-old(.roll):only-child,::view-transition-old(.carton):only-child{animation:vtOut .25s cubic-bezier(.4,0,1,1) both}
+@keyframes vtIn{from{opacity:0;transform:translateY(24px) scale(.92)}}
+@keyframes vtOut{to{opacity:0;transform:translateY(18px) scale(.94)}}
 
 /* opened roll: a see-through sheet over the page. Only the sheet scrolls; the header scrolls away with the strips,
-   Rewind stays put (and gets the green hover trace). */
+   Rewind stays put: a primary .btn (so it gets the site's hover and green trace), a little larger, with its Esc key. */
 .site dialog.rollview{position:fixed;inset:0;width:100%;height:100%;margin:0;overflow:hidden;background:rgba(8,8,10,.55);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
 .rollview[open]{animation:rvIn .35s var(--out)}
 .site .rollview::backdrop{background:transparent}
 .rollview.out{opacity:0;transition:opacity .3s var(--out) .45s}
 @keyframes rvIn{from{opacity:0}to{opacity:1}}
 .rv-scroll{height:100%;overflow-y:auto;overflow-x:clip;overscroll-behavior:contain}
-.rv-head{padding:40px 300px 8px 80px}
+.rv-head{padding:40px 240px 8px 80px}
 .rv-head h2{font-size:calc(43px*var(--s));line-height:1.08}
 .rv-head .count{color:var(--body);font-size:calc(17px*var(--s));margin-top:8px}
 .rollview .reels{padding:30px 0 140px}
-.rewind{position:fixed;top:28px;right:40px;z-index:5;display:inline-flex;align-items:center;gap:14px;min-height:68px;padding:0 30px 0 24px;border-radius:999px;background:var(--purple);color:#fff;font-family:var(--hd);font-weight:700;font-size:24px;letter-spacing:-.01em;box-shadow:0 12px 40px rgba(138,85,230,.45),0 2px 8px rgba(0,0,0,.5);transition:transform .2s var(--out),background .2s var(--out)}
-.site .rewind:focus-visible{border-radius:999px}
-.rewind svg{width:30px;height:30px}
-.rewind:hover{background:#9a68f0;transform:scale(1.04)}
+.rewind{position:fixed;top:32px;right:40px;z-index:5;min-height:52px;gap:10px;padding:0 14px 0 18px;font-size:calc(16px*var(--s));box-shadow:0 10px 30px rgba(0,0,0,.45)}
+.rewind svg{width:20px;height:20px}
+.rewind kbd{margin-left:4px;padding:1px 6px;border:1px solid rgba(255,255,255,.4);border-radius:5px;font-family:var(--mo);font-size:11px;line-height:1.5;letter-spacing:.04em;text-transform:uppercase;opacity:.85}
 /* the large view keeps photos square-cornered, like prints */
 .photos .lbox img{border-radius:0}
 
-@media (max-width:1180px){.shelf{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:860px){
  .rolls-h{margin-top:24px}
- .shelf{grid-template-columns:minmax(0,1fr);row-gap:24px}
  .rv-head{padding:28px 20px 4px}
  .rv-head h2{font-size:calc(32px*var(--s))}
  .rollview .reels{padding:20px 0 120px}
  /* Rewind sits at the bottom, in reach of a thumb */
- .rewind{top:auto;right:auto;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));translate:-50% 0;min-height:60px;font-size:21px;padding:0 26px 0 20px}
- .rewind svg{width:26px;height:26px}
+ .rewind{top:auto;right:auto;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));translate:-50% 0;padding:0 22px 0 18px}
+ .rewind kbd{display:none}
 }

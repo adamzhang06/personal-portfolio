@@ -124,16 +124,38 @@ export function favoriteStrips(frames, g) {
   );
 }
 
-/* Shelf sizes for a window width: the card width follows .wrap and the grid's columns (photos.css), the canister scales
-   with it, and each leader shows only the peek frames that fit inside its card when fully drawn out. */
+// Rolls grouped by year, newest first, for the cartons.
+export function byYear(list) {
+  const out = [];
+  for (const r of list) {
+    if (out.at(-1)?.year !== r.year) out.push({ year: r.year, rolls: [] });
+    out.at(-1).rolls.push(r);
+  }
+  return out;
+}
+
+/* Carton sizes for a window width. Wider screens lay cartons on a grid of `cols` columns (.wrap width, 24 px gaps),
+   a carton spanning one column per roll up to the full width and wrapping its slots after that; each slot holds a
+   canister and its leader, which shows only the peek frames that fit the slot. Phones drop the leaders and stand
+   canisters side by side, three to a row, so cartons sit next to each other. --scw is the canister width. */
 export function shelfGeometry(vw) {
-  const pad = vw <= 860 ? 20 : vw <= 1240 ? 48 : 80;
-  const cols = vw <= 860 ? 1 : vw <= 1180 ? 2 : 4;
-  const card = (Math.min(vw, 1520) - 2 * pad) / cols;
-  const cw = Math.round(clamp(100, card * 0.36, 124));
+  const phone = vw <= 860;
+  const pad = phone ? 20 : vw <= 1240 ? 48 : 80;
+  const content = Math.min(vw, 1520) - 2 * pad;
+  const walls = 6; // the tray's side walls
+  if (phone) {
+    const cw = Math.floor(clamp(84, (content - walls) / 3 - 16, 104));
+    const slot = cw + 16;
+    return { phone, cw, cols: Math.max(1, Math.floor((content - walls) / slot)), slot: () => slot, walls, fit: () => [] };
+  }
+  const gap = 24;
+  const cols = vw <= 1180 ? 2 : 4;
+  const colW = (content - (cols - 1) * gap) / cols;
+  const slot = (span) => (span * colW + (span - 1) * gap - walls) / span;
+  const cw = Math.round(clamp(100, slot(1) * 0.36, 124));
   const peekH = Math.round(cw * 0.75);
-  const room = card - (16 + cw * 0.95) - 22 - 8;
-  const fit = (peek) => {
+  const fit = (peek, w) => {
+    const room = w - (14 + cw * 0.95) - 22 - 8;
     const out = [];
     let used = -9;
     for (const p of peek) {
@@ -143,5 +165,5 @@ export function shelfGeometry(vw) {
     }
     return out;
   };
-  return { cw, peekH, fit };
+  return { phone, cw, cols, slot, walls, peekH, fit };
 }
