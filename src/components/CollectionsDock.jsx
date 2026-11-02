@@ -7,6 +7,7 @@ import { SdCard } from "./SdCard";
 
 const INSERT_MS = 780; // with no camera on screen: the card lifts away and fades, then the page changes
 const MAG_RANGE = 150; // px either side of the pointer that magnify
+const MAG_EASE_MS = 20; // how quickly the cards catch up with the pointer (time constant)
 // Clicks on other controls are left alone: the card door toggles the dock itself, and a link or button
 // that navigates closes it by changing the screen (closing here too would race that navigation).
 const leavesDockAlone = (t) => !!t?.closest?.("a,button,input,select,textarea,summary,[role=button]");
@@ -32,6 +33,7 @@ export function CollectionsDock() {
   const dockRef = useRef(null);
   const flyRef = useRef(null);
   const returnTo = useRef(null);
+  const mag = useRef({ items: [], rest: [], m: [], target: null, raf: 0, last: 0 });
   const open = trayOpen && !fly;
 
   // focus in on open, back to the opener on a plain close; Esc and a click elsewhere close it
@@ -61,16 +63,56 @@ export function CollectionsDock() {
     };
   }, [open, closeTray]);
 
-  const magnify = (e) => {
-    if (e.pointerType !== "mouse") return;
-    dockRef.current?.querySelectorAll(".cd-item").forEach((it) => {
-      const r = it.getBoundingClientRect();
-      const d = Math.min(1, Math.abs(e.clientX - (r.left + r.width / 2)) / MAG_RANGE);
-      it.style.setProperty("--m", Math.cos((d * Math.PI) / 2).toFixed(3));
+  /* Magnifying: each card's size comes from the pointer's distance to where that card sits at rest (measured on
+     open, from the dock's centre, which stays put as the dock grows), so a growing card never moves itself out
+     from under the pointer. One frame loop eases every card toward its size. */
+  useEffect(() => {
+    const g = mag.current, dock = dockRef.current;
+    if (!open || !dock) return undefined;
+    const list = dock.querySelector(".cd-list");
+    g.items = [...dock.querySelectorAll(".cd-item")];
+    g.items.forEach((it) => it.style.setProperty("--m", "0"));
+    g.m = g.items.map(() => 0);
+    g.target = null;
+    const mid = list.offsetLeft + list.offsetWidth / 2;
+    g.rest = g.items.map((it) => it.offsetLeft + it.offsetWidth / 2 - mid);
+    return () => {
+      cancelAnimationFrame(g.raf);
+      g.raf = 0;
+    };
+  }, [open]);
+
+  const step = (t) => {
+    const g = mag.current;
+    const k = g.last ? 1 - Math.exp(-Math.min(64, t - g.last) / MAG_EASE_MS) : 0;
+    g.last = t;
+    let moving = false;
+    g.items.forEach((it, i) => {
+      const to = g.target?.[i] ?? 0;
+      let m = g.m[i] + (to - g.m[i]) * k;
+      if (Math.abs(to - m) < 0.002) m = to;
+      else moving = true;
+      if (m !== g.m[i]) it.style.setProperty("--m", m.toFixed(3));
+      g.m[i] = m;
     });
+    g.raf = moving ? requestAnimationFrame(step) : 0;
+    if (!moving) g.last = 0;
+  };
+  const kick = () => {
+    if (!mag.current.raf) mag.current.raf = requestAnimationFrame(step);
+  };
+  const magnify = (e) => {
+    const g = mag.current, list = dockRef.current?.querySelector(".cd-list");
+    if (e.pointerType !== "mouse" || !list || !g.rest.length) return;
+    const r = list.getBoundingClientRect(), x = e.clientX - (r.left + r.width / 2);
+    g.target = g.rest.map((c) => Math.cos((Math.min(1, Math.abs(x - c) / MAG_RANGE) * Math.PI) / 2));
+    kick();
   };
   const endFlight = useCallback(() => setFly(null), []);
-  const settle = () => dockRef.current?.querySelectorAll(".cd-item").forEach((it) => it.style.setProperty("--m", "0"));
+  const settle = () => {
+    mag.current.target = null;
+    kick();
+  };
 
   const pick = (card, btn) => {
     if (fly) return;

@@ -1,4 +1,4 @@
-// Experience and Leadership roles. Leadership shows in this order; Experience is sorted by end date (see rolesIn).
+// Experience and Leadership roles, each group sorted by end date (see rolesIn).
 // Index 0 of each group is the default selection.
 // Roles without a description keep empty oneLine / bullets and show just their header.
 // models (optional): GLBs in public/models/, one 3D viewer with a button per model (its season); name is the
@@ -188,14 +188,11 @@ function span(dates) {
   return { start: startYear * 12 + start.m, end: end ? end.y * 12 + end.m : Infinity };
 }
 
-// Latest end date first (current roles on top); on the same end date, the one that started earlier comes first.
+// Latest end date first (current roles on top); on the same end date, the one that started later comes first.
 const cmp = (a, b) => (a > b) - (a < b);
 const byEnd = (a, b) => {
   const [x, y] = [span(a.dates), span(b.dates)];
-  return cmp(y.end, x.end) || cmp(x.start, y.start);
+  return cmp(y.end, x.end) || cmp(y.start, x.start);
 };
 
-export const rolesIn = (group) => {
-  const list = roles.filter((r) => r.group === group);
-  return group === "experience" ? list.sort(byEnd) : list;
-};
+export const rolesIn = (group) => roles.filter((r) => r.group === group).sort(byEnd);
