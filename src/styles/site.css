@@ -396,7 +396,7 @@ html, body { margin: 0; background: #08080A; }
 /* card going into the camera: its contacts read (a light sweeps across them) as it flies to the slot */
 .cd-fly{position:fixed;z-index:160;pointer-events:none;transform-origin:50% 50%;filter:drop-shadow(0 14px 24px rgba(0,0,0,.5)) drop-shadow(0 0 14px rgba(138,85,230,.45))}
 .cd-fly .pins{position:relative;overflow:hidden}
-.cd-fly .pins::after{content:"";position:absolute;top:0;bottom:0;left:0;width:34%;background:linear-gradient(90deg,rgba(255,246,214,0),rgba(255,246,214,.95),rgba(255,246,214,0));transform:translateX(-110%);animation:cdRead .34s .1s ease-in-out 2}
+.cd-fly .pins::after{content:"";position:absolute;top:0;bottom:0;left:0;width:34%;background:linear-gradient(90deg,rgba(255,246,214,0),rgba(255,246,214,.95),rgba(255,246,214,0));transform:translateX(-110%);animation:cdRead .34s .1s ease-in-out}
 @keyframes cdRead{to{transform:translateX(310%)}}
 .cd-ping{position:fixed;z-index:160;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;border:2px solid var(--ptext);pointer-events:none;opacity:0;animation:cdPing .5s .56s var(--out) both}
 @keyframes cdPing{0%{transform:scale(.35);opacity:1}100%{transform:scale(1.9);opacity:0}}

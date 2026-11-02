@@ -2,7 +2,7 @@ import * as THREE from "three";
 
 // Procedural Nikon Z-style mirrorless body + 24–70 lens, ported from docs/reference/camera.js.
 // Units ≈ cm; rear faces +z, lens points -z, grip on +x.
-// Returns the model group, the control meshes/anchors by key (HS), the mode dial and the LCD material.
+// Returns the model group, the control meshes/anchors by key (HS), the mode dial, the card door and slot, and the LCD material.
 
 // The engine is built once per page and cached, so a hot update can't swap this module in: reload instead.
 if (import.meta.hot) import.meta.hot.accept(() => window.location.reload());
@@ -308,6 +308,7 @@ function build() {
   const slotMat = new THREE.MeshBasicMaterial({ color: 0x000000, toneMapped: false }); // lights up while a card goes in
   add(new THREE.Mesh(new THREE.BoxGeometry(0.04, 2.7, 0.22), slotMat), [-6.71, 4.45, 0.2]);
   [-0.2, 0.6].forEach((dz) => add(new THREE.Mesh(new THREE.BoxGeometry(0.04, 3.0, 0.05), M.metal), [-6.7, 4.3, 0.2 + dz]));
+  const slot = V(-6.73, 4.45, 0.2); // the slot's mouth; a card goes in along +x, its faces toward ±z
 
   /* ---- rear LCD module ---- */
   add(slab(8.9, 6.25, 0.42, 0.55, 0.13, M.satin), [-1.65, 3.55, 2.12]);
@@ -606,5 +607,5 @@ function build() {
     h.a = a;
   });
 
-  return { model, HS, modeDial, doorPivot, slotMat, lcdMat, radius };
+  return { model, HS, modeDial, doorPivot, slotMat, slot, lcdMat, radius };
 }

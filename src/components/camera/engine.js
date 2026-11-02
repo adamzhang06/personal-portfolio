@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { buildCameraModel } from "./CameraModel";
 import { screenTexture } from "./ScreenTexture";
+import { SD, buildSdCard } from "./SdCardModel";
 import { bezier, EASE } from "@/lib/motion";
 
 /* One scene, one WebGL renderer, drawn into each mounted 2D canvas. Ported from docs/reference/camera.js.
@@ -15,12 +16,16 @@ import { bezier, EASE } from "@/lib/motion";
      data-sweep-delay="500"  ms before that sweep starts
      data-dial="0..4"        mode-dial notch (H · A · P · E · L)
      data-door="open|closed" memory-card door; changes swing it on its hinge
-     data-slot="lit"         the card slot behind the door pulses purple (a card is going in)
+     data-slot="lit"         the card slot behind the door pulses purple and an open door swings wide (a card is going in)
    Children it drives each frame:
      canvas[data-cam-canvas] the 2D canvas the frame is copied into
      [data-hs=key]           44 px hit targets moved over the projected control; hidden when facing away
      [data-lead=key]         leader labels (placed by layout); faded when their control faces away
      line[data-line=key], circle[data-ring=key]   leader lines inside an <svg> covering the mount
+
+   insertCard(mountEl, { card, from, fly }) puts a Collections card into that mount's card slot: the DOM card
+   `fly.current` (fixed at the DOMRect `from`) flies to the slot, turning in 3D to line up with it, then the
+   card in the scene pushes in. Returns how long that takes in ms (0 if that camera isn't drawing).
 
    The renderer is created while something moves and released ~2.5 s after it goes idle, leaving the last
    frame as a still, so many tabs never exceed the browser's WebGL context limit. */
@@ -36,15 +41,35 @@ const INTRO_KEYS = ["shutter", "mode", "record", "monitor", "door", "play", "inf
 const expo = bezier(0.16, 1, 0.3, 1);
 const springy = bezier(...EASE.press); // the door opening overshoots a touch, like a sprung hinge
 const DOOR_OPEN = 1.8; // radians
+const DOOR_WIDE = 2.75; // swung right back while a card goes in, so it can't hide the slot from the rear
 const DOOR_MS = 520;
+const FLY_MS = 640; // a card from the Collections dock flies to the slot and lines up with it…
+const SLIDE_MS = 440; // …then pushes in, past the latch and back
+const OUT = 1.8; // cm off the slot where it lines up
+const LATCH = 0.14; // cm it goes past home before springing back
+const LIFT = 60; // px it rises at the top of its flight
+const flyEase = bezier(0.45, 0, 0.2, 1);
+const slideEase = bezier(0.5, 0, 0.25, 1);
+
+// The CSS matrix3d that maps a w × h box onto the screen quad p (x, y of its TL, TR, BR, BL), with perspective.
+function quadMatrix(w, h, p) {
+  const [x0, y0, x1, y1, x2, y2, x3, y3] = p;
+  const dx1 = x1 - x2, dx2 = x3 - x2, dx3 = x0 - x1 + x2 - x3, dy1 = y1 - y2, dy2 = y3 - y2, dy3 = y0 - y1 + y2 - y3;
+  const den = dx1 * dy2 - dx2 * dy1;
+  const g = (dx3 * dy2 - dx2 * dy3) / den, k = (dx1 * dy3 - dx3 * dy1) / den;
+  const a = x1 - x0 + g * x1, b = x3 - x0 + k * x3, d = y1 - y0 + g * y1, e = y3 - y0 + k * y3;
+  return `matrix3d(${a / w},${d / w},0,${g / w},${b / h},${e / h},0,${k / h},0,0,1,0,${x0},${y0},0,1)`;
+}
 
 export function createEngine({ onFirstFrame, onNoWebGL } = {}) {
   const DPR = Math.min(window.devicePixelRatio || 1, 2);
   const scene = new THREE.Scene();
   const cam3 = new THREE.PerspectiveCamera(28, 1.2, 1, 500);
   const rig = new THREE.Group(), flip = new THREE.Group();
-  const { model, HS, modeDial, doorPivot, slotMat, lcdMat, radius: RAD } = buildCameraModel();
+  const { model, HS, modeDial, doorPivot, slotMat, slot, lcdMat, radius: RAD } = buildCameraModel();
   const SLOT_LIT = new THREE.Color().setHex(0x9a6cf0, THREE.LinearSRGBColorSpace); // linear like the r128-tuned materials
+  const sd = buildSdCard();
+  model.add(sd.group);
   rig.add(flip);
   flip.add(model);
   scene.add(rig);
@@ -181,8 +206,74 @@ export function createEngine({ onFirstFrame, onNoWebGL } = {}) {
     };
   }
 
+  function insertCard(el, { card, from, fly }) {
+    const m = mounts.find((x) => x.el === el);
+    if (!m || !m.vis) return 0;
+    sd.paint(card);
+    m.insert = { from, fly, t0: performance.now(), q: null };
+    poke();
+    start();
+    return FLY_MS + SLIDE_MS;
+  }
+
   /* ---- per-frame draw ---- */
   const q = new THREE.Quaternion(), wp = new THREE.Vector3(), n = new THREE.Vector3(), view = new THREE.Vector3();
+  const X = new THREE.Vector3(1, 0, 0), P0 = new THREE.Vector3(), P1 = new THREE.Vector3(), Q1 = new THREE.Quaternion();
+  const CORNERS = [[-SD.w / 2, 0], [SD.w / 2, 0], [SD.w / 2, -SD.h], [-SD.w / 2, -SD.h]].map(([x, y]) => new THREE.Vector3(x, y, SD.t / 2));
+
+  /* A card on its way in. In the air it is the DOM card, transformed each frame to where this pose would
+     project: it starts as the dock card (facing the screen at the depth that gives its size), rises, and turns
+     to lie along the slot axis OUT cm off the mouth, label toward the viewer. Then the card in the scene takes
+     over at that same pose and slides in, so the body and the open door hide it as they would. */
+  function placeCard(m, t, cv) {
+    const k = m.insert;
+    sd.group.visible = false;
+    if (!k) return;
+    const e = t - k.t0, flyEl = k.fly.current;
+    if (e > FLY_MS + SLIDE_MS + 150) {
+      m.insert = null;
+      return;
+    }
+    if (!k.q) {
+      // the label goes on whichever side of the slot faces the viewer
+      model.localToWorld(wp.copy(slot));
+      flip.getWorldQuaternion(q);
+      const side = n.set(0, 0, 1).applyQuaternion(q).dot(view.copy(cam3.position).sub(wp)) >= 0 ? 1 : -1;
+      k.q = new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(new THREE.Vector3(0, -side, 0), X, new THREE.Vector3(0, 0, side)));
+    }
+    if (e >= FLY_MS) {
+      const s = Math.min(1, (e - FLY_MS) / SLIDE_MS), home = SD.h + 0.06;
+      const depth = s < 0.82 ? -OUT + (home + LATCH + OUT) * slideEase(s / 0.82) : home + LATCH * (1 - expo((s - 0.82) / 0.18));
+      sd.group.position.copy(slot).addScaledVector(X, depth);
+      sd.group.quaternion.copy(k.q);
+      sd.group.visible = true;
+      if (flyEl) flyEl.style.visibility = "hidden";
+      return;
+    }
+    if (!flyEl) return;
+    cam3.updateMatrixWorld();
+    const r = cv.getBoundingClientRect(), f = k.from, tf = Math.tan((cam3.fov * PI) / 360);
+    // where the dock card is, as a card facing the screen (origin at its top edge)
+    const D = (SD.w * r.height) / (2 * tf * f.width);
+    const nx = ((f.left + f.width / 2 - r.left) / r.width) * 2 - 1, ny = 1 - ((f.top + f.height / 2 - r.top) / r.height) * 2;
+    P0.set(nx * D * tf * cam3.aspect, ny * D * tf + SD.h / 2, -D).applyMatrix4(cam3.matrixWorld);
+    // lined up OUT cm off the slot mouth
+    model.localToWorld(P1.copy(slot).addScaledVector(X, -OUT));
+    model.getWorldQuaternion(Q1).multiply(k.q);
+    const p = e / FLY_MS, a = flyEase(p), arc = Math.sin(PI * a);
+    wp.lerpVectors(P0, P1, a);
+    wp.addScaledVector(n.set(0, 1, 0).applyQuaternion(cam3.quaternion), ((LIFT * 2 * D * tf) / r.height) * arc); // up the screen
+    wp.addScaledVector(view.copy(cam3.position).sub(wp).normalize(), D * 0.08 * arc); // and toward the viewer
+    q.copy(cam3.quaternion).slerp(Q1, flyEase(Math.min(1, p / 0.8)));
+    const pts = [];
+    CORNERS.forEach((c) => {
+      n.copy(c).applyQuaternion(q).add(wp).project(cam3);
+      pts.push(r.left + (n.x * 0.5 + 0.5) * r.width - f.left, r.top + (-n.y * 0.5 + 0.5) * r.height - f.top);
+    });
+    flyEl.style.transformOrigin = "0 0";
+    flyEl.style.transform = quadMatrix(f.width, f.height, pts);
+  }
+
   function rectIn(el, base, s) {
     const r = el.getBoundingClientRect();
     return { x: (r.left - base.left) / s, y: (r.top - base.top) / s, w: r.width / s, h: r.height / s };
@@ -262,7 +353,8 @@ export function createEngine({ onFirstFrame, onNoWebGL } = {}) {
     if (Math.abs(dialTarget - m.dialYaw) > 1e-3) m.dialMoving = t;
 
     // card door swings open / shut
-    const doorWant = el.getAttribute("data-door") === "open" ? DOOR_OPEN : 0;
+    const lit = el.getAttribute("data-slot") === "lit";
+    const doorWant = el.getAttribute("data-door") === "open" ? (lit ? DOOR_WIDE : DOOR_OPEN) : 0;
     if (doorWant !== m.doorTo) {
       m.doorFrom = m.door;
       m.doorTo = doorWant;
@@ -271,7 +363,7 @@ export function createEngine({ onFirstFrame, onNoWebGL } = {}) {
     const dp = Math.min(1, (t - m.doorT0) / DOOR_MS);
     m.door = m.doorFrom + (m.doorTo - m.doorFrom) * (m.doorTo > m.doorFrom ? springy(dp) : expo(dp));
     doorPivot.rotation.y = m.door;
-    if (el.getAttribute("data-slot") === "lit") slotMat.color.copy(SLOT_LIT).multiplyScalar(0.65 + 0.35 * Math.sin(t / 70));
+    if (lit) slotMat.color.copy(SLOT_LIT).multiplyScalar(0.65 + 0.35 * Math.sin(t / 70));
     else slotMat.color.setHex(0x000000);
 
     // per-control glow + press (0.09 cm for 260 ms)
@@ -291,6 +383,7 @@ export function createEngine({ onFirstFrame, onNoWebGL } = {}) {
     });
 
     rig.updateMatrixWorld(true);
+    placeCard(m, t, cv);
     gl.render(scene, cam3);
     const c2 = cv.getContext("2d");
     c2.clearRect(0, 0, pw, ph);
@@ -384,7 +477,7 @@ export function createEngine({ onFirstFrame, onNoWebGL } = {}) {
         m.sig = sig;
         m.changed = now;
       }
-      if (now - (m.changed || 0) < 700 || Math.abs(m.yaw - m.to) > 1e-3 || t - m.t0 < 1100 || (m.t0b && t - m.t0b < 3000) || (m.dialMoving && t - m.dialMoving < 200) || t - m.doorT0 < DOOR_MS + 100 || !m.drawn || hsAnim) busy = true;
+      if (now - (m.changed || 0) < 700 || Math.abs(m.yaw - m.to) > 1e-3 || t - m.t0 < 1100 || (m.t0b && t - m.t0b < 3000) || (m.dialMoving && t - m.dialMoving < 200) || t - m.doorT0 < DOOR_MS + 100 || m.insert || !m.drawn || hsAnim) busy = true;
       need = true;
     }
     if (!need) {
@@ -414,5 +507,5 @@ export function createEngine({ onFirstFrame, onNoWebGL } = {}) {
     if (!raf) raf = requestAnimationFrame(loop);
   }
 
-  return { mount, poke };
+  return { mount, poke, insertCard };
 }
