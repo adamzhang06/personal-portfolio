@@ -1,4 +1,5 @@
-// Experience and Leadership roles, newest first within each group (index 0 is the default selection).
+// Experience and Leadership roles. Leadership shows in this order; Experience is sorted by end date (see rolesIn).
+// Index 0 of each group is the default selection.
 // Roles without a description keep empty oneLine / bullets and show just their header.
 // models (optional): GLBs in public/models/, one 3D viewer with a button per model (its season); name is the
 // model's, for Home's previews.
@@ -170,4 +171,31 @@ export const roles = [
   },
 ];
 
-export const rolesIn = (group) => roles.filter((r) => r.group === group);
+const MONTHS = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, June: 5, July: 6, Aug: 7, Sept: 8, Oct: 9, Nov: 10, Dec: 11 };
+
+// "Sept. 2022 – Apr. 2025", "May – Aug. 2024" (the start shares the end's year) or "Jan. 2026 – Present", as month
+// numbers (year × 12 + month); Present is Infinity.
+function span(dates) {
+  const [from, to] = dates.split(" – ");
+  const month = (s) => {
+    const [m, y] = s.replace(".", "").split(" ");
+    if (!(m in MONTHS)) throw new Error(`roles.js: can't read the month in "${dates}"`);
+    return { m: MONTHS[m], y: y && Number(y) };
+  };
+  const end = to === "Present" ? null : month(to);
+  const start = month(from);
+  const startYear = start.y || (start.m > end.m ? end.y - 1 : end.y);
+  return { start: startYear * 12 + start.m, end: end ? end.y * 12 + end.m : Infinity };
+}
+
+// Latest end date first (current roles on top); on the same end date, the one that started earlier comes first.
+const cmp = (a, b) => (a > b) - (a < b);
+const byEnd = (a, b) => {
+  const [x, y] = [span(a.dates), span(b.dates)];
+  return cmp(y.end, x.end) || cmp(x.start, y.start);
+};
+
+export const rolesIn = (group) => {
+  const list = roles.filter((r) => r.group === group);
+  return group === "experience" ? list.sort(byEnd) : list;
+};

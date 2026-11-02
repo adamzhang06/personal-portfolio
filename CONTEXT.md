@@ -32,6 +32,9 @@ The five section cards (About, Projects, Experience, Leadership, Photos) in `src
 ### Latest
 Home's last section (`src/components/Latest.jsx`): the newest project as a large print beside its result (opens the case study), then the newest roll unrolling from its canister on one strip; **Open the roll** goes to `/photos#<roll id>`, which arrives with that roll open. The Home **polaroid** develops like instant film once per page load, after the intro and once it is on screen.
 
+### Scroll cue
+Home's hint that there is more below (`src/components/ScrollCue.jsx`): the 3D model stills fanned like prints, "Spin N of my builds in 3D" (N from `src/data/models.js`) and a bobbing arrow, bottom right of the first screen. It appears once the intro has opened, fades as soon as the page scrolls, and a click glides to the 3D models. Desktop only, and hidden on windows too short to fit it under the Collections callout.
+
 ### LCD counter
 The rear screen shows the page name, a muted line and "NN / 07" over the live pages (`src/data/pages.js`). **LCD preview:** while a project card, role row or roll canister is hovered or focused, the docked camera's LCD shows it instead (name, a line about it, a detail). Pages set it with `useLcdPeek()` from `src/context/uiContext.js`, never by importing camera code.
 

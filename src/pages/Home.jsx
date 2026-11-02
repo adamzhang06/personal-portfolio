@@ -7,6 +7,7 @@ import { HomeModels } from "@/components/HomeModels";
 import { Latest } from "@/components/Latest";
 import { Polaroid } from "@/components/Polaroid";
 import { Rich } from "@/components/Rich";
+import { ScrollCue } from "@/components/ScrollCue";
 import { SdCard } from "@/components/SdCard";
 
 export function Home({ notFound = false }) {
@@ -54,6 +55,7 @@ export function Home({ notFound = false }) {
             Flip the camera <span aria-hidden="true">↻</span>
           </button>
         </div>
+        <ScrollCue />
       </section>
 
       <div className="wrap homewrap">

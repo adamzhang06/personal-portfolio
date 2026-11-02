@@ -21,6 +21,7 @@ const IMAGE_FILES = {
   "https://engineering.purdue.edu/fsae/wordpress/": "purdue-fsae.jpg", // the site's own og:image isn't the hero
   "https://www.purdueusb.com/": "purdue-usb.jpg", // the site has no og:image
   "https://doratcalhacks.site/": "dor-site.jpg", // the site has no og:image; a screenshot of its opening screen
+  "https://ftcscout.org/teams/16498?season=2024": "ftcscout-16498.jpg", // the site has no og:image; a screenshot of the team's 2024 season page
 };
 const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130 Safari/537.36";
 

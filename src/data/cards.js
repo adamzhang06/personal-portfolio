@@ -13,7 +13,7 @@ export const CARDS = [
     sub: "What I’ve built, and the part I played in each." },
   {
     key: "experience", name: "Experience", path: "/experience", c1: "#46308A", c2: "#2A2057",
-    contents: "Raccoon Dynamics · The Data Mine · AIDA3 · WashU · SLU · FIRST Tech Challenge", count: items(rolesIn("experience").length),
+    contents: "AIDA3 · Raccoon Dynamics · The Data Mine · FIRST Tech Challenge · WashU · SLU", count: items(rolesIn("experience").length),
     sub: "Where I’ve worked and done research, newest first.",
   },
   {

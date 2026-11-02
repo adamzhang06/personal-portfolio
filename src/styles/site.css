@@ -75,6 +75,26 @@ html, body { margin: 0; background: #08080A; }
 .flipbtn{min-height:44px;padding:0 14px;border-radius:999px;font-size:calc(15px*var(--s));font-weight:600;color:var(--ptext);border:1px solid transparent}
 .flipbtn:hover{border-color:var(--hair);background:var(--surface)}
 .mcam,.mlegend{display:none}
+/* hero: scroll cue — the model stills fanned like prints, pinned to the first screen's bottom edge, right of the camera */
+.scue{position:absolute;right:72px;top:min(calc(100svh - 96px),804px);width:212px;transform:translateY(calc(-100% + 8px));display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px 10px;padding:14px 14px 14px 16px;border-radius:16px;border:1px solid var(--hair);background:rgba(17,17,21,.78);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .5s var(--out),transform .5s var(--out),border-color .25s var(--out)}
+.scue.on{opacity:1;transform:translateY(-100%);pointer-events:auto;transition-delay:.5s,.5s,0s}
+.scue:hover{border-color:rgba(82,214,138,.35)}
+.scue-prints{display:flex;padding:2px 0 0 2px}
+.scue-print{flex:none;width:56px;height:44px;overflow:hidden;border-radius:6px;border:2px solid #2a2a33;background:#111115;box-shadow:0 6px 14px rgba(0,0,0,.55);transition:transform .4s var(--out),margin .4s var(--out)}
+.scue-print img{display:block;width:100%;height:100%;object-fit:cover;transform:scale(1.7)}
+.scue-print + .scue-print{margin-left:-36px} /* 4 prints: 116px fanned, 137px spread, inside the 138px beside the arrow */
+.scue-print:nth-child(odd){transform:rotate(-6deg)}.scue-print:nth-child(even){transform:rotate(5deg) translateY(-3px)}
+.scue:hover .scue-print{transform:none}.scue:hover .scue-print + .scue-print{margin-left:-29px}
+.scue-txt{grid-column:1 / -1;display:flex;flex-direction:column;line-height:1.3}
+.scue-k{font-size:calc(13px*var(--s));color:var(--muted)}
+.scue-t{font-weight:600;font-size:calc(15px*var(--s));color:var(--text)}
+.scue-arrow{grid-row:1;grid-column:2;width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--pdeep);color:var(--ptext);font-size:17px;animation:scue-bob 1.8s var(--out) infinite}
+@keyframes scue-bob{0%,100%{transform:translateY(-2px)}50%{transform:translateY(3px)}}
+@media (prefers-reduced-motion:reduce){.scue-arrow{animation:none}}
+.cam-off .scue{top:auto;bottom:28px;transform:none}
+/* it needs the strip under the Collections callout: hidden on screens too short for it (narrow desktops draw the camera lower) */
+@media (max-height:779px){.scue{display:none}}
+@media (max-width:1240px) and (max-height:879px){.scue{display:none}}
 .cam-off .hero{height:auto;display:flex;justify-content:space-between;align-items:flex-start;gap:48px;padding:48px 80px 64px}
 .cam-off .intro{position:static;width:auto;max-width:640px}.cam-off .hero-avail{position:static}
 .cam-off .camonly{display:none}
@@ -466,6 +486,7 @@ html, body { margin: 0; background: #08080A; }
  .wrap{padding-left:48px;padding-right:48px}
  .intro{width:520px}.h-hero{font-size:calc(54px*var(--s))}
  .stage.hero{left:calc(50% - 200px);width:820px;height:600px;top:220px}
+ .scue{right:24px}
  .sds{grid-template-columns:repeat(4,minmax(0,1fr))}
  .vf-head{grid-template-columns:minmax(0,1fr) 280px}
 }
@@ -498,7 +519,7 @@ html, body { margin: 0; background: #08080A; }
  .lk{padding:10px;gap:8px}.lk-a{gap:10px}.lk-i{width:40px;height:40px}.lk-t{font-size:calc(15px*var(--s))}
  .chead{gap:16px}
  .lede{font-size:calc(17px*var(--s))}
- .herofoot{display:none}
+ .herofoot,.scue{display:none}
  .block{padding-top:48px}
  .latest{padding:24px 0 48px}
  .lt-proj{grid-template-columns:minmax(0,1fr);gap:20px}
