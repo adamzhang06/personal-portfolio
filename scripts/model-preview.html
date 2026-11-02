@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- npm run models:previews renders each model here (the real ModelViewer, still) and saves the canvas. -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Model preview</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        background: #111115;
+      }
+      /* the viewer's overlays (loading percentage, "Drag to turn" hint) stay out of the still */
+      [role="img"] span {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" style="width: 800px"></div>
+    <script type="module">
+      import "/src/index.css";
+      import { createElement } from "react";
+      import { createRoot } from "react-dom/client";
+      import ModelViewer from "/src/components/ModelViewer.jsx";
+
+      const q = new URLSearchParams(location.search);
+      createRoot(document.getElementById("root")).render(createElement(ModelViewer, { src: q.get("src"), label: "", lcd: q.get("lcd") ?? undefined }));
+    </script>
+  </body>
+</html>

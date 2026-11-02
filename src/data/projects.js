@@ -1,6 +1,8 @@
 // Projects, newest first. Every project can carry links and media; empty arrays render nothing.
 // summary: the one-line headline, on the project's card and under its case-study title.
 // lede: "What it is"; a blank line ("\n\n") starts a new paragraph.
+// model: a GLB in public/models/, shown in a 3D viewer in the sidebar, under the demo (omit for none).
+// (Its moving parts and camera mount come from the model itself: see scripts/models.mjs.)
 // demo: { provider: 'youtube' | 'vimeo', id } — the demo video, embedded in the sidebar above Links (omit for none)
 // links: GitHub and Devpost show as logo buttons; any other link (a live site) gets a preview card from
 // npm run link-previews (run it after adding one).
@@ -79,6 +81,7 @@ export const projects = [
       "Currently building a similar camera slider **for a client**, for standardized and automated documentation.",
     ],
     tech: ["Python", "JavaScript", "React", "FastAPI", "WebSockets", "OpenCV", "YOLO", "Raspberry Pi"],
+    model: "/models/slider-final.glb",
     demo: { provider: "vimeo", id: "1184530933" },
     links: [
       { label: "GitHub", href: "https://github.com/adamzhang06/AXI6-cinema-robotics" },

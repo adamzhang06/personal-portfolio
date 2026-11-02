@@ -1,5 +1,7 @@
 // Experience and Leadership roles, newest first within each group (index 0 is the default selection).
 // Roles without a description keep empty oneLine / bullets and show just their header.
+// models (optional): GLBs in public/models/, one 3D viewer with a button per model (its season); name is the
+// model's, for Home's previews.
 
 export const roles = [
   {
@@ -158,6 +160,11 @@ export const roles = [
     links: [
       { label: "Team 16498 · FTC Scout", href: "https://ftcscout.org/teams/16498?season=2024" },
       { label: "FTC Stats · 2025 Wall", href: "https://www.ftcstats.org/2025/wall.html" },
+    ],
+    models: [
+      { src: "/models/robot-2022-final.glb", season: "2022–23", name: "Mr. Roboto" },
+      { src: "/models/robot-2023-final.glb", season: "2023–24", name: "Plus Bot" },
+      { src: "/models/robot-2024-final.glb", season: "2024–25", name: "Calvin" },
     ],
     media: [],
   },

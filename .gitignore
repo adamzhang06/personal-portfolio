@@ -32,3 +32,7 @@ photos-originals/
 # Photo inbox: drop new originals here; only the README is tracked
 photos-inbox/*
 !photos-inbox/README.md
+
+# CAD exports the 3D models are built from (npm run models): local only; only the README is tracked
+models-src/*
+!models-src/README.md

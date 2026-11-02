@@ -83,7 +83,7 @@ function labelTex(txt, col) {
     x.fillText(txt, 128, 134);
   }
   const t = new THREE.CanvasTexture(c);
-  t.encoding = THREE.sRGBEncoding;
+  t.colorSpace = THREE.SRGBColorSpace;
   t.anisotropy = 8;
   return t;
 }
@@ -124,7 +124,19 @@ function cyl(rt, rb, h, mat, seg, open) {
   return new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg || 96, 1, !!open), mat);
 }
 
+// The materials were tuned on three r128, which took hex colors as linear. Build with color management off so
+// they keep those values (and that look) on current three, whose ColorManagement would convert them from sRGB.
 export function buildCameraModel() {
+  const was = THREE.ColorManagement.enabled;
+  THREE.ColorManagement.enabled = false;
+  try {
+    return build();
+  } finally {
+    THREE.ColorManagement.enabled = was;
+  }
+}
+
+function build() {
   const model = new THREE.Group();
   const add = (m, p, rot) => {
     if (p) m.position.set(p[0], p[1], p[2]);
@@ -195,7 +207,7 @@ export function buildCameraModel() {
     x.fillStyle = "#A57CF2"; // a touch brighter than the UI purple so the dot survives the dark finish
     x.fillText(".", left + wAYZ, 196);
     const t = new THREE.CanvasTexture(c);
-    t.encoding = THREE.sRGBEncoding;
+    t.colorSpace = THREE.SRGBColorSpace;
     t.anisotropy = 8;
     const logo = new THREE.Mesh(
       new THREE.PlaneGeometry(2.9, 0.725),
@@ -323,7 +335,7 @@ export function buildCameraModel() {
     x.font = '500 60px "JetBrains Mono",monospace';
     x.fillText("[ r 24 ]", 80, 290);
     const t = new THREE.CanvasTexture(c);
-    t.encoding = THREE.sRGBEncoding;
+    t.colorSpace = THREE.SRGBColorSpace;
     add(slab(2.6, 1.85, 0.12, 0.18, 0.04, M.satin), [3.15, 8.53, 0.35], [PI / 2, 0, 0]);
     add(new THREE.Mesh(new THREE.PlaneGeometry(2.3, 1.6), new THREE.MeshPhysicalMaterial({ map: t, roughness: 0.08, clearcoat: 1 })), [3.15, 8.6, 0.35], [-PI / 2, 0, 0]);
   }
@@ -363,7 +375,7 @@ export function buildCameraModel() {
     x.fillStyle = "#232328";
     x.beginPath(); x.arc(256, 256, 110, 0, 7); x.fill();
     const t = new THREE.CanvasTexture(c);
-    t.encoding = THREE.sRGBEncoding;
+    t.colorSpace = THREE.SRGBColorSpace;
     t.anisotropy = 8;
     const top = new THREE.Mesh(new THREE.CircleGeometry(0.98, 64), new THREE.MeshStandardMaterial({ map: t, roughness: 0.45, metalness: 0.2 }));
     top.rotation.x = -PI / 2;
@@ -472,7 +484,7 @@ export function buildCameraModel() {
       });
     }
     const bt = new THREE.CanvasTexture(bc);
-    bt.encoding = THREE.sRGBEncoding;
+    bt.colorSpace = THREE.SRGBColorSpace;
     bt.anisotropy = 8;
     at(cyl(3.78, 3.78, 0.55, new THREE.MeshStandardMaterial({ map: bt, roughness: 0.5, metalness: 0.2 })), 3.275); // 24–70 band
     at(knurl(3.86, 2.45, 90, 0.035, M.rubber), 4.775); // ribbed zoom ring
@@ -512,7 +524,7 @@ export function buildCameraModel() {
       x.stroke();
     }
     const rt = new THREE.CanvasTexture(rc);
-    rt.encoding = THREE.sRGBEncoding;
+    rt.colorSpace = THREE.SRGBColorSpace;
     rt.anisotropy = 8;
     const face = new THREE.Mesh(new THREE.RingGeometry(2.85, 3.5, 128), new THREE.MeshStandardMaterial({ map: rt, roughness: 0.55, metalness: 0.15 }));
     face.rotation.x = -PI / 2;
