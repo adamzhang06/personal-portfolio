@@ -3,6 +3,7 @@ import { useHistoryBack } from "@/hooks/useHistoryBack";
 import { AVAILABILITY, HEADLINE_LINES, INTRO, NAME } from "@/data/site";
 import { liveCards } from "@/data/cards";
 import { HeroLinks } from "@/components/HeroLinks";
+import { HomeModels } from "@/components/HomeModels";
 import { Latest } from "@/components/Latest";
 import { Polaroid } from "@/components/Polaroid";
 import { Rich } from "@/components/Rich";
@@ -69,6 +70,7 @@ export function Home({ notFound = false }) {
         </section>
       </div>
       <Latest />
+      <HomeModels />
     </>
   );
 }

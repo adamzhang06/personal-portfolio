@@ -44,18 +44,18 @@ export function createEngine({ onFirstFrame, onNoWebGL } = {}) {
   const cam3 = new THREE.PerspectiveCamera(28, 1.2, 1, 500);
   const rig = new THREE.Group(), flip = new THREE.Group();
   const { model, HS, modeDial, doorPivot, slotMat, lcdMat, radius: RAD } = buildCameraModel();
-  const SLOT_LIT = new THREE.Color(0x9a6cf0);
+  const SLOT_LIT = new THREE.Color().setHex(0x9a6cf0, THREE.LinearSRGBColorSpace); // linear like the r128-tuned materials
   rig.add(flip);
   flip.add(model);
   scene.add(rig);
 
-  const key = new THREE.DirectionalLight(0xffffff, 0.6);
+  const key = new THREE.DirectionalLight(0xffffff, 0.6 * PI); // × π: r128's legacy lighting scaled by π internally
   key.position.set(-10, 22, 16);
   scene.add(key);
-  const key2 = new THREE.DirectionalLight(0xffffff, 0.35);
+  const key2 = new THREE.DirectionalLight(0xffffff, 0.35 * PI);
   key2.position.set(14, 18, -18);
   scene.add(key2);
-  const rimL = new THREE.DirectionalLight(0xd9ceff, 0.9);
+  const rimL = new THREE.DirectionalLight(new THREE.Color().setHex(0xd9ceff, THREE.LinearSRGBColorSpace), 0.9 * PI);
   rimL.position.set(-20, 8, -14);
   scene.add(rimL);
 
@@ -65,7 +65,7 @@ export function createEngine({ onFirstFrame, onNoWebGL } = {}) {
   function buildEnv() {
     // softbox environment: overhead key, right strip, left fill, floor bounce, back light, front strip
     const pm = new THREE.PMREMGenerator(gl), es = new THREE.Scene();
-    es.add(new THREE.Mesh(new THREE.BoxGeometry(80, 80, 80), new THREE.MeshBasicMaterial({ color: 0x020203, side: THREE.BackSide })));
+    es.add(new THREE.Mesh(new THREE.BoxGeometry(80, 80, 80), new THREE.MeshBasicMaterial({ color: new THREE.Color().setHex(0x020203, THREE.LinearSRGBColorSpace), side: THREE.BackSide })));
     const panel = (w, h, p, i) => {
       const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color("#ffffff").multiplyScalar(i), side: THREE.DoubleSide }));
       m.position.set(p[0], p[1], p[2]);
@@ -91,7 +91,7 @@ export function createEngine({ onFirstFrame, onNoWebGL } = {}) {
       gl = new THREE.WebGLRenderer({ canvas: glCanvas, antialias: true, alpha: true });
       gl.setPixelRatio(1);
       gl.setClearColor(0, 0);
-      gl.outputEncoding = THREE.sRGBEncoding;
+      gl.outputColorSpace = THREE.SRGBColorSpace;
       gl.toneMapping = THREE.ACESFilmicToneMapping;
       gl.toneMappingExposure = 0.92;
       glCanvas.addEventListener("webglcontextlost", (e) => {
@@ -284,8 +284,8 @@ export function createEngine({ onFirstFrame, onNoWebGL } = {}) {
       h.g.position.copy(h.base).addScaledVector(h.ax, -dd);
       const fl = m.flash[k] ? Math.max(0, 1 - Math.abs(t - m.flash[k]) / 350) : 0;
       const glow = Math.max(m.hot === k ? 1 : 0, fl, pr);
-      if (k === "record") h.m.emissive.setHex(glow ? 0x8a55e6 : 0x000000);
-      else h.m.emissive.setHex(0x8a55e6);
+      if (k === "record") h.m.emissive.setHex(glow ? 0x8a55e6 : 0x000000, THREE.LinearSRGBColorSpace);
+      else h.m.emissive.setHex(0x8a55e6, THREE.LinearSRGBColorSpace);
       // an open door shows its inner face; keep that dark rather than a flat lit panel
       h.m.emissiveIntensity = glow * 0.85 * (k === "door" ? 1 - 0.85 * Math.min(1, Math.max(0, m.door / DOOR_OPEN)) : 1);
     });

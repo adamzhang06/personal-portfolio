@@ -1,13 +1,40 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLcdPeek } from "@/context/uiContext";
 import { PHONE_QUERY, useMediaQuery } from "@/hooks/useMediaQuery";
+import { hasWebGL } from "@/lib/webgl";
+import { LazyModel } from "./LazyModel";
 import { MediaGrid } from "./MediaGrid";
 import { LinkPreviews } from "./LinkPreview";
 import { Rich } from "./Rich";
 
 const hasBody = (r) => Boolean(r.oneLine || r.bullets.length || r.links.length || r.media.length);
 
-function RoleBody({ role }) {
+// One viewer for the role's 3D models, with a button per model (its season) to switch between them.
+// `open` (a season's first year) starts on that model and scrolls it into view.
+function RoleModels({ role, open }) {
+  const [i, setI] = useState(() => Math.max(0, role.models.findIndex((m) => open && m.season.startsWith(open))));
+  const ref = useRef(null);
+  useEffect(() => {
+    if (open) ref.current?.scrollIntoView({ block: "center" });
+  }, [open]);
+  const m = role.models[i];
+  return (
+    <div className="grid gap-3" ref={ref}>
+      {role.models.length > 1 && (
+        <div className="flex flex-wrap gap-2" role="group" aria-label="Robot by season">
+          {role.models.map((x, j) => (
+            <button key={x.src} type="button" className="btn small" aria-pressed={j === i} style={j === i ? { borderColor: "#8A55E6" } : undefined} onClick={() => setI(j)}>
+              {x.season}
+            </button>
+          ))}
+        </div>
+      )}
+      <LazyModel key={m.src} src={m.src} label={`3D model of the ${m.season} ${role.org} robot`} />
+    </div>
+  );
+}
+
+function RoleBody({ role, model }) {
   return (
     <>
       {role.oneLine && <p className="rone">{role.oneLine}</p>}
@@ -20,6 +47,7 @@ function RoleBody({ role }) {
           ))}
         </ul>
       )}
+      {role.models && hasWebGL() && <RoleModels key={role.slug} role={role} open={model} />}
       <LinkPreviews links={role.links} className="lps-grid" />
       <MediaGrid media={role.media} />
     </>
@@ -29,10 +57,11 @@ function RoleBody({ role }) {
 /* Experience and Leadership: a list on the left and a sticky detail panel on the right.
    The most recent role (index 0) is selected on load; click a row or press ↑ ↓ to change it. Hovering a row
    previews it on the docked camera's LCD.
-   On phones there is no panel: the picked row opens in place, accordion-style, and tapping it again closes it. */
-export function RolePane({ roles, label }) {
+   On phones there is no panel: the picked row opens in place, accordion-style, and tapping it again closes it.
+   open: a role's slug to select instead, and model: which of its 3D models to show (see RoleModels). */
+export function RolePane({ roles, label, open, model }) {
   const phone = useMediaQuery(PHONE_QUERY);
-  const [sel, setSel] = useState(0); // -1 = every row closed (phones only)
+  const [sel, setSel] = useState(() => Math.max(0, roles.findIndex((r) => r.slug === open))); // -1 = every row closed (phones only)
   const listRef = useRef(null);
   const peek = useLcdPeek();
   const shown = phone ? sel : Math.max(sel, 0);
@@ -78,7 +107,7 @@ export function RolePane({ roles, label }) {
               </button>
               {fold && on && (
                 <div className="rdetail rfold" id={`role-${r.slug}`}>
-                  <RoleBody role={r} />
+                  <RoleBody role={r} model={r.slug === open ? model : undefined} />
                 </div>
               )}
             </li>
@@ -90,7 +119,7 @@ export function RolePane({ roles, label }) {
           <p className="dt">{role.dates}</p>
           <h2>{role.role}</h2>
           <p className="rorg">{role.org}</p>
-          <RoleBody role={role} />
+          <RoleBody role={role} model={role.slug === open ? model : undefined} />
           <p className="rhint note">
             {shown + 1} / {roles.length} · ↑ ↓ to browse
           </p>

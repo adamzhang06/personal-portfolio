@@ -61,7 +61,7 @@ export function screenTexture(page, sub, count) {
     x.fillText(fit(x, count, (fs) => "500 " + fs + 'px "JetBrains Mono",monospace', 30, 26, W - 112), 56, H - 60);
   }
   const t = new THREE.CanvasTexture(c);
-  t.encoding = THREE.sRGBEncoding;
+  t.colorSpace = THREE.SRGBColorSpace;
   t.anisotropy = 8;
   cache[k] = t;
   return t;

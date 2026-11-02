@@ -2,14 +2,16 @@ import { useParams } from "react-router-dom";
 import { useHistoryBack } from "@/hooks/useHistoryBack";
 import { projects } from "@/data/projects";
 import { Crumb } from "@/components/CardHead";
+import { LazyModel } from "@/components/LazyModel";
 import { MediaGrid, VideoEmbed } from "@/components/MediaGrid";
 import { ProjectLinks } from "@/components/LinkPreview";
 import { Rich } from "@/components/Rich";
 import { Home } from "./Home";
 
 // Case study inside a rounded viewfinder frame: header with the one-line headline, write-up with a
-// Built with / Demo / Links sidebar, then the gallery. Previous / next sit beside the counter at the top
-// (arrows only on phones) and replace history, so Back still returns to wherever the visitor came from.
+// Built with / Demo / 3D model / Links sidebar (the demo moves under What I did when there's a 3D model), then the
+// gallery. Previous / next sit beside the counter at the top (arrows only on phones) and replace history, so Back
+// still returns to wherever the visitor came from.
 // The demo, links and gallery are omitted when the project has none.
 export function ProjectCase() {
   const { slug } = useParams();
@@ -19,6 +21,7 @@ export function ProjectCase() {
   const p = projects[i];
   const prev = projects[(i + projects.length - 1) % projects.length];
   const next = projects[(i + 1) % projects.length];
+  const demoBelow = Boolean(p.demo && p.model); // the sidebar has the 3D model; the demo goes under What I did
 
   return (
     <div className="wrap page">
@@ -69,6 +72,12 @@ export function ProjectCase() {
                 </li>
               ))}
             </ul>
+            {demoBelow && (
+              <>
+                <h2 style={{ marginTop: 32 }}>Demo</h2>
+                <VideoEmbed video={p.demo} title={`${p.name} demo video`} />
+              </>
+            )}
           </div>
           <aside>
             <h2>Built with</h2>
@@ -79,10 +88,16 @@ export function ProjectCase() {
                 </span>
               ))}
             </div>
-            {p.demo && (
+            {p.demo && !demoBelow && (
               <>
                 <h2 style={{ marginTop: 20 }}>Demo</h2>
                 <VideoEmbed video={p.demo} title={`${p.name} demo video`} />
+              </>
+            )}
+            {p.model && (
+              <>
+                <h2 style={{ marginTop: 20 }}>3D model</h2>
+                <LazyModel src={p.model} lcd={p.name} label={`3D model of ${p.name}`} />
               </>
             )}
             <ProjectLinks links={p.links} />
