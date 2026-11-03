@@ -3,6 +3,7 @@ import { useHistoryBack } from "@/hooks/useHistoryBack";
 import { coverOf, projects } from "@/data/projects";
 import { cardByKey } from "@/data/cards";
 import { CardHead } from "@/components/CardHead";
+import { Img } from "@/components/Img";
 
 // 2 × 2 project cards led by each project's cover picture (a type cover when it has none yet).
 // The whole card is the link; hovering one previews it on the docked camera's LCD.
@@ -19,7 +20,7 @@ export function Projects() {
             <article key={p.slug} className="card" {...peek({ page: p.name, sub: p.result, count: p.period })}>
               <div className="card-cover">
                 {cover ? (
-                  <img src={cover.src} alt={cover.alt} loading={i < 2 ? "eager" : "lazy"} style={{ objectPosition: cover.position }} />
+                  <Img src={cover.src} alt={cover.alt} loading={i < 2 ? "eager" : "lazy"} style={{ objectPosition: cover.position }} />
                 ) : (
                   <span className="card-cover-type" aria-hidden="true">
                     {p.name}

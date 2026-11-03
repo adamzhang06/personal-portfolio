@@ -9,6 +9,7 @@ import { skills } from "@/data/skills";
 import { cardByKey } from "@/data/cards";
 import { CardHead } from "@/components/CardHead";
 import { Rich } from "@/components/Rich";
+import { Img } from "@/components/Img";
 
 export function About() {
   return (
@@ -21,7 +22,7 @@ export function About() {
               <div className="about-polaroids">
                 {ABOUT_PHOTOS.map((p, i) => (
                   <figure key={i} className="mini-polaroid">
-                    <img src={p.src} alt={p.alt} width="140" height="140" />
+                    <Img src={p.src} alt={p.alt} width="140" height="140" />
                     {p.caption && <figcaption>{p.caption}</figcaption>}
                   </figure>
                 ))}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useUi } from "@/context/uiContext";
 import { models, previewOf } from "@/data/models";
+import { Img } from "@/components/Img";
 
 /* The hero's "there's more below" cue: the 3D model stills as a fanned stack of prints and a bobbing arrow.
    It shows once the intro has opened, fades as soon as the page scrolls, and a click glides to the 3D models. */
@@ -23,7 +24,7 @@ export function ScrollCue() {
       <span className="scue-prints" aria-hidden="true">
         {models.map((m) => (
           <span key={m.src} className="scue-print">
-            <img src={previewOf(m.src)} alt="" />
+            <Img src={previewOf(m.src)} alt="" />
           </span>
         ))}
       </span>

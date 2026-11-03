@@ -8,6 +8,7 @@ import { dateLabel, exposures, filmGeometry, filmVars, rollStrips, rolls } from 
 import { FilmStrip } from "@/components/photos/FilmStrip";
 import { PhotoLightbox } from "@/components/photos/PhotoLightbox";
 import "@/styles/photos.css";
+import { Img } from "@/components/Img";
 
 /* Home's Latest: the newest project as a large print beside its result (the whole block opens the case study), then
    the newest roll unrolling from its canister on one strip as it comes into view. A frame opens the lightbox here;
@@ -30,7 +31,7 @@ export function Latest() {
         <h2 id="home-latest">Latest</h2>
         <article className="lt-proj">
           <div className="lt-cover">
-            {cover ? <img src={cover.src} alt={cover.alt} loading="lazy" style={{ objectPosition: cover.position }} /> : <span className="card-cover-type">{p.name}</span>}
+            {cover ? <Img src={cover.src} alt={cover.alt} loading="lazy" style={{ objectPosition: cover.position }} /> : <span className="card-cover-type">{p.name}</span>}
           </div>
           <div className="lt-txt">
             <p className="eyebrow">Newest project · {p.period}</p>

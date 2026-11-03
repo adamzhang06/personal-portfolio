@@ -563,3 +563,10 @@ html, body { margin: 0; background: #08080A; }
  .ap svg{width:240px;height:240px}
  .iris{width:240px;height:240px}.pct b{font-size:32px}.ld-t{font-size:32px}
 }
+
+/* Img: a slow shimmer on the image's own box while it loads, then a short fade-in */
+.ld{color:transparent;background-image:linear-gradient(100deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.09) 50%,rgba(255,255,255,0) 70%);background-size:250% 100%;background-repeat:no-repeat;animation:ldShimmer 1.4s linear infinite}
+.ld-in{animation:ldIn .45s var(--out) both}
+@keyframes ldShimmer{from{background-position:150% 0}to{background-position:-50% 0}}
+@keyframes ldIn{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.ld{animation:none}.ld-in{animation:none}}

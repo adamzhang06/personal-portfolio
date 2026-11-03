@@ -1,6 +1,7 @@
 import { useLcdPeek } from "@/context/uiContext";
 import { byYear, exposures, frameWidth, shelfGeometry } from "@/lib/rolls";
 import { FilmCanister } from "./FilmCanister";
+import { Img } from "@/components/Img";
 
 /* The shelves: one kraft counter-display carton per year, newest first, seen from slightly above. Its printed header
    carries the year and what is inside; the year's canisters stand in the tray, coloured by kind, between the side
@@ -57,7 +58,7 @@ export function RollShelf({ rolls, vw, onOpen }) {
                             <span className="frames">
                               {s.fit(r.peek, slot).map((p) => (
                                 <span key={p.id} className="fr">
-                                  <img src={p.src} alt="" loading="lazy" decoding="async" style={{ width: frameWidth(p, s.peekH), height: s.peekH }} />
+                                  <Img src={p.src} alt="" loading="lazy" decoding="async" style={{ width: frameWidth(p, s.peekH), height: s.peekH }} />
                                 </span>
                               ))}
                             </span>

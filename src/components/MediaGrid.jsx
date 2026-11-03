@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { NativeDialog } from "./NativeDialog";
+import { Img } from "@/components/Img";
 
 const EMBED_SRC = {
   youtube: (id) => `https://www.youtube-nocookie.com/embed/${id}`,
@@ -43,7 +44,7 @@ export function Lightbox({ images, index, onIndex, render }) {
             render(m, index)
           ) : (
             <figure>
-              <img src={m.src} alt={m.alt} />
+              <Img src={m.src} alt={m.alt} />
               <figcaption>
                 {m.caption && <span>{m.caption}</span>}
                 {images.length > 1 && (
@@ -90,7 +91,7 @@ export function MediaGrid({ media }) {
               <Embed provider={m.provider} id={m.id} title={m.caption || `${m.provider} video`} />
             ) : (
               <button type="button" className="mzoom" aria-label={`Enlarge photo: ${m.alt}`} onClick={() => setShown(images.indexOf(m))}>
-                <img src={m.src} alt="" loading="lazy" style={m.aspect ? { aspectRatio: m.aspect } : undefined} />
+                <Img src={m.src} alt="" loading="lazy" style={m.aspect ? { aspectRatio: m.aspect } : undefined} />
               </button>
             )}
             {m.caption && <figcaption>{m.caption}</figcaption>}

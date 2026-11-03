@@ -1,5 +1,6 @@
 import { Github, Link2 } from "lucide-react";
 import previews from "@/data/link-previews.json";
+import { Img } from "@/components/Img";
 
 const hostOf = (href) => new URL(href).hostname.replace(/^www\./, "");
 
@@ -14,7 +15,7 @@ export function LinkPreview({ link }) {
     <a className="lp" href={link.href} target="_blank" rel="noopener noreferrer">
       <span className="lp-media">
         {image ? (
-          <img src={image} alt="" loading="lazy" />
+          <Img src={image} alt="" loading="lazy" />
         ) : (
           <span className="lp-type" aria-hidden="true">
             {link.label}

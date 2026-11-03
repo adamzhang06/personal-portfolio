@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Lightbox } from "@/components/MediaGrid";
+import { Img } from "@/components/Img";
 
 // "2022-06-03T19:56" → "2022/06/03 19:56", as the camera stamps it; a film scan has only its month: "2023/03"
 const stamp = (takenAt) => takenAt.replace(/-/g, "/").replace("T", " ");
@@ -52,7 +53,7 @@ function Playback({ p, i, n }) {
           </span>
         </div>
         <div className="pb-scr">
-          <img src={p.src} alt={p.alt} />
+          <Img src={p.src} alt={p.alt} width={p.w} height={p.h} />
         </div>
         <div className="pb-bar pb-exp">
           <span className="pb-vals">

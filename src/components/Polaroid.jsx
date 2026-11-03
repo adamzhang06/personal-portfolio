@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useUi } from "@/context/uiContext";
 import { NAME } from "@/data/site";
+import { Img } from "@/components/Img";
 
 let developed = false; // the portrait develops once per page load
 
@@ -23,7 +24,7 @@ export function Polaroid() {
   const waiting = introPhase === "cover" || introPhase === "opening" || !seen;
   return (
     <figure ref={ref} className={"polaroid" + (develop ? " dev" : "") + (develop && waiting ? " wait" : "")}>
-      <img src="/assets/portrait.jpg" alt="Adam Zhang smiling outdoors in a black Purdue quarter-zip, trees behind him" width="216" height="216" />
+      <Img src="/assets/portrait.jpg" alt="Adam Zhang smiling outdoors in a black Purdue quarter-zip, trees behind him" width="216" height="216" />
       <figcaption>{NAME}</figcaption>
     </figure>
   );
