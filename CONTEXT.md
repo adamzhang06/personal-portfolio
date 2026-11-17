@@ -27,7 +27,10 @@ A camera button with a plain-English action: Shutter → Contact, Mode dial → 
 The mode dial's picker: H · A · P · E · L (Home, About, Projects, Experience, Leadership). Photography and Contact have no notch.
 
 ### Collections / SD card
-The five section cards (About, Projects, Experience, Leadership, Photos) in `src/data/cards.js`. On Home they sit below the hero; the card door opens the **Collections dock**, which rises from the bottom like the macOS Dock and flies the picked card into the camera's card slot. Counts are computed from data, never typed ("4 items" on the page, printed "04 ITEMS" on the card).
+The five section cards (About, Projects, Experience, Leadership, Photos) in `src/data/cards.js`. Home no longer shows them as a row (it goes hero → Latest → 3D models); the card door opens the **Collections dock**, which rises from the bottom like the macOS Dock and flies the picked card into the camera's card slot. Counts are computed from data, never typed ("4 items" on the page, printed "04 ITEMS" on the card).
+
+### Top 3
+The Projects page's ranked list (`src/components/TopProjects.jsx`), in the head right against the Projects SD card: 01–03 top to bottom, each a tiny cover and the name, opening its case study (01 in gold). The order is `TOP_PROJECTS` in `src/data/projects.js`, a list of slugs. On phones it drops below the head.
 
 ### Latest
 Home's last section (`src/components/Latest.jsx`): the newest project as a large print beside its result (opens the case study), then the newest roll unrolling from its canister on one strip; **Open the roll** goes to `/photos#<roll id>`, which arrives with that roll open. The Home **polaroid** develops like instant film once per page load, after the intro and once it is on screen.

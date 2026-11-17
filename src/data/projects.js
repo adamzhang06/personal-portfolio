@@ -12,7 +12,58 @@
 // which is otherwise the first image.
 // Unused dor screenshots (door-open, pinboard, settings, calendar) are in public/projects/dor/ as app-*.jpg.
 
+// Home's Top 3, in rank order (slugs from the list below).
+export const TOP_PROJECTS = ["axi6", "dor", "facebook-space"];
+
 export const projects = [
+  {
+    slug: "facebook-space",
+    name: "Facebook Space",
+    period: "Nov. 2026",
+    result: "Invite-only · 75 students · Meta, Menlo Park",
+    big: "75",
+    bigSub: "students invited to Closer Together with AI, hosted by Facebook Engineering at Meta’s Menlo Park campus",
+    summary: "A weekly game inside Facebook Groups that quietly finds the people who feel the way you do.",
+    lede: "Most people our age think they’re the only one eating alone or pretending to be fine, because a feed only shows everyone’s best night. Facebook Space is a **weekly game inside Facebook Groups**: answer **one private question each weekday**, and Meta’s **Muse** models read what you mean, not which words you used, to place you in that day’s anonymous constellations.\n\nOn Saturday you see your whole week across a sky of stars; on Sunday your closest people form a constellation drawn as the **Meta logo**, with a **24-hour anonymous group chat**. Names appear only when two people both ask to reveal. **Muse proposes, code enforces**: every grouping, message and nudge is checked by deterministic code before anyone sees it. Built at **Closer Together with AI**, an **invite-only hackathon for 75 students** hosted by Facebook Engineering at Meta’s Menlo Park campus.",
+    bullets: [
+      "Owned the **Muse model adapter** on a 5-person team: strict-JSON calls with one retry and a labeled fallback, **per-task model routing**, and the model, call type and latency recorded on every output.",
+      "Built the **daily questions, follow-ups and event nudges**, with nudges limited to approved public venues where **3 or more** people from your constellations are going.",
+      "Ran the **live matching evals**: on a 30-player test set written to share meaning but not words, Muse grouped people at **0.95 to 1.0 pairwise precision**, against **0.13 for a keyword baseline**.",
+      "Built the **presenter stage** that runs the demo week on two live phones, the **100-person synthetic cast**, and the **Vercel + Railway** deploy.",
+    ],
+    tech: ["Python", "FastAPI", "TypeScript", "React", "PostgreSQL", "Muse API", "Vercel", "Railway"],
+    links: [{ label: "GitHub", href: "https://github.com/Meta-Hackathon-SF/Meta-Hackathon" }],
+    media: [
+      { type: "image", src: "/projects/facebook-space/team.jpg", alt: "The five of us with event lanyards in front of the Meta sign at the Menlo Park campus", caption: "The team at Meta, Menlo Park", cover: true },
+      { type: "image", src: "/projects/facebook-space/sunday.jpg", alt: "Sunday's constellation on a phone: seven stars joined by lines, a shared feeling under them and an Open chat button", caption: "Sunday: your constellation", aspect: "390/844" },
+      { type: "image", src: "/projects/facebook-space/monday.jpg", alt: "Monday's sky on a phone: your star, lit, joined to the day's constellations", caption: "Monday’s sky", aspect: "390/844" },
+      { type: "image", src: "/projects/facebook-space/home.jpg", alt: "The Facebook Space tab on a phone with today's private question: where did you eat most of your meals this week", caption: "Today’s question", aspect: "390/844" },
+      { type: "image", src: "/projects/facebook-space/selfie.jpg", alt: "A team selfie in the crowd of students outside the Meta sign", caption: "Outside the Meta sign" },
+    ],
+  },
+  {
+    slug: "charlyzhang",
+    name: "charlyzhang.org",
+    period: "Oct. 2026",
+    result: "Live at charlyzhang.org",
+    big: "80",
+    bigSub: "photographs hung across seven walk-through gallery rooms",
+    summary: "My brother Charly’s photography site: a gallery you walk through, built with Claude Code.",
+    lede: "My brother Charly’s photography site, built as a **gallery you walk through**. You start at the lobby’s front desk (ring the bell three times and **Charly pops up to welcome you**), take a gallery map, and step into one of **seven rooms**: Favorites, Nature, Birds, Travel, Benches, Cars and Film. A collage mode hangs all **80 photos** on one wall.\n\nThe code was written by **Claude Code**. My part was helping Charly **build it himself**: teaching him to work with Claude Code and git, setting it up so we could each run our own agent on the same site, and getting it **hosted on Cloudflare**.",
+    bullets: [
+      "**Taught Charly to use Claude Code and git**, so he can describe a change, try it, and ship it to his own site.",
+      "Set it up so we could each run **our own Claude Code agent on our own branch**, handing work back and forth through git and a shared log.",
+      "Figured out the **hosting on Cloudflare Pages**: every push makes a preview link to try on a phone, and merging puts it live at charlyzhang.org.",
+    ],
+    tech: ["Claude Code", "Git", "GitHub", "Cloudflare Pages", "React"],
+    links: [{ label: "Website", href: "https://charlyzhang.org/" }],
+    media: [
+      { type: "image", src: "/projects/charlyzhang/lobby.jpg", alt: "The gallery lobby: Charly standing behind the wooden front desk with his name plate, saying Welcome, under a framed photo of Delicate Arch", caption: "The lobby, after three rings of the bell" },
+      { type: "image", src: "/projects/charlyzhang/favorites.jpg", alt: "The Favorites room seen through an archway in a deep red damask wall", caption: "Favorites" },
+      { type: "image", src: "/projects/charlyzhang/nature.jpg", alt: "The Nature room through a teal archway, frames lit by lamps along the walls", caption: "Nature" },
+      { type: "image", src: "/projects/charlyzhang/collage.jpg", alt: "All 80 photos hung together on one wall, salon style", caption: "Collage: all photos" },
+    ],
+  },
   {
     slug: "dor",
     name: "dor",

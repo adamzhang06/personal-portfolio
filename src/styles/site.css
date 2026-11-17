@@ -123,10 +123,20 @@ html, body { margin: 0; background: #08080A; }
 /* blocks + sd cards */
 .block{padding:72px 0 0}
 .block h2{font-size:calc(28px*var(--s));line-height:1.14;margin:10px 0 24px}
-.sds{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px}
-.sdlink{display:block;width:100%;min-height:44px;border-radius:8px}
 .sd{--sd-edge:#A99BD6;position:relative;container-type:inline-size;display:block;aspect-ratio:24/32;width:100%;border-radius:6px;background:var(--sd-edge);clip-path:polygon(0 0,82% 0,100% 13.5%,100% 100%,0 100%);transition:transform .3s var(--out)}
-.sdlink:hover .sd,.sdlink:focus-visible .sd{transform:translateY(-4px)}
+/* Projects head: the Top 3, a small ranked list set right against the SD card */
+.chead-aside{display:flex;align-items:flex-start;gap:20px;flex:none}
+.top3{width:280px}
+.top3-h{font-family:var(--mo);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ptext);margin:2px 0 8px 10px}
+.top3 ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.top3-row{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:6px 10px;border-radius:10px;text-align:left;color:var(--text);transition:background .15s var(--out)}
+.top3-row:hover,.top3-row:focus-visible{background:var(--raised)}
+.top3-n{font-family:var(--mo);font-size:13px;font-weight:600;color:var(--muted);width:20px;flex:none}
+.top3 li:first-child .top3-n{color:#E2C47E}
+.top3-img{width:56px;height:36px;flex:none;border-radius:6px;overflow:hidden;background:linear-gradient(160deg,#3A2470,#17121F)}
+.top3-img img{display:block;width:100%;height:100%;object-fit:cover}
+.top3-name{font-weight:600;font-size:calc(15px*var(--s));line-height:1.25;min-width:0}
+.top3-row:hover .top3-name{color:var(--ptext)}
 .sd-in{position:absolute;inset:1.5px;display:flex;flex-direction:column;justify-content:space-between;padding:6cqw 7cqw 8cqw;border-radius:5px;background:linear-gradient(160deg,var(--c1),var(--c2));clip-path:polygon(0 0,82% 0,100% 13.5%,100% 100%,0 100%)}
 /* two rows of gold contacts across the top; row 2 is offset half a contact, the last top contact sits under the chamfer */
 .pins{display:grid;grid-template-columns:repeat(18,minmax(0,1fr));column-gap:1.4cqw;row-gap:2.2cqw;margin:0 -1cqw}
@@ -487,7 +497,6 @@ html, body { margin: 0; background: #08080A; }
  .intro{width:520px}.h-hero{font-size:calc(54px*var(--s))}
  .stage.hero{left:calc(50% - 200px);width:820px;height:600px;top:220px}
  .scue{right:24px}
- .sds{grid-template-columns:repeat(4,minmax(0,1fr))}
  .vf-head{grid-template-columns:minmax(0,1fr) 280px}
 }
 
@@ -526,7 +535,8 @@ html, body { margin: 0; background: #08080A; }
  .lt-txt h3{font-size:40px}
  .lt-txt .sum{font-size:17px}
  .lt-roll{margin-top:72px}
- .sds{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .chead:has(.top3){flex-wrap:wrap}.chead:has(.top3) .ph{flex:1 1 0}
+ .chead-aside{display:contents}.top3{order:3;width:100%}
  .cards,.two,.case,.vf-head{grid-template-columns:minmax(0,1fr)}
  .vf{border-width:8px;border-radius:28px;padding:24px 20px}
  .rhint{display:none}

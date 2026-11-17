@@ -1,14 +1,12 @@
 import { useUi } from "@/context/uiContext";
 import { useHistoryBack } from "@/hooks/useHistoryBack";
 import { AVAILABILITY, HEADLINE_LINES, INTRO, NAME } from "@/data/site";
-import { liveCards } from "@/data/cards";
 import { HeroLinks } from "@/components/HeroLinks";
 import { HomeModels } from "@/components/HomeModels";
 import { Latest } from "@/components/Latest";
 import { Polaroid } from "@/components/Polaroid";
 import { Rich } from "@/components/Rich";
 import { ScrollCue } from "@/components/ScrollCue";
-import { SdCard } from "@/components/SdCard";
 
 export function Home({ notFound = false }) {
   const { view, setView } = useUi();
@@ -35,7 +33,7 @@ export function Home({ notFound = false }) {
           <em />
         </div>
         <div className="intro">
-          <p className="eyebrow">{NAME} · Purdue AI</p>
+          <p className="eyebrow">{NAME} · AI @ Purdue</p>
           <h1 className="h-hero" id="home-h1">
             {l1}
             <br /> {l2}
@@ -58,19 +56,6 @@ export function Home({ notFound = false }) {
         <ScrollCue />
       </section>
 
-      <div className="wrap homewrap">
-        <section className="block" aria-labelledby="home-coll">
-          <p className="eyebrow">Card door</p>
-          <h2 id="home-coll">Collections</h2>
-          <div className="sds">
-            {liveCards.map((c) => (
-              <button key={c.key} type="button" className="sdlink" aria-label={`${c.name}, ${c.count}`} onClick={() => go(c.path)}>
-                <SdCard card={c} />
-              </button>
-            ))}
-          </div>
-        </section>
-      </div>
       <Latest />
       <HomeModels />
     </>

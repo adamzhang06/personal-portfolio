@@ -10,7 +10,7 @@ import { LeaderLabels } from "./LeaderLabels";
 import { SectionsDial } from "./SectionsDial";
 import { CameraLegend } from "./CameraLegend";
 
-const HOME_SUB = "Purdue AI · Robotics · ML · Photography";
+const HOME_SUB = "AI @ Purdue · Robotics · ML · Photography";
 
 // The LCD shows the page, or what is hovered on it (a project, role or roll) while the camera is docked.
 function useLcd(pageKey, peek) {

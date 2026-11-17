@@ -48,6 +48,13 @@
     "domain": "ftcstats.org",
     "image": null
   },
+  "https://charlyzhang.org/": {
+    "title": "Charly Zhang · Photography",
+    "description": "Photography by Charly Zhang, hung as a walk-through gallery.",
+    "site": null,
+    "domain": "charlyzhang.org",
+    "image": "/previews/5625c62199a9.webp"
+  },
   "https://doratcalhacks.site/": {
     "title": "dor · the room",
     "description": null,
