@@ -19,7 +19,7 @@ function initialIntroPhase() {
 
 /* Screen-level UI state shared by the shell, the pages and the camera:
    overlay (dialog: 'menu' | 'info' | 'videos'), whether the docked camera is expanded (it stays expanded
-   under dialogs and the Collections dock), camera view (front / rear), the Sections dial, toast, shutter flash, the intro phase
+   under dialogs and the Collections dock), camera view (front / rear), the Sections dial, toast, the intro phase
    ('cover' → 'opening' → 'sweep' → 'done') and a counter that ticks on every new screen
    (it replays the aperture transition). */
 export function UiProvider({ children }) {
@@ -34,7 +34,6 @@ export function UiProvider({ children }) {
   const [screenCount, setScreenCount] = useState(0);
   const [inserting, setInserting] = useState(false); // a card from the Collections dock is going into the camera
   const [toast, setToast] = useState({ text: "", on: false });
-  const [flash, setFlash] = useState(false);
   const [introPhase, setIntroPhase] = useState(initialIntroPhase);
   const [peek, setPeek] = useState(null); // the LCD preview (see PeekContext)
 
@@ -76,15 +75,8 @@ export function UiProvider({ children }) {
     toastTimer.current = setTimeout(() => setToast((t) => ({ ...t, on: false })), DURATION.toast);
   }, []);
 
-  const flashTimer = useRef(0);
-  const shutter = useCallback(() => {
-    setFlash(true);
-    clearTimeout(flashTimer.current);
-    flashTimer.current = setTimeout(() => {
-      go("/contact");
-      setFlash(false);
-    }, DURATION.flash);
-  }, [go]);
+  // the Shutter: the page transition to Contact, with a flash the opening iris reveals
+  const shutter = useCallback(() => go("/contact", { flash: true }), [go]);
 
   const closeDial = useCallback(() => {
     setDialOpen(false);
@@ -126,7 +118,6 @@ export function UiProvider({ children }) {
 
   useEffect(() => () => {
     clearTimeout(toastTimer.current);
-    clearTimeout(flashTimer.current);
   }, []);
 
   const value = useMemo(
@@ -139,10 +130,10 @@ export function UiProvider({ children }) {
       screenCount,
       inserting, setInserting,
       toast, showToast,
-      flash, shutter,
+      shutter,
       introPhase, setIntroPhase,
     }),
-    [pageKey, overlay, dockOpen, setDockOpen, view, dialOpen, dialPreview, closeDial, sectionIndex, screenCount, inserting, toast, showToast, flash, shutter, introPhase]
+    [pageKey, overlay, dockOpen, setDockOpen, view, dialOpen, dialPreview, closeDial, sectionIndex, screenCount, inserting, toast, showToast, shutter, introPhase]
   );
 
   return (

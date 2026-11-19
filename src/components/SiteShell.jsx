@@ -50,8 +50,7 @@ function Shell() {
       <div className={"toast" + (ui.toast.on ? " show" : "")} role="status" aria-live="polite">
         {ui.toast.text}
       </div>
-      <div className={"flash" + (ui.flash ? " on" : "")} aria-hidden="true" />
-      {ui.screenCount > 0 && <PageAperture key={ui.screenCount} />}
+      <PageAperture />
       <IntroIris />
     </div>
   );

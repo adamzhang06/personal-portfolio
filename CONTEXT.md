@@ -17,6 +17,9 @@ Every route runs inside `SiteShell`: one procedural three.js camera (`src/compon
 ### Camera stage
 The single camera canvas. On **Home** it sits in the hero and scrolls with the page; on every other page it is **docked** bottom right (rear view). It is never re-mounted. Phones get an inline camera on Home only, plus a "Camera controls" disclosure.
 
+### Intro / page transition
+The **intro** (`IntroIris`) plays once per session when a visit starts on Home: a viewfinder (frame corners, status row, exposure readout) whose AF points hunt around the name while the site really loads, lock green at 100%, then the shutter fires and a full-screen iris opens onto Home. Every later screen change plays the **page transition** (`PageAperture`): the same iris shuts over the old page, the route swaps behind it, and it opens onto the new one; the Shutter adds a flash. It plays with reduced motion on too. In-app navigation waits for the shut through `transit()` in `src/lib/transition.js`; browser Back / forward play only the opening.
+
 ### Docked camera / camera controls
 Clicking the docked camera expands it; **Camera controls** and **Sections** slide in as two panels from the right. The camera's buttons sweep purple when it opens and as a hint on each page until it has been opened once.
 
