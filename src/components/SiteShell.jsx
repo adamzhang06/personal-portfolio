@@ -12,9 +12,8 @@ import { titleFor } from "@/data/pages";
 import { TopBar, TabBar } from "./TopBar";
 import { CollectionsDock } from "./CollectionsDock";
 import { SiteDialogs } from "./SiteDialogs";
-import { IntroLoader } from "./lab/IntroLoaders";
-import { PageTransition } from "./lab/PageTransition";
-import { LabSwitcher } from "./lab/LabSwitcher";
+import { IntroIris } from "./IntroIris";
+import { PageAperture } from "./PageAperture";
 
 function Shell() {
   useScrollRestoration();
@@ -51,10 +50,8 @@ function Shell() {
       <div className={"toast" + (ui.toast.on ? " show" : "")} role="status" aria-live="polite">
         {ui.toast.text}
       </div>
-      <div className={"flash" + (ui.flash ? " on" : "")} aria-hidden="true" />
-      <PageTransition />
-      <IntroLoader />
-      <LabSwitcher />
+      <PageAperture />
+      <IntroIris />
     </div>
   );
 }

@@ -12,7 +12,6 @@ export const DURATION = {
   panel: 300,
   reveal: 600, // iris reveal, dock glide
   flip: 1000,
-  flash: 120, // shutter flash before Contact
   toast: 1400,
 };
 

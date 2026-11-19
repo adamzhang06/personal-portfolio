@@ -1,6 +1,6 @@
 /* adamzhang.org v2 — ported from the Claude Design canvas (docs/reference/Main.dc.html).
    The canvas renders inside a 100vh artboard with an inner scroller; here the document scrolls,
-   so the top bar, camera layer, tab bar, toast and flash are position: fixed. */
+   so the top bar, camera layer, tab bar and toast are position: fixed. */
 
 html, body { margin: 0; background: #08080A; }
 
@@ -456,36 +456,80 @@ section.hero{zoom:var(--hk,1)} /* the section only: .stage.hero sizes itself fro
 .menu button:hover,.menu a:hover,.menu a.on{color:var(--ptext)}
 .menu button,.menu a{display:flex;justify-content:space-between;align-items:center;min-height:56px;border-bottom:1px solid var(--hair);font-family:var(--hd);font-weight:600;font-size:calc(24px*var(--s));color:var(--text);text-decoration:none}
 
-/* toast + shutter flash */
+/* toast */
 .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:90;background:var(--raised);border:1px solid var(--hair);border-radius:10px;padding:10px 16px;font-size:15px;opacity:0;pointer-events:none;transition:opacity .3s var(--out)}
 .toast.show{opacity:1}
-.flash{position:fixed;inset:0;z-index:95;background:#000;opacity:0;pointer-events:none;transition:opacity .35s var(--out)}
-.flash.on{opacity:1;transition:opacity .1s linear}
 .foot{border-top:1px solid var(--hair);margin-top:24px;padding:28px 80px 40px;color:var(--muted);font-size:calc(15px*var(--s));display:flex;justify-content:space-between}
 .tabbar{display:none}
 
-/* page transition: the iris opening onto each new screen */
+/* page transition: a full-screen iris shuts over the old page and opens onto the new one (PageAperture) */
 .ap{position:fixed;inset:0;z-index:150;pointer-events:none;overflow:hidden}
-.ap-veil{position:absolute;inset:0;background:#08080A}
-.ap svg{position:absolute;left:50%;top:50%;width:380px;height:380px;overflow:visible;transform:translate(-50%,-50%)}
+.sh-flash{position:absolute;inset:0;background:radial-gradient(120% 120% at 50% 50%,#fff 0%,#F4EEFF 45%,#E6DBFF 100%);pointer-events:none}
+.sh-iris{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;filter:drop-shadow(0 0 24px rgba(0,0,0,.55))}
 
-/* iris loader */
+
+/* viewfinder loader (IntroIris) */
 .ld{position:fixed;inset:0;z-index:200;overflow:hidden;color:#F2EFF7;font-family:'Hanken Grotesk',system-ui,sans-serif}
-.ld-bg{position:absolute;inset:0;background:radial-gradient(60% 60% at 50% 46%,#0F0E14 0%,#08080A 70%)}
-.ld-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px}
-.ld-eb{margin:0;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:#BBA3F8;font-weight:500}
-.iris{position:relative;width:380px;height:380px}
-.iris svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.pct{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;pointer-events:none}
-.pct b{font-family:'Hanken Grotesk',system-ui,sans-serif;font-weight:500;font-size:40px;line-height:1;font-variant-numeric:tabular-nums}
-.pct span{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12px;letter-spacing:.04em;color:#BBA3F8}
-.ld-t{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:700;font-size:40px;line-height:1.1;letter-spacing:-.01em;margin:6px 0 0}
-.ld-l{color:#A8A3B3;font-size:17px;margin:0}
 .ld-skip{position:absolute;left:50%;bottom:calc(32px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 16px;border-radius:999px;color:#A8A3B3;font-size:15px;font-weight:500;transition:color .15s var(--out)}
 .ld-skip:hover{color:#F2EFF7}
 .ld-skip kbd{padding:1px 6px;border:1px solid #2A2A33;border-radius:5px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12px;line-height:1.5}
 @media (hover:none){.ld-skip kbd{display:none}}
-.speck{position:absolute;width:2px;height:2px;border-radius:50%;background:#3A3A45}
+.vf1-hud{position:absolute;inset:0}
+.vf1-bg{position:absolute;inset:0;background-image:url(/assets/grain.png),radial-gradient(70% 70% at 50% 48%,#121019 0%,#08080A 72%);background-size:256px 256px,auto}
+.vf1-bg::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 50%,transparent 55%,rgba(0,0,0,.55))}
+.vf1-guides{position:absolute;inset:24px;pointer-events:none}
+.vf1-guides i{position:absolute;width:48px;height:48px;border:0 solid rgba(187,163,248,.55);animation:vfCorner .9s cubic-bezier(.16,1,.3,1) both}
+.vf1-guides i:nth-child(1){left:0;top:0;border-left-width:1.5px;border-top-width:1.5px;--dx:-14px;--dy:-14px}
+.vf1-guides i:nth-child(2){right:0;top:0;border-right-width:1.5px;border-top-width:1.5px;--dx:14px;--dy:-14px}
+.vf1-guides i:nth-child(3){left:0;bottom:0;border-left-width:1.5px;border-bottom-width:1.5px;--dx:-14px;--dy:14px}
+.vf1-guides i:nth-child(4){right:0;bottom:0;border-right-width:1.5px;border-bottom-width:1.5px;--dx:14px;--dy:14px}
+@keyframes vfCorner{from{opacity:0;transform:translate(var(--dx),var(--dy))}}
+.vf1-guides b{position:absolute;left:33.33%;right:33.33%;top:0;bottom:0;border-left:1px solid rgba(242,239,247,.05);border-right:1px solid rgba(242,239,247,.05);animation:vfFade 1.2s .2s both}
+.vf1-guides em{position:absolute;top:33.33%;bottom:33.33%;left:0;right:0;border-top:1px solid rgba(242,239,247,.05);border-bottom:1px solid rgba(242,239,247,.05);animation:vfFade 1.2s .2s both}
+@keyframes vfFade{from{opacity:0}}
+.vf1-top{position:absolute;left:44px;right:44px;top:40px;display:flex;align-items:center;gap:18px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12px;letter-spacing:.06em;color:#A8A3B3;animation:vfUp .7s .15s cubic-bezier(.16,1,.3,1) both}
+.vf1-gap{flex:1}
+.vf1-mode{display:inline-grid;place-items:center;width:22px;height:22px;border:1px solid rgba(187,163,248,.5);border-radius:4px;color:#BBA3F8}
+.vf1-bat{display:inline-flex;gap:2px;padding:2px;border:1px solid #6E6A7A;border-radius:3px;position:relative}
+.vf1-bat::after{content:"";position:absolute;right:-4px;top:4px;width:2px;height:5px;background:#6E6A7A;border-radius:0 1px 1px 0}
+.vf1-bat i{width:4px;height:7px;background:#52D68A;border-radius:1px}
+@keyframes vfUp{from{opacity:0;transform:translateY(8px)}}
+.vf1-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center}
+.vf1-af{position:absolute;left:50%;top:50%;width:min(800px,92vw);height:360px;transform:translate(-50%,-50%);display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(3,1fr);place-items:center}
+.vf1-af i{width:22px;height:16px;border:1.5px solid rgba(242,239,247,.14);border-radius:2px;transition:border-color .08s,box-shadow .08s,opacity .3s}
+.vf1-af i.on{border-color:rgba(242,239,247,.85)}
+.vf1-namewrap{position:relative}
+.vf1-lock{position:absolute;inset:-14px -26px -10px;animation:vfLock .35s cubic-bezier(.16,1,.3,1) both;filter:drop-shadow(0 0 8px rgba(82,214,138,.55));
+ background:
+  linear-gradient(#52D68A,#52D68A) 0 0/22px 2px no-repeat,linear-gradient(#52D68A,#52D68A) 0 0/2px 22px no-repeat,
+  linear-gradient(#52D68A,#52D68A) 100% 0/22px 2px no-repeat,linear-gradient(#52D68A,#52D68A) 100% 0/2px 22px no-repeat,
+  linear-gradient(#52D68A,#52D68A) 0 100%/22px 2px no-repeat,linear-gradient(#52D68A,#52D68A) 0 100%/2px 22px no-repeat,
+  linear-gradient(#52D68A,#52D68A) 100% 100%/22px 2px no-repeat,linear-gradient(#52D68A,#52D68A) 100% 100%/2px 22px no-repeat}
+@keyframes vfLock{from{transform:scale(1.18);opacity:0}}
+.vf1-eb{margin:0;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#BBA3F8;animation:vfUp .8s .25s cubic-bezier(.16,1,.3,1) both}
+.vf1-name{margin:0;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:700;font-size:clamp(44px,7vw,84px);line-height:1;letter-spacing:-.02em;color:#F2EFF7;animation:vfUp .9s .3s cubic-bezier(.16,1,.3,1) both}
+.vf1-line{margin:4px 0 0;color:#A8A3B3;font-size:17px;animation:vfUp .9s .4s cubic-bezier(.16,1,.3,1) both}
+.vf1-bottom{position:absolute;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;align-items:center;gap:22px;padding:10px 18px;border-top:1px solid rgba(242,239,247,.08);border-bottom:1px solid rgba(242,239,247,.08);font-family:'JetBrains Mono',ui-monospace,monospace;font-size:13px;letter-spacing:.04em;color:#F2EFF7;white-space:nowrap;animation:vfFade .8s .35s both}
+.vf1-meter{position:relative;display:inline-block;width:150px;height:26px}
+.vf1-scale{position:absolute;left:0;right:0;top:4px;display:flex;justify-content:space-between;align-items:flex-end;height:8px}
+.vf1-scale i{width:1px;height:4px;background:#6E6A7A}.vf1-scale i.maj{height:8px;background:#A8A3B3}
+.vf1-needle{position:absolute;top:14px;width:0;height:0;margin-left:-4px;border:4px solid transparent;border-bottom:6px solid #BBA3F8;border-top:0}
+.vf1-nums{position:absolute;left:-6px;right:-6px;top:-10px;display:flex;justify-content:space-between;font-size:9px;color:#6E6A7A}
+.vf1-nums em{font-style:normal}
+.vf1-status{min-width:118px;color:#BBA3F8}
+.vf1-status.lock{color:#52D68A}
+.vf1-frames{color:#A8A3B3}
+.ld .ld-skip{transition:opacity .3s,color .15s}
+@media (max-width:720px){
+ .vf1-top{left:28px;right:28px;top:30px;gap:12px}
+ .vf1-top span:nth-child(3){display:none}
+ .vf1-bottom{gap:12px;font-size:11px;padding:8px 10px}
+ .vf1-bottom > span:nth-child(3),.vf1-frames{display:none}
+ .vf1-meter{width:96px}
+ .vf1-status{min-width:96px}
+ .vf1-af{height:300px}
+}
+
 
 /* hover: bordered, interactive boxes lift a little, their border turns green, and src/lib/hoverTrace.js runs
    a green streak around the outline at an even pace whatever the shape, surging fast-slow-fast each lap.
@@ -585,8 +629,6 @@ section.hero{zoom:var(--hk,1)} /* the section only: .stage.hero sizes itself fro
  .cdock,.site.docked .cdock{left:50%;bottom:76px}
  .cd-list{gap:10px;padding:12px 14px 14px}
  .cd-item{width:54px}
- .ap svg{width:240px;height:240px}
- .iris{width:240px;height:240px}.pct b{font-size:32px}.ld-t{font-size:32px}
 }
 
 /* phones on their side: no room for two fixed bars, so the tab bar goes (Menu in the top bar covers it) and the camera shrinks */

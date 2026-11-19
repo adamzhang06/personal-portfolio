@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useUi } from "@/context/uiContext";
 import { useCamera } from "@/components/camera/cameraContext";
-import { labSpeed } from "@/lib/lab";
 
 const FILL_S = 2.4; // the percent never runs ahead of this pace
 const GIVE_UP_S = 6;
@@ -13,7 +12,7 @@ function pace(e) {
   return Math.min(1, p);
 }
 
-/* The lab loaders' shared clock. p: loading (follows real loading, never ahead of the pace); at 100% a
+/* The intro loader's clock. p: loading (follows real loading, never ahead of the pace); at 100% a
    hold (h: 0 → 1 over holdS) for the lock moment, then the exit (o: 0 → 1 over exitS, linear: the loader
    eases it). 'opening' is set as the exit starts (the camera fades up), 'sweep' when it ends.
    Skip (click, Esc, Enter, Space) jumps p to 1. e: seconds since start, for idle motion. */
@@ -42,7 +41,6 @@ export function useIntroClock({ holdS, exitS }) {
       }
     };
     window.addEventListener("keydown", onKey);
-    const k = labSpeed();
     const started = performance.now();
     let e = 0, last = started, p = 0, lockAt = null, openAt = null, raf = 0;
     const tick = () => {
@@ -53,12 +51,12 @@ export function useIntroClock({ holdS, exitS }) {
       const target = gaveUp || skipped.current ? 1 : Math.min(real.current >= 0.999 ? 1 : real.current, pace(e));
       p = Math.max(p, target);
       if (p >= 1 && lockAt === null) lockAt = e;
-      const h = lockAt === null ? 0 : Math.min(1, (e - lockAt) / (holdS * k));
+      const h = lockAt === null ? 0 : Math.min(1, (e - lockAt) / holdS);
       if (h >= 1 && openAt === null) {
         openAt = e;
         setIntroPhase("opening");
       }
-      const o = openAt === null ? 0 : Math.min(1, (e - openAt) / (exitS * k));
+      const o = openAt === null ? 0 : Math.min(1, (e - openAt) / exitS);
       setFrame({ p, h, o, e });
       if (o >= 1) {
         setIntroPhase("sweep");
