@@ -4,6 +4,7 @@ import { PeekContext, SetPeekContext, UiContext } from "./uiContext";
 import { useHistoryBack } from "@/hooks/useHistoryBack";
 import { pageByKey, pageKeyFor } from "@/data/pages";
 import { DURATION } from "@/lib/motion";
+import { getLab } from "@/lib/lab";
 
 const INTRO_KEY = "ayz-intro-seen";
 const ENTRY_PATH = window.location.pathname; // where this visit started
@@ -78,6 +79,7 @@ export function UiProvider({ children }) {
 
   const flashTimer = useRef(0);
   const shutter = useCallback(() => {
+    if (getLab().fx !== "old") return go("/contact", { flash: true }); // lab: the transition carries its own flash
     setFlash(true);
     clearTimeout(flashTimer.current);
     flashTimer.current = setTimeout(() => {
