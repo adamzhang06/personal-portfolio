@@ -18,7 +18,16 @@ const HERO_H = 828; // the hero's design height (site.css .hero), under the 72px
 function useHeroFit() {
   useLayoutEffect(() => {
     const root = document.documentElement;
-    const fit = () => root.style.setProperty("--hk", Math.min(1, Math.max(0.8, (window.innerHeight - 72) / HERO_H)).toFixed(3));
+    // On touch devices the browser's toolbars collapse on scroll, firing height-only resizes; refitting on those made the
+    // whole hero zoom in mid-scroll. There, refit only when the width changes (rotation), so scrolling just reveals more page.
+    const touch = window.matchMedia("(pointer: coarse)").matches;
+    let lastW = 0;
+    const fit = () => {
+      const w = window.innerWidth;
+      if (touch && w === lastW) return;
+      lastW = w;
+      root.style.setProperty("--hk", Math.min(1, Math.max(0.8, (window.innerHeight - 72) / HERO_H)).toFixed(3));
+    };
     fit();
     window.addEventListener("resize", fit);
     return () => {
