@@ -31,7 +31,7 @@ export const projects = [
       "Ran the **live matching evals**: on a 30-player test set written to share meaning but not words, Muse grouped people at **0.95 to 1.0 pairwise precision**, against **0.13 for a keyword baseline**.",
       "Built the **presenter stage** that runs the demo week on two live phones, the **100-person synthetic cast**, and the **Vercel + Railway** deploy.",
     ],
-    tech: ["Python", "FastAPI", "TypeScript", "React", "PostgreSQL", "Muse API", "Vercel", "Railway"],
+    tech: ["Python", "FastAPI", "Meta Muse API", "TypeScript", "React", "PostgreSQL", "Vercel", "Railway"],
     links: [{ label: "GitHub", href: "https://github.com/Meta-Hackathon-SF/Meta-Hackathon" }],
     media: [
       { type: "image", src: "/projects/facebook-space/team.jpg", alt: "The five of us with event lanyards in front of the Meta sign at the Menlo Park campus", caption: "The team at Meta, Menlo Park", cover: true },

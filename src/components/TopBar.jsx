@@ -1,3 +1,4 @@
+import { Briefcase, Camera, FolderOpen, House, Mail, UserRound } from "lucide-react";
 import { useUi } from "@/context/uiContext";
 import { useHistoryBack } from "@/hooks/useHistoryBack";
 import { navPages, pageByKey, TAB_KEYS } from "@/data/pages";
@@ -42,6 +43,8 @@ export function TopBar() {
   );
 }
 
+const TAB_ICONS = { home: House, about: UserRound, projects: FolderOpen, experience: Briefcase, photography: Camera, contact: Mail };
+
 // Phone tab bar: Home · About · Projects · Experience · Photos (Leadership, Contact and the rest via Menu).
 export function TabBar() {
   const { pageKey } = useUi();
@@ -51,6 +54,7 @@ export function TabBar() {
     <nav className="tabbar" aria-label="Main (mobile)">
       {TAB_KEYS.map((k) => {
         const p = pageByKey(k);
+        const Icon = TAB_ICONS[k];
         return (
           <a
             key={k}
@@ -59,6 +63,9 @@ export function TabBar() {
             aria-current={here === k ? "page" : undefined}
             onClick={routed(go, p.path)}
           >
+            <span className="tab-ic" aria-hidden="true">
+              <Icon size={20} strokeWidth={here === k ? 2.2 : 1.8} />
+            </span>
             {p.tab ?? p.label}
           </a>
         );
