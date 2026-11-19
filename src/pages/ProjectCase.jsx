@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useHistoryBack } from "@/hooks/useHistoryBack";
+import { RouteLink } from "@/components/RouteLink";
 import { projects } from "@/data/projects";
 import { Crumb } from "@/components/CardHead";
 import { LazyModel } from "@/components/LazyModel";
@@ -15,7 +15,6 @@ import { Home } from "./Home";
 // The demo, links and gallery are omitted when the project has none.
 export function ProjectCase() {
   const { slug } = useParams();
-  const { go } = useHistoryBack();
   const i = projects.findIndex((p) => p.slug === slug);
   if (i < 0) return <Home notFound />;
   const p = projects[i];
@@ -30,12 +29,12 @@ export function ProjectCase() {
           <Crumb />
           <div className="vf-nav">
             <nav className="pn" aria-label="More projects">
-              <button type="button" className="btn small" aria-label={`Previous: ${prev.name}`} onClick={() => go(`/projects/${prev.slug}`, { replace: true })}>
+              <RouteLink className="btn small" aria-label={`Previous: ${prev.name}`} to={`/projects/${prev.slug}`} replace>
                 <span aria-hidden="true">←</span> <span className="pn-name">{prev.name}</span>
-              </button>
-              <button type="button" className="btn small" aria-label={`Next: ${next.name}`} onClick={() => go(`/projects/${next.slug}`, { replace: true })}>
+              </RouteLink>
+              <RouteLink className="btn small" aria-label={`Next: ${next.name}`} to={`/projects/${next.slug}`} replace>
                 <span className="pn-name">{next.name}</span> <span aria-hidden="true">→</span>
-              </button>
+              </RouteLink>
             </nav>
             <span className="note muted">
               {i + 1} / {projects.length}

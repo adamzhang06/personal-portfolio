@@ -406,7 +406,8 @@ export function createEngine({ onFirstFrame, onNoWebGL } = {}) {
         b.style.opacity = vis ? "1" : "0";
         b.style.pointerEvents = vis ? "auto" : "none";
         b.style.visibility = vis ? "visible" : "hidden";
-        if (vis) b.removeAttribute("tabindex");
+        // data-nokbd: a pointer target only, its action already has a keyboard stop (Home's leader labels, Flip)
+        if (vis && !b.hasAttribute("data-nokbd")) b.removeAttribute("tabindex");
         else b.setAttribute("tabindex", "-1");
       });
       const lead = el.querySelector('[data-lead="' + k + '"]'), line = el.querySelector('[data-line="' + k + '"]'), ring = el.querySelector('[data-ring="' + k + '"]');

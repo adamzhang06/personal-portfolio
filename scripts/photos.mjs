@@ -8,7 +8,10 @@
    4. npm run photos:apply  compresses each complete photo into public/photos/gallery-compressed/<year>/,
                             moves its original to photos-originals/<year>/ (gitignored), and records it in
                             src/data/photos.json and src/data/rolls.json. Incomplete entries stay in the inbox.
-   5. npm run photos:check  validates both data files against the image files.
+   5. npm run photos:check  validates both data files against the image files (and their thumbnails).
+
+   npm run photos:thumbs writes any missing thumbnail: public/photos/thumbs/<year>/<name>.jpg, at most 640px on its
+   long side, the size film strips and shelves show (photos:apply does this too). The lightbox keeps the full file.
 
    Nothing is guessed: a field the file can't answer stays empty and is listed under "missing". */
 
@@ -19,6 +22,11 @@ import path from 'node:path';
 const INBOX = 'photos-inbox';
 const ORIGINALS = 'photos-originals';
 const OUT = 'public/photos/gallery-compressed';
+const THUMBS = 'public/photos/thumbs';
+const THUMB_BOX = 640;
+const THUMB_QUALITY = 78;
+// /photos/gallery-compressed/<year>/<name>.jpg → public/photos/thumbs/<year>/<name>.jpg (src/lib/rolls.js thumbOf mirrors this)
+const thumbFile = (src) => path.join('public', src.replace('/photos/gallery-compressed/', '/photos/thumbs/'));
 const PHOTOS = 'src/data/photos.json';
 const ROLLS = 'src/data/rolls.json';
 const PENDING = path.join(INBOX, 'pending.json');
@@ -248,10 +256,25 @@ async function apply() {
   await writeJson(PHOTOS, photos);
   await writeJson(ROLLS, rolls);
   await writeJson(PENDING, { ...pending, photos: left });
+  await thumbs();
   console.log(`\nAdded ${added.length} photo(s):`);
   for (const a of added) console.log(`  ${a}`);
   if (left.length) console.log(`\n${left.length} still need info (see ${PENDING}): ${left.map((e) => `${e.file} [${e.missing.join(', ')}]`).join('; ')}`);
   await check();
+}
+
+async function thumbs() {
+  const { default: sharp } = await import('sharp');
+  const photos = await readJson(PHOTOS, []);
+  let made = 0;
+  for (const p of photos) {
+    const from = path.join('public', p.src), to = thumbFile(p.src);
+    if (existsSync(to) || !existsSync(from)) continue;
+    await mkdir(path.dirname(to), { recursive: true });
+    await sharp(from).resize({ width: THUMB_BOX, height: THUMB_BOX, fit: 'inside', withoutEnlargement: true }).jpeg({ quality: THUMB_QUALITY, mozjpeg: true }).toFile(to);
+    made++;
+  }
+  console.log(`Thumbnails: ${made} written, ${photos.length - made} already there.`);
 }
 
 async function check() {
@@ -265,6 +288,7 @@ async function check() {
     for (const k of ['title', 'alt', 'takenAt', 'camera', 'src']) if (!p[k]) issues.push(`${p.id}: no ${k}`);
     if (!p.film && !p.exposure) issues.push(`${p.id}: digital photo with no exposure`);
     if (!existsSync(path.join('public', p.src))) issues.push(`${p.id}: missing file public${p.src}`);
+    else if (!existsSync(thumbFile(p.src))) issues.push(`${p.id}: no thumbnail (run npm run photos:thumbs)`);
   }
   const seen = new Map();
   for (const r of rolls.rolls) {
@@ -288,9 +312,9 @@ async function check() {
 }
 
 const cmd = process.argv[2];
-const run = { scan, apply, check }[cmd];
+const run = { scan, apply, check, thumbs }[cmd];
 if (!run) {
-  console.log('usage: node scripts/photos.mjs scan | apply | check');
+  console.log('usage: node scripts/photos.mjs scan | apply | check | thumbs');
   process.exit(1);
 }
 run().catch((err) => {

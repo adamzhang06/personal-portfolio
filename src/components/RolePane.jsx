@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { useLcdPeek } from "@/context/uiContext";
 import { PHONE_QUERY, useMediaQuery } from "@/hooks/useMediaQuery";
 import { hasWebGL } from "@/lib/webgl";
@@ -55,8 +56,9 @@ function RoleBody({ role, model }) {
 }
 
 /* Experience and Leadership: a list on the left and a sticky detail panel on the right.
-   The most recent role (index 0) is selected on load; click a row or press ↑ ↓ to change it. Hovering a row
-   previews it on the docked camera's LCD.
+   The most recent role (index 0) is selected on load; click a row or press ↑ ↓ to change it. The pick is kept in the
+   address (?role=<slug>), so a refresh or a shared link opens the same role. Hovering a row previews it on the
+   docked camera's LCD.
    On phones there is no panel: the picked row opens in place, accordion-style, and tapping it again closes it.
    open: a role's slug to select instead, and model: which of its 3D models to show (see RoleModels). */
 export function RolePane({ roles, label, open, model }) {
@@ -67,21 +69,46 @@ export function RolePane({ roles, label, open, model }) {
   const shown = phone ? sel : Math.max(sel, 0);
   const role = roles[shown] ?? roles[0];
 
+  const [, setParams] = useSearchParams();
+  const location = useLocation();
+  // Mirror the pick in ?role= (replacing this entry, keeping its Back crumb); a model link only holds for its own role.
+  const remember = (i) =>
+    setParams(i >= 0 ? { role: roles[i].slug } : {}, { replace: true, state: location.state, preventScrollReset: true });
+
+  // Desktop: the detail panel is sticky, but a long one scrolled to the page's end can sit with its title above the
+  // top bar; bring the title back into view after a pick.
+  const select = (i) => {
+    setSel(i);
+    remember(i);
+    requestAnimationFrame(() => {
+      const d = document.getElementById("role-detail");
+      if (d && d.getBoundingClientRect().top < 72) d.scrollIntoView({ block: "start", behavior: "smooth" });
+    });
+  };
+
   const pick = (i, row) => {
-    if (!phone) return setSel(i);
-    setSel(i === sel ? -1 : i);
+    if (!phone) return select(i);
+    const next = i === sel ? -1 : i;
+    setSel(next);
+    remember(next);
     // Closing a longer row above pulls this one up, possibly out of view; bring it back.
     requestAnimationFrame(() => row.scrollIntoView({ block: "nearest", behavior: "smooth" }));
   };
 
+  // ↑ ↓ move from the focused row (Tab may have moved focus off the selected one)
   const onKey = (e) => {
-    let i = shown;
-    if (e.key === "ArrowDown") i = Math.min(roles.length - 1, shown + 1);
-    else if (e.key === "ArrowUp") i = Math.max(0, shown - 1);
-    else return;
+    if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+    const rows = [...(listRef.current?.querySelectorAll(".rrow") ?? [])];
+    const at = rows.indexOf(document.activeElement);
+    const from = at >= 0 ? at : shown;
+    const i = e.key === "ArrowDown" ? Math.min(roles.length - 1, from + 1) : Math.max(0, from - 1);
     e.preventDefault();
-    setSel(i);
-    listRef.current?.querySelectorAll(".rrow")[i]?.focus();
+    if (phone) {
+      rows[i]?.focus();
+      return;
+    }
+    select(i);
+    rows[i]?.focus();
   };
 
   return (

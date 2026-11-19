@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { useHistoryBack } from "@/hooks/useHistoryBack";
+import { RouteLink } from "@/components/RouteLink";
 import { useUnroll } from "@/hooks/useUnroll";
 import { useViewportWidth } from "@/hooks/useViewportWidth";
 import { coverOf, projects } from "@/data/projects";
@@ -14,7 +14,6 @@ import { Img } from "@/components/Img";
    the newest roll unrolling from its canister on one strip as it comes into view. A frame opens the lightbox here;
    Open the roll goes to the Photos page with that roll open (/photos#<roll id>). */
 export function Latest() {
-  const { go } = useHistoryBack();
   const p = projects[0];
   const cover = coverOf(p);
   const roll = PHOTOGRAPHY_ENABLED ? rolls[0] : null;
@@ -36,9 +35,9 @@ export function Latest() {
           <div className="lt-txt">
             <p className="eyebrow">Newest project · {p.period}</p>
             <h3>
-              <button type="button" className="stretch" onClick={() => go(`/projects/${p.slug}`)}>
+              <RouteLink className="stretch" to={`/projects/${p.slug}`}>
                 {p.name}
-              </button>
+              </RouteLink>
             </h3>
             <p className="winline">{p.result}</p>
             <p className="sum">{p.summary}</p>
@@ -61,9 +60,9 @@ export function Latest() {
                 {n} {n === 1 ? "photo" : "photos"}, {dateLabel(roll.photos[0].takenAt)} to {dateLabel(roll.photos.at(-1).takenAt)}
               </p>
             </div>
-            <button type="button" className="btn" onClick={() => go(`/photos#${roll.id}`)}>
+            <RouteLink className="btn" to={`/photos#${roll.id}`}>
               Open the roll <span aria-hidden="true">→</span>
-            </button>
+            </RouteLink>
           </div>
           <div className="reels" ref={reels} style={filmVars(g)}>
             <FilmStrip

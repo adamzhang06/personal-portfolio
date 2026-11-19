@@ -1,5 +1,5 @@
 import { useLcdPeek } from "@/context/uiContext";
-import { byYear, exposures, frameWidth, shelfGeometry } from "@/lib/rolls";
+import { byYear, exposures, frameWidth, shelfGeometry, thumbOf } from "@/lib/rolls";
 import { FilmCanister } from "./FilmCanister";
 import { Img } from "@/components/Img";
 
@@ -58,7 +58,7 @@ export function RollShelf({ rolls, vw, onOpen }) {
                             <span className="frames">
                               {s.fit(r.peek, slot).map((p) => (
                                 <span key={p.id} className="fr">
-                                  <Img src={p.src} alt="" loading="lazy" decoding="async" style={{ width: frameWidth(p, s.peekH), height: s.peekH }} />
+                                  <Img src={thumbOf(p.src)} fallback={p.src} alt="" loading="lazy" decoding="async" style={{ width: frameWidth(p, s.peekH), height: s.peekH }} />
                                 </span>
                               ))}
                             </span>

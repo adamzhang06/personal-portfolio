@@ -1,5 +1,5 @@
 import { useLcdPeek } from "@/context/uiContext";
-import { useHistoryBack } from "@/hooks/useHistoryBack";
+import { RouteLink } from "@/components/RouteLink";
 import { coverOf, projects } from "@/data/projects";
 import { cardByKey } from "@/data/cards";
 import { CardHead } from "@/components/CardHead";
@@ -10,7 +10,6 @@ import { Img } from "@/components/Img";
 // Head: the Top 3 list set against the Projects SD card. Below, 2 × 2 project cards led by each project's cover picture (a type cover when it has none yet).
 // The whole card is the link; hovering one previews it on the docked camera's LCD.
 export function Projects() {
-  const { go } = useHistoryBack();
   const peek = useLcdPeek();
   return (
     <div className="wrap page">
@@ -39,9 +38,9 @@ export function Projects() {
               </div>
               <p className="meta">{p.period}</p>
               <h3>
-                <button type="button" className="stretch" onClick={() => go(`/projects/${p.slug}`)}>
+                <RouteLink className="stretch" to={`/projects/${p.slug}`}>
                   {p.name}
-                </button>
+                </RouteLink>
               </h3>
               <p className="winline">{p.result}</p>
               <p className="sum">{p.summary}</p>

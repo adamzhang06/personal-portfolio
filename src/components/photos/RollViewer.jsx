@@ -21,16 +21,6 @@ export function RollViewer({ roll, onClose }) {
   const strips = roll ? rollStrips(roll, g) : [];
   useUnroll(scroller, { active: !!roll && !closing, self: true, once: true, eager: true, delay: 150, stagger: 0.25, layout: strips.length });
 
-  useEffect(() => {
-    if (!roll) return undefined;
-    const html = document.documentElement;
-    const prev = html.style.overflow;
-    html.style.overflow = "hidden";
-    return () => {
-      html.style.overflow = prev;
-    };
-  }, [roll]);
-
   useEffect(() => () => clearTimeout(timer.current), []);
 
   const rewind = () => {

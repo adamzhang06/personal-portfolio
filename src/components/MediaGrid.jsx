@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { NativeDialog } from "./NativeDialog";
 import { Img } from "@/components/Img";
 
@@ -26,20 +26,40 @@ export function VideoEmbed({ video, title }) {
   );
 }
 
-/* One photo at full size over the page. ← → step through the grid's photos, wrapping; Esc, Close or a
-   click outside the photo closes it. Also used by the Photos page, whose `render` draws each photo as the camera's
+/* One photo at full size over the page. ← → (or a sideways swipe on touch) step through the grid's photos,
+   wrapping; Esc, Close or a click outside the photo closes it. Also used by the Photos page, whose `render` draws each photo as the camera's
    playback screen in place of the plain figure. */
 export function Lightbox({ images, index, onIndex, render }) {
   const m = images[index];
   const step = (d) => onIndex((index + d + images.length) % images.length);
+  // On the dialog itself, so the keys keep working after a click moves focus off the buttons.
   const onKey = (e) => {
+    if (images.length < 2) return;
     if (e.key === "ArrowLeft") step(-1);
     else if (e.key === "ArrowRight") step(1);
   };
+  // A mostly-horizontal touch drag of 50px or more steps to the next / previous photo.
+  const swipe = useRef(null);
+  const onPointerDown = (e) => {
+    if (e.pointerType !== "mouse") swipe.current = { x: e.clientX, y: e.clientY };
+  };
+  const onPointerUp = (e) => {
+    const s = swipe.current;
+    swipe.current = null;
+    if (!s || images.length < 2) return;
+    const dx = e.clientX - s.x, dy = e.clientY - s.y;
+    if (Math.abs(dx) >= 50 && Math.abs(dx) > Math.abs(dy) * 1.5) step(dx < 0 ? 1 : -1);
+  };
+  const label = m ? `${m.alt || m.caption || "Photo"}${images.length > 1 ? `, ${index + 1} of ${images.length}` : ""}` : undefined;
   return (
-    <NativeDialog open={index != null} onClose={() => onIndex(null)} className="lbox">
+    <NativeDialog open={index != null} onClose={() => onIndex(null)} className="lbox" label={label} onKeyDown={onKey}>
       {m && (
-        <div className="lbox-in" onKeyDown={onKey}>
+        <div
+          className="lbox-in"
+          onPointerDown={onPointerDown}
+          onPointerUp={onPointerUp}
+          onPointerCancel={() => (swipe.current = null)}
+        >
           {render ? (
             render(m, index)
           ) : (

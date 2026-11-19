@@ -30,6 +30,15 @@ export function pageKeyFor(pathname) {
   return page ? page.key : "notfound";
 }
 
+// The browser tab's title for a route: "dor · Adam Zhang", "Projects · Adam Zhang"; Home is just the name.
+export function titleFor(pathname, name) {
+  const key = pageKeyFor(pathname);
+  if (key === "home") return name;
+  if (key === "notfound") return `Page not found · ${name}`;
+  const slug = pathname.replace(/\/+$/, "").match(/^\/projects\/([^/]+)$/)?.[1];
+  return `${slug ? projectBySlug(slug).name : pageByKey(key).label} · ${name}`;
+}
+
 export function lcdCounter(key) {
   const k = key === "notfound" ? "home" : key;
   const i = livePages.findIndex((p) => p.key === k);
