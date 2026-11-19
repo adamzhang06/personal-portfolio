@@ -25,6 +25,8 @@ export function dateLabel(takenAt) {
   return d ? `${MONTHS[m - 1]} ${d}, ${y}` : `${MONTHS[m - 1]} ${y}`;
 }
 
+// The small copy film strips and shelves draw (npm run photos:thumbs writes it; scripts/photos.mjs thumbFile mirrors this).
+export const thumbOf = (src) => src.replace("/photos/gallery-compressed/", "/photos/thumbs/");
 export const photoLabel = (p) => `${p.title}, ${dateLabel(p.takenAt)}`;
 // Black-and-white stocks (their negatives carry no orange mask)
 export const isMono = (p) => /HP5|FP4|Tri-?X|T-?Max|Delta|Pan ?F|XP2|Fomapan|Kentmere|Acros/i.test(p.film ?? "");

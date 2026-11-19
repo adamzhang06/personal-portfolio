@@ -23,7 +23,7 @@ const animate = (change) => (document.startViewTransition ? document.startViewTr
 /* The Photos page (/photos), design D "Film rolls": the favorites unroll from their canisters as they scroll into
    view (the first on load), on as many strips as the window needs; then the shelves of rolls, coloured by kind, with
    a filter per kind (any number on at once; none on shows every roll). Picking a canister opens that roll over the
-   page; /photos#<roll id> arrives with that roll open. */
+   page and gets its own history entry (/photos#<roll id>), so Back closes it; that address also arrives with the roll open. */
 export function PhotosPage() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -37,16 +37,22 @@ export function PhotosPage() {
   const [shown, setShown] = useState(null); // index into favPhotos, or null
   const rollFor = (hash) => rolls.find((r) => `#${r.id}` === hash) ?? null;
   const [roll, setRoll] = useState(() => rollFor(location.hash));
-  // a #roll arriving later (the address edited, or Back to it) opens that roll too
+  // The address follows the open roll: a #roll arriving later (opened here, the address edited, or Forward to it)
+  // opens that roll, and Back off it (no #roll any more) closes it.
   const [seenHash, setSeenHash] = useState(location.hash);
   if (seenHash !== location.hash) {
     setSeenHash(location.hash);
-    if (rollFor(location.hash)) setRoll(rollFor(location.hash));
+    setRoll(rollFor(location.hash));
   }
-  // closing a roll that came in on the address drops the #roll, keeping this history entry and its Back crumb
+  // Opening a roll pushes /photos#<roll id>, keeping the page's own Back crumb (`from`) on the new entry.
+  const openRoll = (r) => navigate({ hash: r.id }, { state: { ...location.state, rollPushed: true } });
+  // Closing steps back off that entry; a roll that came in on the address drops its #roll in place instead.
   const closeRoll = () => {
-    setRoll(null);
-    if (location.hash) navigate(location.pathname, { replace: true, state: location.state });
+    if (location.state?.rollPushed && (window.history.state?.idx ?? 0) > 0) navigate(-1);
+    else {
+      setRoll(null);
+      if (location.hash) navigate(location.pathname, { replace: true, state: location.state });
+    }
   };
   const [picked, setPicked] = useState([]); // kinds switched on in the filter
   // While filters are on the shelf keeps the tallest height it has had, so a shorter shelf never pulls the page up
@@ -58,9 +64,26 @@ export function PhotosPage() {
   useEffect(() => {
     if (!picked.length && shelfBox.current) shelfBox.current.style.minHeight = "";
   }, [picked]);
+  // A click during a running view transition (about 1.5s) would land on the transition's snapshot and be lost;
+  // a quick second filter click skips the animation instead.
+  const running = useRef(null);
+  const change = (fn) => {
+    if (running.current) {
+      running.current.skipTransition?.();
+      flushSync(fn);
+      return;
+    }
+    const t = animate(fn);
+    if (t?.finished) {
+      running.current = t;
+      t.finished.finally(() => {
+        if (running.current === t) running.current = null;
+      });
+    }
+  };
   const toggle = (kind) => {
     hold();
-    animate(() => setPicked((on) => (on.includes(kind) ? on.filter((k) => k !== kind) : [...on, kind])));
+    change(() => setPicked((on) => (on.includes(kind) ? on.filter((k) => k !== kind) : [...on, kind])));
   };
   const shelf = picked.length ? rolls.filter((r) => picked.includes(r.kind)) : rolls;
 
@@ -101,7 +124,7 @@ export function PhotosPage() {
               type="button"
               className={`btn small reset${picked.length ? "" : " off"}`}
               onClick={() => {
-                animate(() => setPicked([]));
+                change(() => setPicked([]));
                 filters.current?.querySelector(".chip")?.focus(); // Reset hides; keep focus on the filters
               }}
             >
@@ -122,7 +145,7 @@ export function PhotosPage() {
           {picked.length ? `Showing ${shelf.length} of ${rolls.length} rolls` : ""}
         </p>
         <div ref={shelfBox}>
-          <RollShelf rolls={shelf} vw={vw} onOpen={setRoll} />
+          <RollShelf rolls={shelf} vw={vw} onOpen={openRoll} />
         </div>
       </section>
 

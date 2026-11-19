@@ -1,13 +1,17 @@
-import { useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { useUi } from "@/context/uiContext";
 import { CONTROLS, DOCK_LEGEND_KEYS, PHONE_LEGEND_KEYS } from "./controls";
 import { SectionsDial } from "./SectionsDial";
 
-function LegendButtons({ keys, actions }) {
+// `after`: extra content keyed by control, drawn right under that control's button.
+function LegendButtons({ keys, actions, after = {} }) {
   return keys.map((k) => (
-    <button key={k} type="button" className="lgb" data-door-toggle={k === "door" ? "" : undefined} onClick={actions[k]}>
-      {CONTROLS[k].label} <em>{CONTROLS[k].term}</em>
-    </button>
+    <Fragment key={k}>
+      <button type="button" className="lgb" data-door-toggle={k === "door" ? "" : undefined} onClick={actions[k]}>
+        {CONTROLS[k].label} <em>{CONTROLS[k].term}</em>
+      </button>
+      {after[k]}
+    </Fragment>
   ));
 }
 
@@ -29,8 +33,8 @@ export function CameraLegend({ variant, open = false, actions }) {
           Camera controls <span className="pm" aria-hidden="true" />
         </summary>
         <div className="lbtns">
-          <LegendButtons keys={PHONE_LEGEND_KEYS} actions={actions} />
-          {dialOpen && <SectionsDial variant="inline" />}
+          {/* the dial opens right under Sections, where the thumb already is */}
+          <LegendButtons keys={PHONE_LEGEND_KEYS} actions={actions} after={{ mode: dialOpen && <SectionsDial variant="inline" /> }} />
         </div>
       </details>
     );

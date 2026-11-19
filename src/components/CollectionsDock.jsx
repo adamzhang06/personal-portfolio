@@ -26,7 +26,7 @@ function doorTarget() {
    cards like the macOS Dock; the dot marks the section you are in. Picking a card flies it to the camera's
    card slot, turns it to line up and pushes it in, then opens that page and the door swings shut. */
 export function CollectionsDock() {
-  const { trayOpen, closeTray, go } = useHistoryBack();
+  const { trayOpen, closeTray, leaveTray } = useHistoryBack();
   const { pageKey, setInserting } = useUi();
   const { engine } = useCamera();
   const [fly, setFly] = useState(null);
@@ -126,7 +126,7 @@ export function CollectionsDock() {
     settle();
     setInserting(true);
     setFly({ card, from, dx: to.x - fx, dy: to.y - fy, to, hasDoor: !!door, inMs });
-    setTimeout(() => go(card.path), inMs || INSERT_MS);
+    setTimeout(() => leaveTray(card.path), inMs || INSERT_MS);
   };
 
   return (

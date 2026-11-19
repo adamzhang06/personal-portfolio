@@ -54,9 +54,19 @@ export function useHistoryBack() {
     else navigate(location.pathname, { replace: true, state: { ...state, tray: false } });
   }, [navigate, location.pathname, state, trayOpen]);
 
+  // Leaving the tray for a page (a Collections card): the page takes the tray's history entry, so Back returns to
+  // the screen the tray was opened over, not to a tray left open beside a collapsed camera. Its crumb names that screen.
+  const leaveTray = useCallback(
+    (to) => {
+      if (!trayOpen) return go(to);
+      navigate(to, { replace: true, state: { from: { path: location.pathname, tray: false } } });
+    },
+    [go, navigate, location.pathname, trayOpen]
+  );
+
   let crumb = null;
   if (state?.from) crumb = { label: labelOf(state.from), go: back };
   else if (/^\/projects\/[^/]+$/.test(location.pathname)) crumb = { label: "Projects", go: () => navigate("/projects", { replace: true }) };
 
-  return { go, back, crumb, trayOpen, openTray, closeTray };
+  return { go, back, crumb, trayOpen, openTray, closeTray, leaveTray };
 }

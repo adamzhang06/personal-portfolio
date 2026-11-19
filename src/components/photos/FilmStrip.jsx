@@ -1,4 +1,4 @@
-import { frameWidth, isMono, photoLabel } from "@/lib/rolls";
+import { frameWidth, isMono, photoLabel, thumbOf } from "@/lib/rolls";
 import { FilmCanister } from "./FilmCanister";
 import { Img } from "@/components/Img";
 
@@ -21,7 +21,7 @@ export function FilmStrip({ frames, side = "left", can, H, onOpen }) {
                 const fromCan = side === "left" ? j : frames.length - 1 - j;
                 return (
                   <button key={p.id} type="button" className={"fr" + neg} style={{ "--j": fromCan }} aria-label={photoLabel(p)} onClick={() => onOpen(p)}>
-                    <Img src={p.src} alt="" width={p.w} height={p.h} loading="lazy" decoding="async" style={size} />
+                    <Img src={thumbOf(p.src)} fallback={p.src} alt="" width={p.w} height={p.h} loading="lazy" decoding="async" style={size} />
                   </button>
                 );
               })}

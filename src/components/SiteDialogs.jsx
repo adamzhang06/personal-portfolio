@@ -1,8 +1,8 @@
 import { useUi } from "@/context/uiContext";
-import { useHistoryBack } from "@/hooks/useHistoryBack";
 import { livePages } from "@/data/pages";
 import { DEMO_VIDEO_LINKS, QUICK_FACTS } from "@/data/site";
 import { NativeDialog } from "./NativeDialog";
+import { RouteLink } from "./RouteLink";
 
 function DialogHead({ id, title, onClose }) {
   return (
@@ -16,17 +16,17 @@ function DialogHead({ id, title, onClose }) {
 }
 
 export function SiteMenuDialog({ open, onClose }) {
-  const { go } = useHistoryBack();
+  const { pageKey } = useUi();
   return (
     <NativeDialog open={open} onClose={onClose} className="dialog" labelledBy="dlg-menu">
       <div className="dialog-in">
         <DialogHead id="dlg-menu" title="Site menu" onClose={onClose} />
         <nav className="menu" aria-label="Every page">
           {livePages.map((p) => (
-            <button key={p.key} type="button" onClick={() => go(p.path)}>
+            <RouteLink key={p.key} to={p.path} onClick={onClose} className={pageKey === p.key ? "on" : undefined} aria-current={pageKey === p.key ? "page" : undefined}>
               {p.label}
-              <span aria-hidden="true">→</span>
-            </button>
+              <span aria-hidden="true">{pageKey === p.key ? "•" : "→"}</span>
+            </RouteLink>
           ))}
         </nav>
       </div>

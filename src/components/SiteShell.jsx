@@ -1,4 +1,5 @@
-import { Outlet } from "react-router-dom";
+import { useEffect } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import { UiProvider } from "@/context/UiProvider";
 import { useUi } from "@/context/uiContext";
 import { CameraProvider } from "@/components/camera/CameraProvider";
@@ -7,6 +8,7 @@ import { CameraStage } from "@/components/camera/CameraStage";
 import { useMediaQuery, PHONE_QUERY } from "@/hooks/useMediaQuery";
 import { useScrollRestoration } from "@/hooks/useScrollRestoration";
 import { DOMAIN, NAME } from "@/data/site";
+import { titleFor } from "@/data/pages";
 import { TopBar, TabBar } from "./TopBar";
 import { CollectionsDock } from "./CollectionsDock";
 import { SiteDialogs } from "./SiteDialogs";
@@ -15,6 +17,10 @@ import { PageAperture } from "./PageAperture";
 
 function Shell() {
   useScrollRestoration();
+  const { pathname } = useLocation();
+  useEffect(() => {
+    document.title = titleFor(pathname, NAME);
+  }, [pathname]);
   const { status } = useCamera();
   const ui = useUi();
   const phone = useMediaQuery(PHONE_QUERY);
@@ -28,16 +34,16 @@ function Shell() {
       </a>
       <TopBar />
       <main className="main" id="main" tabIndex={-1}>
-        {phone && home && <CameraStage variant="phone" />}
         <Outlet />
       </main>
+      {/* before the footer so its controls come before the footer in Tab order */}
+      {!phone && <CameraStage />}
       <footer className="foot">
         <span>
           © {new Date().getFullYear()} {NAME}
         </span>
         <span>{DOMAIN}</span>
       </footer>
-      {!phone && <CameraStage />}
       <TabBar />
       <CollectionsDock />
       <SiteDialogs />

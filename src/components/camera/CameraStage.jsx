@@ -128,7 +128,7 @@ export function CameraStage({ variant = "layer" }) {
       </div>
       {home && ready && <LeaderLabels view={flipped ? "rear" : "front"} actions={actions} cover={cover} />}
       {home && ui.dialOpen && <SectionsDial variant="float" flipped={flipped} />}
-      {ready && <CameraHotspots keys={docked ? DOCK_HOTSPOT_KEYS : HOTSPOT_KEYS} actions={actions} tips={docked} />}
+      {ready && <CameraHotspots keys={docked ? DOCK_HOTSPOT_KEYS : HOTSPOT_KEYS} actions={actions} tips={docked} keyboard={docked} />}
       {docked && ready && <CameraLegend variant="dock" open={dockOpen} actions={actions} />}
     </div>
   );

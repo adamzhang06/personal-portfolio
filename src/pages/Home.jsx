@@ -1,4 +1,7 @@
+import { useLayoutEffect } from "react";
 import { useUi } from "@/context/uiContext";
+import { useMediaQuery, PHONE_QUERY } from "@/hooks/useMediaQuery";
+import { CameraStage } from "@/components/camera/CameraStage";
 import { useHistoryBack } from "@/hooks/useHistoryBack";
 import { AVAILABILITY, HEADLINE_LINES, INTRO, NAME } from "@/data/site";
 import { HeroLinks } from "@/components/HeroLinks";
@@ -8,8 +11,27 @@ import { Polaroid } from "@/components/Polaroid";
 import { Rich } from "@/components/Rich";
 import { ScrollCue } from "@/components/ScrollCue";
 
+const HERO_H = 828; // the hero's design height (site.css .hero), under the 72px top bar
+
+/* On a laptop window shorter than the hero (900px tall with the top bar), scale the hero and its camera down to fit,
+   so Flip the camera and the polaroid stay on the first screen: --hk on <html>, read by .hero and .stage.hero. */
+function useHeroFit() {
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+    const fit = () => root.style.setProperty("--hk", Math.min(1, Math.max(0.8, (window.innerHeight - 72) / HERO_H)).toFixed(3));
+    fit();
+    window.addEventListener("resize", fit);
+    return () => {
+      window.removeEventListener("resize", fit);
+      root.style.removeProperty("--hk");
+    };
+  }, []);
+}
+
 export function Home({ notFound = false }) {
   const { view, setView } = useUi();
+  const phone = useMediaQuery(PHONE_QUERY);
+  useHeroFit();
   const { go } = useHistoryBack();
   const [l1, l2, l3] = HEADLINE_LINES;
 
@@ -43,6 +65,8 @@ export function Home({ notFound = false }) {
             <Rich text={INTRO} />
           </p>
         </div>
+        {/* phones: the camera follows the headline (desktop draws it in the fixed camera layer instead) */}
+        {phone && <CameraStage variant="phone" />}
         <span className="avail hero-avail">{AVAILABILITY}</span>
         <div className="hero-me">
           <HeroLinks />

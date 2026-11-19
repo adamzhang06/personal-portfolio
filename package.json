@@ -13,6 +13,7 @@
     "photos:scan": "node scripts/photos.mjs scan",
     "photos:apply": "node scripts/photos.mjs apply",
     "photos:check": "node scripts/photos.mjs check",
+    "photos:thumbs": "node scripts/photos.mjs thumbs",
     "models": "node scripts/models.mjs build",
     "models:previews": "node scripts/models.mjs previews"
   },

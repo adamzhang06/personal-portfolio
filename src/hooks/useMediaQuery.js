@@ -12,4 +12,5 @@ export function useMediaQuery(query) {
   return useSyncExternalStore(subscribe, () => window.matchMedia(query).matches, () => false);
 }
 
-export const PHONE_QUERY = "(max-width: 860px)";
+// Phones, and phones on their side (a short touch screen of any width); the CSS phone blocks use the same query.
+export const PHONE_QUERY = "(max-width: 860px), (pointer: coarse) and (max-height: 500px)";

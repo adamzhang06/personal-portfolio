@@ -200,7 +200,7 @@ function Controls({ controls, values, onChange, label }) {
       {controls.map((c, i) => (
         <label key={c.label} className="grid grid-cols-[76px_minmax(0,1fr)_60px] items-center gap-3 text-sm text-[#F2EFF7]">
           {c.label}
-          <input type="range" min="0" max="1" step="0.001" value={values[i]} aria-valuetext={readout(c, values[i])} className="w-full accent-[#8A55E6]" onChange={(e) => set(values.map((v, k) => (k === i ? +e.target.value : v)))} />
+          <input type="range" min="0" max="1" step="0.001" value={values[i]} aria-valuetext={readout(c, values[i])} className="w-full h-11 accent-[#8A55E6]" onChange={(e) => set(values.map((v, k) => (k === i ? +e.target.value : v)))} />
           <span className="text-right font-['JetBrains_Mono',ui-monospace,monospace] text-xs tabular-nums text-[#A8A3B3]">{readout(c, values[i])}</span>
         </label>
       ))}
